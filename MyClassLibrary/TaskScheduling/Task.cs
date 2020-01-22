@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace MyClassLibrary.TaskScheduling
 {
+	[DebuggerDisplay("{" + nameof(Name) + "}, " + ("{" + nameof(DependingTasksNames) + "}, " + ("{" + nameof(Duration) + "}, IsParallel=" + ("{" + nameof(IsParallel) + "}"))))]
 	public class Task
 	{
 		public string Name { get; }
@@ -13,6 +14,28 @@ namespace MyClassLibrary.TaskScheduling
 		public bool IsParallel { get; }
 		public IEnumerable<Task>? DependingTasks { get; private set; }
 		public int Priority { get; }
+
+		public bool IsDependingOnOtherTasks
+		{
+			get
+			{
+				if (DependingTasks == null)
+					return false;
+
+				return !DependingTasks.IsEmpty();
+			}
+		}
+
+		private string DependingTasksNames
+		{
+			get
+			{
+				if (!IsDependingOnOtherTasks)
+					return "No Depending Tasks";
+
+				return "Task depends on " + string.Join(", ", DependingTasks.Select(t => t.Name));
+			}
+		}
 
 		public int DependingTasksDepth
 		{
@@ -70,6 +93,11 @@ namespace MyClassLibrary.TaskScheduling
 				return;
 
 			DependingTasks = new List<Task> {task};
+		}
+
+		public void RestoreDependingTasks(IEnumerable<Task>? dependentTasks)
+		{
+			DependingTasks = dependentTasks;
 		}
 	}
 }

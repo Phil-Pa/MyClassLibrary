@@ -224,13 +224,18 @@ namespace UnitTestProject.TaskScheduling
 			SchedulingInformation si = scheduler.GetSchedulingInformation();
 
 			//Assert.Equal(task1, list[0]);
-			//Assert.Equal(task3, list[1]);
-			//Assert.Equal(task2, list[2]);
-			//Assert.Equal(task4, list[3]);
+			//Assert.Equal(task2, list[1]);
+			//Assert.Equal(task1, list[2]);
+			//Assert.Equal(task1, list[3]);
+			//Assert.Equal(task1, list[4]);
+			//Assert.Equal(task1, list[5]);
+			//Assert.Equal(task1, list[6]);
+
+			int other = 15 + 10 + 15 + 5 + 30 + 15; // = 90 15+5+10+20+30+15 = 95
 
 			Assert.Equal(7, list.Count);
 
-			Assert.Equal(TimeSpan.FromMinutes(95), si.Duration);
+			Assert.Equal(TimeSpan.FromMinutes(other), si.Duration);
 		}
 	}
 }

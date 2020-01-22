@@ -59,8 +59,19 @@ namespace MyClassLibrary.TaskScheduling
 
 		private void HandleSingleDependentTasks(IDictionary<Task, int> map)
 		{
+
 			var deepestTaskValue = map.Values.Max();
-			Task deepestTask = map.Where((pair, _) => pair.Value == deepestTaskValue).First().Key;
+
+			// check if multiple tasks have the deepest task value. usually, this should not be the case but if, then take the last task of them
+
+			var takeLastDeepestTask = map.Values.Count(depth => depth == deepestTaskValue) > 1;
+
+			var deepestTask = takeLastDeepestTask ? map.Where((pair, _) => pair.Value == deepestTaskValue).Last().Key : map.Where((pair, _) => pair.Value == deepestTaskValue).First().Key;
+
+			if (takeLastDeepestTask)
+			{
+				map[deepestTask]++;
+			}
 
 			var stack = new Stack<Task>();
 
@@ -70,11 +81,79 @@ namespace MyClassLibrary.TaskScheduling
 				deepestTask = deepestTask.DependingTasks.First();
 			}
 
-			stack.ToList().ForEach(task => { _calculatedDuration += task.Duration; });
-			_calculatedDuration += deepestTask.Duration;
+			// calculate duration
+			_tasks.ForEach(t => { _calculatedDuration += t.Duration; });
 		}
 
 		private void HandleMultiDependentTasks(IDictionary<Task, int> map)
+		{
+			var taskLists = JoinToTasksLists(map);
+
+			var resultTaskStackListForTaskDepthMap = new List<Task>();
+			var resultTaskList = new List<Task>();
+			Task? generatedTask = null;
+			var generatedNewTask = false;
+
+			foreach (var taskList in taskLists)
+			{
+				if (taskList.All(t => !t.IsDependingOnOtherTasks))
+				{
+					var tasksToAdd = taskList;
+					if (generatedNewTask)
+					{
+						foreach (var task in tasksToAdd)
+						{
+							task.AddSingleDependentTask(generatedTask);
+						}
+						generatedNewTask = false;
+					}
+
+					resultTaskList.AddRange(tasksToAdd);
+					resultTaskStackListForTaskDepthMap.AddRange(tasksToAdd);
+				}
+				else
+				{
+					// clear depending tasks so we don't have recursion
+					Task dependingTask = taskList.First().DependingTasks.First();
+
+					var dependentTaskMap = new Dictionary<Task, IEnumerable<Task>?>();
+
+					foreach (Task task in taskList)
+					{
+						// cleared tasks are restored for later
+						dependentTaskMap.Add(task, task.DependingTasks);
+
+						task.ClearDependingTasks();
+					}
+					TaskScheduler scheduler = new TaskScheduler(taskList, _numberWorkers);
+					var sequence = scheduler.CalculateTaskSequence();
+
+					foreach (Task task in sequence)
+					{
+						task.RestoreDependingTasks(dependentTaskMap[task]);
+					}
+
+					resultTaskList.AddRange(sequence);
+
+					if (generatedNewTask)
+						dependingTask = resultTaskList.Last();
+
+					SchedulingInformation si = scheduler.GetSchedulingInformation();
+					generatedTask = new Task("Generated Sub task of " + string.Join(", ", taskList.Select(task => task.Name)), "", si.Duration, false, (int)taskList.Average(t => t.Priority), dependingTask);
+					resultTaskStackListForTaskDepthMap.Add(generatedTask);
+					generatedNewTask = true;
+				}
+			}
+
+			var newMap = CreateTaskDepthMap(resultTaskStackListForTaskDepthMap);
+			//HandleSingleDependentTasks(newMap);
+			_tasks = resultTaskList;
+
+			// duration calculation has to be after HandleSingleDependentTasks, because we want to overwrite the calculated duration
+			resultTaskStackListForTaskDepthMap.ForEach(t => { _calculatedDuration += t.Duration; });
+		}
+
+		private static IEnumerable<List<Task>> JoinToTasksLists(IDictionary<Task, int> map)
 		{
 			var taskLists = new List<List<Task>>();
 			foreach (var depth in map.Values.Distinct())
@@ -85,49 +164,7 @@ namespace MyClassLibrary.TaskScheduling
 				taskLists.Add(list);
 			}
 
-			var resultTaskStackListForTaskDepthMap = new List<Task>();
-			var resultTaskList = new List<Task>();
-			Task? generatedTask = null;
-			var generatedNewTask = false;
-
-			foreach (var taskList in taskLists)
-			{
-				if (taskList.Count == 1)
-				{
-					Task taskToAdd = taskList.First();
-					if (generatedNewTask)
-					{
-						taskToAdd.AddSingleDependentTask(generatedTask);
-						generatedNewTask = false;
-					}
-
-					resultTaskList.Add(taskToAdd);
-					resultTaskStackListForTaskDepthMap.Add(taskToAdd);
-				}
-				else
-				{
-					// clear depending tasks so we dont have recursion
-					Task dependingTask = taskList.First().DependingTasks.First();
-					foreach (Task task in taskList)
-					{
-						task.ClearDependingTasks();
-					}
-					TaskScheduler scheduler = new TaskScheduler(taskList, _numberWorkers);
-					var sequence = scheduler.CalculateTaskSequence();
-
-					resultTaskList.AddRange(sequence);
-
-					SchedulingInformation si = scheduler.GetSchedulingInformation();
-					generatedTask = new Task("Generated Sub task of " + string.Join(", ", taskList.Select(task => task.Name)), "", si.Duration, false, (int)taskList.Average(t => t.Priority), dependingTask);
-					resultTaskStackListForTaskDepthMap.Add(generatedTask);
-					generatedNewTask = true;
-				}
-			}
-
-			var newMap = CreateTaskDepthMap(resultTaskStackListForTaskDepthMap);
-			HandleSingleDependentTasks(newMap);
-
-			_tasks = resultTaskList;
+			return taskLists;
 		}
 
 		private void HandleNotDependentTasks()
