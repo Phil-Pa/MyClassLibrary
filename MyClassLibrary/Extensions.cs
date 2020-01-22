@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MyClassLibrary
 {
@@ -16,6 +15,22 @@ namespace MyClassLibrary
 		public static bool IsEmpty<T>(this IEnumerable<T> enumerable)
 		{
 			return !enumerable.Any();
+		}
+
+		public static bool IsNotEmpty<T>(this IEnumerable<T> enumerable)
+		{
+			return !IsEmpty(enumerable);
+		}
+
+		public static IEnumerable<T> Flatten<T>(this List<List<T>> enumerable)
+		{
+			var list = new List<T>();
+			foreach (var item in enumerable)
+			{
+				list.AddRange(item);
+			}
+
+			return list;
 		}
 
 	}

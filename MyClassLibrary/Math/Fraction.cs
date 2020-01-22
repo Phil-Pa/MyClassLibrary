@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MyClassLibrary.Math
 {
@@ -26,7 +24,7 @@ namespace MyClassLibrary.Math
 
 		public static bool operator==(in Fraction a, in Fraction b)
 		{
-			return System.Math.Abs(a.ToFloat()) == System.Math.Abs(b.ToFloat());
+			return System.Math.Abs(System.Math.Abs(a.ToFloat()) - System.Math.Abs(b.ToFloat())) < float.Epsilon;
 		}
 
 		public static bool operator !=(in Fraction a, in Fraction b)

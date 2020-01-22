@@ -9,10 +9,8 @@ namespace MyClassLibrary.Encoding
 	public class ShannonAlgorithm : IEncodingAlgorithm
 	{
 
-		private IDictionary<string, char>? _decodingMap = null;
-		private IDictionary<char, string>? _encodingMap = null;
-
-		private bool NoEncodingMapProvided => _encodingMap == null;
+		private IDictionary<string, char>? _decodingMap;
+		private IDictionary<char, string>? _encodingMap;
 
 		public ShannonAlgorithm(IDictionary<char, string>? encodingMap = null)
 		{
@@ -107,7 +105,7 @@ namespace MyClassLibrary.Encoding
 				zeroList.Add(tuple);
 				if (sum >= limit)
 				{
-					var oneList = pMap.Where(p => !zeroList.Select(tuple => tuple.Item2).Contains(p.Item2)).ToList();
+					var oneList = pMap.Where(p => !zeroList.Select(valueTuple => valueTuple.Item2).Contains(p.Item2)).ToList();
 
 					AddToEncodingMap(map, zeroList, "0");
 					AddToEncodingMap(map, oneList, "1");
@@ -177,8 +175,6 @@ namespace MyClassLibrary.Encoding
 
 		public string Decode(string str)
 		{
-			var hasDecodingMap = !NoEncodingMapProvided && _encodingMap == null;
-
 			if (string.IsNullOrEmpty(str))
 				throw new ArgumentException("cant decode empty string");
 

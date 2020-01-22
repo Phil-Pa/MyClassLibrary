@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
 
 namespace MyClassLibrary.Encoding
 {
@@ -11,9 +9,9 @@ namespace MyClassLibrary.Encoding
 
 		public string Compress(string str)
 		{
-			byte[] buffer = System.Text.Encoding.UTF8.GetBytes(str);
-			var memoryStream = new MemoryStream();
-			using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
+			var buffer = System.Text.Encoding.UTF8.GetBytes(str);
+			MemoryStream memoryStream = new MemoryStream();
+			using (GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
 			{
 				gZipStream.Write(buffer, 0, buffer.Length);
 			}
@@ -31,22 +29,20 @@ namespace MyClassLibrary.Encoding
 
 		public string Decompress(string str)
 		{
-			byte[] gZipBuffer = Convert.FromBase64String(str);
-			using (var memoryStream = new MemoryStream())
+			var gZipBuffer = Convert.FromBase64String(str);
+			using MemoryStream memoryStream = new MemoryStream();
+			var dataLength = BitConverter.ToInt32(gZipBuffer, 0);
+			memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
+
+			var buffer = new byte[dataLength];
+
+			memoryStream.Position = 0;
+			using (GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
 			{
-				int dataLength = BitConverter.ToInt32(gZipBuffer, 0);
-				memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
-
-				var buffer = new byte[dataLength];
-
-				memoryStream.Position = 0;
-				using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
-				{
-					gZipStream.Read(buffer, 0, buffer.Length);
-				}
-
-				return System.Text.Encoding.UTF8.GetString(buffer);
+				gZipStream.Read(buffer, 0, buffer.Length);
 			}
+
+			return System.Text.Encoding.UTF8.GetString(buffer);
 		}
 
 	}
