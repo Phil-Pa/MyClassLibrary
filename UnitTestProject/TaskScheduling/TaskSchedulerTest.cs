@@ -231,7 +231,7 @@ namespace UnitTestProject.TaskScheduling
 			//Assert.Equal(task1, list[5]);
 			//Assert.Equal(task1, list[6]);
 
-			int other = 15 + 10 + 15 + 5 + 30 + 15; // = 90 15+5+10+20+30+15 = 95
+			var other = System.Math.Min(15 + 10 + 15 + 5 + 30 + 15, 15 + 5 + 10 + 20 + 30 + 15); // = 90 15+5+10+20+30+15 = 95
 
 			Assert.Equal(7, list.Count);
 

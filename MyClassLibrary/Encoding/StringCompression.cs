@@ -4,10 +4,10 @@ using System.IO.Compression;
 
 namespace MyClassLibrary.Encoding
 {
-	public class StringCompression
+	public static class StringCompression
 	{
 
-		public string Compress(string str)
+		public static string Compress(string str)
 		{
 			var buffer = System.Text.Encoding.UTF8.GetBytes(str);
 			MemoryStream memoryStream = new MemoryStream();
@@ -27,7 +27,7 @@ namespace MyClassLibrary.Encoding
 			return Convert.ToBase64String(gZipBuffer);
 		}
 
-		public string Decompress(string str)
+		public static string Decompress(string str)
 		{
 			var gZipBuffer = Convert.FromBase64String(str);
 			using MemoryStream memoryStream = new MemoryStream();

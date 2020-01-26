@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using MyClassLibrary.Encoding;
 using Xunit;
 
@@ -19,7 +18,7 @@ namespace UnitTestProject.Encoding
 				{'a', "0"}, {'b', "10"}, {'c', "110"}
 			};
 
-			IEncodingAlgorithm encodingAlgorithm = new ShannonAlgorithm(encodingMap);
+			IEncodingAlgorithm encodingAlgorithm = new ShannonAlgorithm(true, encodingMap);
 
 			var encoded = encodingAlgorithm.Encode("abcabcbac");
 
@@ -50,7 +49,7 @@ namespace UnitTestProject.Encoding
 			Assert.Throws<ArgumentException>(() => encodingAlgorithm.Decode(""));
 
 
-			encodingAlgorithm = new ShannonAlgorithm(new Dictionary<char, string>
+			encodingAlgorithm = new ShannonAlgorithm(true, new Dictionary<char, string>
 			{
 				{ '4', "0011" }
 			});

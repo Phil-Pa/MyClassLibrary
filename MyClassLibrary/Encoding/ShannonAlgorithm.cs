@@ -11,9 +11,11 @@ namespace MyClassLibrary.Encoding
 
 		private IDictionary<string, char>? _decodingMap;
 		private IDictionary<char, string>? _encodingMap;
+		private readonly bool _enableErrorChecking;
 
-		public ShannonAlgorithm(IDictionary<char, string>? encodingMap = null)
+		public ShannonAlgorithm(bool enableErrorChecking = true, IDictionary<char, string>? encodingMap = null)
 		{
+			_enableErrorChecking = enableErrorChecking;
 			_encodingMap = encodingMap;
 		}
 
@@ -22,9 +24,10 @@ namespace MyClassLibrary.Encoding
 			if (string.IsNullOrEmpty(str))
 				return string.Empty;
 
-			CheckSymbolsAreInEncodingMap(str);
-
 			var encodingMap = _encodingMap ?? BuildEncodingMap(BuildProbabilityMap(str));
+
+			if (_enableErrorChecking)
+				CheckSymbolsAreInEncodingMap(str);
 
 			StringBuilder sb = new StringBuilder();
 
@@ -162,15 +165,9 @@ namespace MyClassLibrary.Encoding
 			}
 		}
 
-		private IDictionary<string, char> BuildDecodingMap()
+		private IDictionary<string, char> AquireDecodingMap()
 		{
-
-			if (_decodingMap != null)
-				return _decodingMap;
-
-			var decodingMap = _encodingMap.ToDictionary(pair => pair.Value, pair => pair.Key);
-			_decodingMap = decodingMap;
-			return decodingMap;
+			return _decodingMap ??= _encodingMap.ToDictionary(pair => pair.Value, pair => pair.Key);
 		}
 
 		public string Decode(string str)
@@ -178,7 +175,7 @@ namespace MyClassLibrary.Encoding
 			if (string.IsNullOrEmpty(str))
 				throw new ArgumentException("cant decode empty string");
 
-			var decodingMap = BuildDecodingMap();
+			var decodingMap = AquireDecodingMap();
 
 			StringBuilder sb = new StringBuilder(), result = new StringBuilder();
 
@@ -186,9 +183,11 @@ namespace MyClassLibrary.Encoding
 			{
 				sb.Append(c);
 
-				if (decodingMap.ContainsKey(sb.ToString()))
+				var tempStr = sb.ToString();
+
+				if (decodingMap.ContainsKey(tempStr))
 				{
-					result.Append(decodingMap[sb.ToString()]);
+					result.Append(decodingMap[tempStr]);
 					sb.Clear();
 				}
 			}

@@ -18,11 +18,11 @@ namespace MyClassLibrary.Math
 
 		private static int Evaluate(char c)
 		{
-			if (c >= '0' && c <= '9')
+			if (c.IsBetweenAsciiCharactersInclusive('0', '9'))
 				return int.Parse(c.ToString());
-			if (c >= 'A' && c <= 'Z')
+			if (c.IsBetweenAsciiCharactersInclusive('A', 'Z'))
 				return c - 55;
-			if (c >= 'a' && c <= 'z')
+			if (c.IsBetweenAsciiCharactersInclusive('a', 'z'))
 				return c - 61;
 			return c switch
 			{

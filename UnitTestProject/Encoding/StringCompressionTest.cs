@@ -13,10 +13,9 @@ namespace UnitTestProject.Encoding
 		{
 			const string sampleText = "hallo hier ist mein beispiel text";
 
-			StringCompression stringCompression = new StringCompression();
-			var compressed = stringCompression.Compress(sampleText);
+			var compressed = StringCompression.Compress(sampleText);
 
-			var decompressed = stringCompression.Decompress(compressed);
+			var decompressed = StringCompression.Decompress(compressed);
 			Assert.Equal(sampleText, decompressed);
 		}
 	}

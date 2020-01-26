@@ -22,7 +22,7 @@ namespace MyClassLibrary
 			return !IsEmpty(enumerable);
 		}
 
-		public static IEnumerable<T> Flatten<T>(this List<List<T>> enumerable)
+		public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> enumerable)
 		{
 			var list = new List<T>();
 			foreach (var item in enumerable)
@@ -31,6 +31,11 @@ namespace MyClassLibrary
 			}
 
 			return list;
+		}
+
+		public static bool IsBetweenAsciiCharactersInclusive(this char c, char lowerLimit, char upperLimit)
+		{
+			return c >= lowerLimit && c <= upperLimit;
 		}
 
 	}

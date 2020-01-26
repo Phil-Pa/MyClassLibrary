@@ -59,7 +59,7 @@ namespace MyClassLibrary.TaskScheduling
 			}
 		}
 
-		public Task(string name, string description, in TimeSpan duration, bool isParallel,
+		public Task(string name, string description, in TimeSpan duration, in bool isParallel,
 			in int priority, params Task[] dependingTasks)
 		{
 			CheckPriorityRange(priority);
