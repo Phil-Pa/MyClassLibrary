@@ -27,8 +27,7 @@ namespace UnitTestProject.TaskScheduling
 		{
 			Assert.Throws<ArgumentException>(() =>
 			{
-				Task task = new Task("", "", TimeSpan.MaxValue, false, 0, null);
-			});
+				Task task = new Task("", "", TimeSpan.MaxValue, false, 0, null); });
 
 			Assert.Throws<ArgumentException>(() =>
 			{

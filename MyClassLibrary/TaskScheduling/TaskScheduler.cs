@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace MyClassLibrary.TaskScheduling
@@ -126,14 +125,16 @@ namespace MyClassLibrary.TaskScheduling
 						task.ClearDependingTasks();
 					}
 					TaskScheduler scheduler = new TaskScheduler(taskList, _numberWorkers);
-					var sequence = scheduler.CalculateTaskSequence();
+					var sequence = scheduler.CalculateTaskSequence() ?? throw new Exception("sequence should not be null");
 
-					foreach (Task task in sequence)
+					var list = sequence.ToList();
+
+					foreach (Task task in list)
 					{
 						task.RestoreDependingTasks(dependentTaskMap[task]);
 					}
 
-					resultTaskList.AddRange(sequence);
+					resultTaskList.AddRange(list);
 
 					if (generatedNewTask)
 						dependingTask = resultTaskList.Last();

@@ -42,16 +42,15 @@ namespace MyClassLibraryBenchmark
 		public string TestCompress()
 		{
 
-			return new StringCompression().Compress(Text);
+			return StringCompression.Compress(Text);
 		}
 
 		[Benchmark]
 		public string TestDecompress()
 		{
-			StringCompression stringCompression = new StringCompression();
 
-			var compressed = stringCompression.Compress(Text);
-			var decompressed = stringCompression.Decompress(compressed);
+			var compressed = StringCompression.Compress(Text);
+			var decompressed = StringCompression.Decompress(compressed);
 
 			return decompressed;
 		}
