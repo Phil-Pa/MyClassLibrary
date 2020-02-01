@@ -6,6 +6,24 @@ namespace MyClassLibrary
 {
 	public static class Extensions
 	{
+		public static bool ContainsOnly<T>(this IEnumerable<T> enumerable, T value) where T : IComparable<T>
+		{
+			return enumerable.All(item => item.CompareTo(value) == 0);
+		}
+
+		public static int ToInt(this string str)
+		{
+			bool success = int.TryParse(str, out int result);
+			if (success)
+				return result;
+			else
+				throw new ArgumentException("str can no be converted to an int");
+		}
+
+		public static int ToInt(this char c)
+		{
+			return (int)char.GetNumericValue(c);
+		}
 
 		public static int Count<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
 		{
