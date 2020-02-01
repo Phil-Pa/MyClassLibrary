@@ -32,6 +32,7 @@ namespace UnitTestProject.Math.Learning
 
 		[Theory]
 		[InlineData(23, 6, 138, " 23*6\n+  18\n+ 12 \n= 138")]
+		[InlineData(1121, 312, 349752, " 1121*312\n+       2\n+      1 \n+     3  \n+      4 \n+     2  \n+    6   \n+     2  \n+    1   \n+   3    \n+    2   \n+   1    \n+  3     \n=  349752")]
 		public void TestSimpleMultiplicationWithSpacesAfterTempResult(int a, int b, int correctResult, string calculationResult)
 		{
 			var (result, calculation) = Multiplication.DoMultiply(a, b);
@@ -44,6 +45,7 @@ namespace UnitTestProject.Math.Learning
 
 		[Theory]
 		[InlineData(321, 98, 31458, " 321*98\n+     8\n+    9 \n+   16 \n+  18  \n+  24  \n+ 27   \nü 111  \n= 31458")]
+		[InlineData(28341, 39653, 1123805673, "")]
 		public void TestDifficultMultiplication(int a, int b, int correctResult, string calculationResult)
 		{
 			var (result, calculation) = Multiplication.DoMultiply(a, b);

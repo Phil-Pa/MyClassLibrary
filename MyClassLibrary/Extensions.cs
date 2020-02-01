@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace MyClassLibrary
@@ -20,6 +21,7 @@ namespace MyClassLibrary
 				throw new ArgumentException("str can no be converted to an int");
 		}
 
+		[DebuggerHidden]
 		public static int ToInt(this char c)
 		{
 			return (int)char.GetNumericValue(c);
@@ -49,6 +51,22 @@ namespace MyClassLibrary
 			}
 
 			return list;
+		}
+
+		public static IEnumerable<IEnumerable<T>> Pivot<T>(this IEnumerable<IEnumerable<T>> source)
+		{
+			var enumerators = source.Select(e => e.GetEnumerator()).ToArray();
+			try
+			{
+				while (enumerators.All(e => e.MoveNext()))
+				{
+					yield return enumerators.Select(e => e.Current).ToArray();
+				}
+			}
+			finally
+			{
+				Array.ForEach(enumerators, e => e.Dispose());
+			}
 		}
 
 		public static bool IsBetweenAsciiCharactersInclusive(this char c, char lowerLimit, char upperLimit)
