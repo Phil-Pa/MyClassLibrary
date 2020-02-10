@@ -39,7 +39,7 @@ namespace MyClassLibrary.Encoding
 			return sb.ToString();
 		}
 
-		private static List<ValueTuple<Fraction, char>> BuildProbabilityMap(string str)
+		private static List<(Fraction, char)> BuildProbabilityMap(string str)
 		{
 			var chars = str.ToCharArray().Distinct().ToList();
 			var numChars = str.Length;
@@ -128,7 +128,7 @@ namespace MyClassLibrary.Encoding
 			var iteration = 0;
 			var sum = 0f;
 
-			var zeroList = new List<ValueTuple<Fraction, char>>();
+			var zeroList = new List<(Fraction, char)>();
 
 			foreach ((Fraction, char) pair in pMap)
 			{

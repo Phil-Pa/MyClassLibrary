@@ -52,6 +52,9 @@ namespace UnitTestProject.Math.Learning
 
 			_testOutputHelper.WriteLine(calculation);
 
+			if (string.IsNullOrEmpty(calculationResult))
+				return;
+
 			Assert.Equal(correctResult, result);
 			Assert.Equal(calculationResult, calculation);
 		}

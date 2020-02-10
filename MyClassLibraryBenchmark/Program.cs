@@ -8,6 +8,7 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using MyClassLibrary.Encoding;
 using MyClassLibrary.Math;
+using MyClassLibrary.Math.Learning;
 
 namespace MyClassLibraryBenchmark
 {
@@ -15,7 +16,7 @@ namespace MyClassLibraryBenchmark
 	{
 		private static void Main(string[] args)
 		{
-			var summary = BenchmarkRunner.Run<MyBenchmark>();
+			var summary = BenchmarkRunner.Run<MultiplyBenchmark>();
 
 			Console.ReadKey();
 		}
@@ -54,5 +55,23 @@ namespace MyClassLibraryBenchmark
 
 			return decompressed;
 		}
+	}
+
+	public class MultiplyBenchmark
+	{
+
+		// , 16, 32, 64, 128, 256, 512, 1024, 2048, 2048 * 2, 2048 * 2 * 2, 2048 * 2 * 2 * 2
+		[Params(2, 96, 147, 3795, 99999)]
+		public int MulA { get; set; }
+
+		[Params(2, 96, 147, 3795, 99999)]
+		public int MulB { get; set; }
+
+		[Benchmark]
+		public int TestMultiply()
+		{
+			return Multiplication.DoMultiply(MulA, MulB).result;
+		}
+
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -25,9 +26,7 @@ namespace MyClassLibrary.Math.Learning
 
 		private const string NewLine = "\n";
 
-		public static (int result, string calculation) DoMultiply(int a,
-			int b,
-			in TempMultiplicationOrder tempMultiplicationOrder = TempMultiplicationOrder.AInnerToBOuter)
+		public static (int result, string calculation) DoMultiply(in int a, in int b)
 		{
 
 			string strA = a.ToString();
@@ -42,76 +41,51 @@ namespace MyClassLibrary.Math.Learning
 
 			int aTimesBLength = aTimesB.Length;
 
-			switch (tempMultiplicationOrder)
+			for (int i = numDigitsA - 1; i >= 0; i--)
 			{
-				case TempMultiplicationOrder.AInnerToBOuter:
-					for (int i = numDigitsA - 1; i >= 0; i--)
-					{
-						for (int j = numDigitsB - 1; j >= 0; j--)
-						{
-							CalculateTempResult(strA, i, strB, j, aTimesBLength, sb, tempMultiplicationOrder);
-						}
-					}
-					break;
-				case TempMultiplicationOrder.AInnerToBInner:
-					for (int i = numDigitsA - 1; i >= 0; i--)
-					{
-						for (int j = 0; j < numDigitsB; j++)
-						{
-							CalculateTempResult(strA, i, strB, j, aTimesBLength, sb, tempMultiplicationOrder);
-						}
-					}
-					break;
-				case TempMultiplicationOrder.AOuterToBOuter:
-					for (int i = 0; i < numDigitsA; i++)
-					{
-						for (int j = numDigitsB - 1; j >= 0; j--)
-						{
-							CalculateTempResult(strA, i, strB, j, aTimesBLength, sb, tempMultiplicationOrder);
-						}
-					}
-					break;
-				case TempMultiplicationOrder.AOuterToBInner:
-					for (int i = 0; i < numDigitsA; i++)
-					{
-						for (int j = 0; j < numDigitsB; j++)
-						{
-							CalculateTempResult(strA, i, strB, j, aTimesBLength, sb, tempMultiplicationOrder);
-						}
-					}
-					break;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(tempMultiplicationOrder), tempMultiplicationOrder, null);
+				for (int j = numDigitsB - 1; j >= 0; j--)
+				{
+					CalculateTempResult(strA, i, strB, j, aTimesBLength, sb);
+				}
 			}
 
-			var lines = sb.ToString().Split(NewLine)[1..^1].Select(str => str.Substring(1)).ToArray();
-			var newLines = lines.Pivot().Select(chars => new string(chars.ToArray()).Replace(" ", string.Empty)).Where(str => str.Length > 0).Reverse().ToList();
+			var lines = sb.ToString().Split(NewLine)[1..^1].Select(str => str.Substring(1)).ToList();
 
-			StringBuilder sbOverflow = new StringBuilder(aTimesBLength);
-			sbOverflow.Append('ü');
-
-			StringBuilder overflow = new StringBuilder(aTimesBLength);
-			overflow.Append(new string(' ', aTimesBLength));
-			overflow[0] = 'ü';
-			overflow[overflow.Capacity - 1] = '\n';
-
-			int x = aTimesBLength;
-
-			for (int i = 0; i < newLines.Count; i++)
+			if (lines.Count > 1)
 			{
-				int sum = newLines[i].Sum(c => c.ToInt());
-				if (sum >= 10)
+				StringBuilder overflow = new StringBuilder(aTimesBLength + 1);
+				overflow.Append(new string(' ', aTimesBLength + 1));
+				overflow[0] = 'ü';
+				overflow[overflow.Capacity - 1] = '\n';
+
+				int length = lines[0].Length;
+				bool hasOverflow = false;
+
+				Debug.Assert(lines.All(str => str.Length == length));
+
+				for (int i = length - 1; i >= 0; i--)
 				{
-					overflow[x] = sum.ToString()[0];
-					if (i + 1 < newLines.Count)
-						newLines[i + 1] += (sum % 10).ToString();
+					int columnSum = lines.Sum(str => str[i].ToInt());
+
+					var values = lines.Select(str => str[i].ToInt()).ToList();
+
+					if (columnSum >= 10)
+					{
+						var columnSumAsChar = columnSum.ToString()[0];
+
+						StringBuilder lineBuilder = new StringBuilder(new string(' ', aTimesBLength))
+						{
+							[i] = columnSumAsChar
+						};
+						lines.Add(lineBuilder.ToString());
+						hasOverflow = true;
+						overflow[i] = columnSumAsChar;
+					}
 				}
 
-				x--;
+				if (hasOverflow)
+					sb.Append(overflow.ToString());
 			}
-
-			if (overflow.Length > 1)
-				sb.Append(overflow.ToString());
 
 			return CalculateFinalResult(a, b, aTimesB, sb);
 		}
@@ -128,7 +102,7 @@ namespace MyClassLibrary.Math.Learning
 			return (intResult, sb.ToString());
 		}
 
-		private static void CalculateTempResult(string strA, in int i, string strB, in int j, in int aTimesBLength, StringBuilder sb, in TempMultiplicationOrder tempMultiplicationOrder)
+		private static void CalculateTempResult(string strA, in int i, string strB, in int j, in int aTimesBLength, StringBuilder sb)
 		{
 			int tempResult = strA[i].ToInt() * strB[j].ToInt();
 			string strTempResult = tempResult.ToString();
@@ -138,7 +112,7 @@ namespace MyClassLibrary.Math.Learning
 				new string(' ', aTimesBLength - strTempResult.Length - spacesAfterTempResult.Length - 1); // -1 for the + sign
 
 			var (spacesBeforeResult, spacesAfterResult) =
-				GetTempResultSpaces(strA.Length, strB.Length, strTempResult.Length, aTimesBLength, i, j, tempMultiplicationOrder);
+				GetTempResultSpaces(strA.Length, strB.Length, strTempResult.Length, aTimesBLength, i, j);
 
 			sb.Append("+").Append(spacesBeforeResult).Append(strTempResult).Append(spacesAfterResult).Append(NewLine);
 		}
@@ -146,43 +120,26 @@ namespace MyClassLibrary.Math.Learning
 		private static (string spacesBeforeResult, string spacesAfterResult) GetTempResultSpaces(
 			in int aLength, in int bLength,
 			in int tempResultLength, in int aTimesBLength, 
-			in int i, in int j, in TempMultiplicationOrder tempMultiplicationOrder)
+			in int i, in int j)
 		{
+			// length of something like " 4*6" must be 4
 
-			string spacesBeforeResult = null, spacesAfterResult = null;
+			if (aLength == 1 && bLength == 1)
+				return (new string(' ', 4 - 1 - tempResultLength), string.Empty);
 
-			switch (tempMultiplicationOrder)
-			{
-				case TempMultiplicationOrder.AInnerToBOuter:
+			//string spacesAfterTempResult = new string(' ', bLength - (aLength - i - 1) + (bLength - j - 1));
+			//string spacesAfterTempResult = new string(' ', bLength - i + j);
 
-					// length of something like " 4*6" must be 4
+			//int numSpaces = System.Math.Abs((aLength - i) - (bLength - j));
+			int numSpaces = GetTempAfterSpaces(aLength - i, bLength - j);
 
-					if (aLength == 1 && bLength == 1)
-						return (new string(' ', 4 - 1 - tempResultLength), string.Empty);
+			string spacesAfterTempResult = new string(' ', numSpaces);
 
-					//string spacesAfterTempResult = new string(' ', bLength - (aLength - i - 1) + (bLength - j - 1));
-					//string spacesAfterTempResult = new string(' ', bLength - i + j);
+			string spaces =
+				new string(' ', aTimesBLength - tempResultLength - spacesAfterTempResult.Length - 1); // -1 for the + sign
 
-					//int numSpaces = System.Math.Abs((aLength - i) - (bLength - j));
-					int numSpaces = GetTempAfterSpaces(aLength - i, bLength - j);
-
-					string spacesAfterTempResult = new string(' ', numSpaces);
-
-					string spaces =
-						new string(' ', aTimesBLength - tempResultLength  - spacesAfterTempResult.Length - 1); // -1 for the + sign
-
-					spacesBeforeResult = spaces;
-					spacesAfterResult = spacesAfterTempResult;
-					break;
-				case TempMultiplicationOrder.AInnerToBInner:
-					break;
-				case TempMultiplicationOrder.AOuterToBOuter:
-					break;
-				case TempMultiplicationOrder.AOuterToBInner:
-					break;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(tempMultiplicationOrder), tempMultiplicationOrder, null);
-			}
+			var spacesBeforeResult = spaces;
+			var spacesAfterResult = spacesAfterTempResult;
 
 			return (spacesBeforeResult, spacesAfterResult);
 		}

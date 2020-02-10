@@ -24,6 +24,9 @@ namespace MyClassLibrary
 		[DebuggerHidden]
 		public static int ToInt(this char c)
 		{
+			if (c < '0' || c > '9')
+				return 0;
+
 			return (int)char.GetNumericValue(c);
 		}
 
