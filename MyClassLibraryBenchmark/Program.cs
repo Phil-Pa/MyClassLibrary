@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
@@ -9,6 +10,7 @@ using BenchmarkDotNet.Running;
 using MyClassLibrary.Encoding;
 using MyClassLibrary.Math;
 using MyClassLibrary.Math.Learning;
+using MyClassLibrary.Windows;
 
 namespace MyClassLibraryBenchmark
 {

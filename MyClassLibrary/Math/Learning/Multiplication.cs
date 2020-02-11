@@ -9,21 +9,6 @@ namespace MyClassLibrary.Math.Learning
 	public static class Multiplication
 	{
 
-		/// <summary>
-		/// Determines in which order the algorithm calculates the temporary result. <br/>
-		/// <see cref="AInnerToBOuter"/> calculates aaaaa &lt; to bbbbb &lt; <br/>
-		/// <see cref="AInnerToBInner"/> calculates aaaaa &lt; to &gt; bbbbb <br/>
-		/// <see cref="AOuterToBOuter"/> calculates &gt; aaaaa to bbbbb &lt; <br/>
-		/// <see cref="AOuterToBInner"/> calculates &gt; aaaaa to &gt; bbbbb <br/>
-		/// </summary>
-		public enum TempMultiplicationOrder
-		{
-			AInnerToBOuter,
-			AInnerToBInner,
-			AOuterToBOuter,
-			AOuterToBInner
-		}
-
 		private const string NewLine = "\n";
 
 		public static (int result, string calculation) DoMultiply(in int a, in int b)
@@ -107,10 +92,6 @@ namespace MyClassLibrary.Math.Learning
 			int tempResult = strA[i].ToInt() * strB[j].ToInt();
 			string strTempResult = tempResult.ToString();
 
-			string spacesAfterTempResult = new string(' ', i + j);
-			string spaces =
-				new string(' ', aTimesBLength - strTempResult.Length - spacesAfterTempResult.Length - 1); // -1 for the + sign
-
 			var (spacesBeforeResult, spacesAfterResult) =
 				GetTempResultSpaces(strA.Length, strB.Length, strTempResult.Length, aTimesBLength, i, j);
 
@@ -127,10 +108,6 @@ namespace MyClassLibrary.Math.Learning
 			if (aLength == 1 && bLength == 1)
 				return (new string(' ', 4 - 1 - tempResultLength), string.Empty);
 
-			//string spacesAfterTempResult = new string(' ', bLength - (aLength - i - 1) + (bLength - j - 1));
-			//string spacesAfterTempResult = new string(' ', bLength - i + j);
-
-			//int numSpaces = System.Math.Abs((aLength - i) - (bLength - j));
 			int numSpaces = GetTempAfterSpaces(aLength - i, bLength - j);
 
 			string spacesAfterTempResult = new string(' ', numSpaces);
@@ -146,24 +123,6 @@ namespace MyClassLibrary.Math.Learning
 
 		private static int GetTempAfterSpaces(in int i, in int j)
 		{
-
-			//int lower = System.Math.Min(i, j);
-			//int diff = System.Math.Abs(i - j);
-
-			//if (i == 1 || j == 1)
-			//	return System.Math.Abs(i - j);
-
-			//if (i == 2 || j == 2)
-			//	return System.Math.Abs(i - j) + 2;
-
-			//if (i == 3 || j == 3)
-			//	return System.Math.Abs(i - j) + 4;
-
-			//for (int k = 0; k < 10; k++)
-			//{
-			//	if (i == k || j == k)
-			//		return System.Math.Abs(i - j) + 2 * (k - 1);
-			//}
 
 			int x = 1;
 			while (true)
