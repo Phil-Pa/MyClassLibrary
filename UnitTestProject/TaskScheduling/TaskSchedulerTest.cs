@@ -202,7 +202,7 @@ namespace UnitTestProject.TaskScheduling
 			Assert.Equal(TimeSpan.FromMinutes(40), si.Duration);
 		}
 
-		//[Fact]
+		[Fact]
 		public void TestMoreComplexDependentTask()
 		{
 			Task task1 = new Task(name: "Task1", description: "Task1 Test", duration: TimeSpan.FromMinutes(20), isParallel: true, priority: 3, dependingTasks: null);
@@ -224,13 +224,13 @@ namespace UnitTestProject.TaskScheduling
 
 			SchedulingInformation si = scheduler.GetSchedulingInformation();
 
-			//Assert.Equal(task1, list[0]);
-			//Assert.Equal(task2, list[1]);
-			//Assert.Equal(task1, list[2]);
-			//Assert.Equal(task1, list[3]);
-			//Assert.Equal(task1, list[4]);
-			//Assert.Equal(task1, list[5]);
-			//Assert.Equal(task1, list[6]);
+			Assert.Equal(task1, list[0]);
+			Assert.Equal(task2, list[1]);
+			Assert.Equal(task1, list[2]);
+			Assert.Equal(task1, list[3]);
+			Assert.Equal(task1, list[4]);
+			Assert.Equal(task1, list[5]);
+			Assert.Equal(task1, list[6]);
 
 			var other = System.Math.Min(15 + 10 + 15 + 5 + 30 + 15, 15 + 5 + 10 + 20 + 30 + 15); // = 90 15+5+10+20+30+15 = 95
 

@@ -14,6 +14,16 @@ namespace MyClassLibrary.Math.Learning
 		public static (int result, string calculation) DoMultiply(in int a, in int b)
 		{
 
+			if (a < 0 || b < 0)
+				throw new ArgumentException("cant multiply negative numbers");
+
+			if (a * b < 0)
+			{
+				// overflow
+
+				throw new ArgumentException(a + " * " + b + " is greater than int.MaxValue");
+			}
+
 			string strA = a.ToString();
 			string strB = b.ToString();
 

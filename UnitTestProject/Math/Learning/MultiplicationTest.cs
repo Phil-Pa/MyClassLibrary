@@ -16,6 +16,24 @@ namespace UnitTestProject.Math.Learning
 			_testOutputHelper = testOutputHelper;
 		}
 
+		[Fact]
+		public void TestThrowIfNegativeInput()
+		{
+			Assert.Throws<ArgumentException>(() =>
+			{
+				var (result, calculation) = Multiplication.DoMultiply(-2, 0);
+			});
+		}
+
+		[Fact]
+		public void TestThrowIfOverflow()
+		{
+			Assert.Throws<ArgumentException>(() =>
+			{
+				var (result, calculation) = Multiplication.DoMultiply(int.MaxValue / 2, int.MaxValue / 2);
+			});
+		}
+
 		[Theory]
 		[InlineData(0, 0, 0, " 0*0\n+  0\n=  0")]
 		[InlineData(2, 2, 4, " 2*2\n+  4\n=  4")]
