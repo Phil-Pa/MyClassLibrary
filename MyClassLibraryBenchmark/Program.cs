@@ -18,13 +18,13 @@ namespace MyClassLibraryBenchmark
 	{
 		private static void Main(string[] args)
 		{
-			var summary = BenchmarkRunner.Run<MultiplyBenchmark>();
+			var summary = BenchmarkRunner.Run<ShannonAlgorithmBenchmark>();
 
 			Console.ReadKey();
 		}
 	}
 
-	public class MyBenchmark
+	public class ShannonAlgorithmBenchmark
 	{
 
 		[ParamsSource(nameof(TextSource))]

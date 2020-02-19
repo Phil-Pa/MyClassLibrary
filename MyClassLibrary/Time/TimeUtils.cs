@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyClassLibrary.Time
 {
-	public class TimeUtils
+	public static class TimeUtils
 	{
 		public static TimeSpan Max(in TimeSpan t1, in TimeSpan t2)
 		{

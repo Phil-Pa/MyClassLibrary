@@ -30,6 +30,17 @@ namespace MyClassLibrary
 			return (int)char.GetNumericValue(c);
 		}
 
+		[DebuggerHidden]
+		public static byte ToByte(this char c)
+		{
+			if (c < '0' || c > '9')
+				return 0;
+
+			double result = char.GetNumericValue(c);
+			Debug.Assert(result >= byte.MinValue && result <= byte.MaxValue);
+			return (byte)result;
+		}
+
 		public static int Count<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
 		{
 			return Enumerable.Count(enumerable, predicate);

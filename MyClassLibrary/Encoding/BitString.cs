@@ -76,4 +76,25 @@ namespace MyClassLibrary.Encoding
 			return sb.ToString();
 		}
 	}
+
+	public readonly ref struct FastBitString
+	{
+
+		public int NumBits { get; }
+		public Span<byte> Bits { get; }
+
+		public FastBitString(in Span<char> asciiData, in int numBits = -1)
+		{
+			int length = asciiData.Length;
+
+			for (int i = 0; i < length; i++)
+			{
+				char character = asciiData[i];
+				byte b = character.ToByte();
+			}
+
+			throw new NotImplementedException();
+		}
+
+	}
 }
