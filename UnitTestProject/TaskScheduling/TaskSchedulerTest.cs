@@ -206,7 +206,6 @@ namespace UnitTestProject.TaskScheduling
 		public void TestMoreComplexDependentTask()
 		{
 			Task task1 = new Task(name: "Task1", description: "Task1 Test", duration: TimeSpan.FromMinutes(20), isParallel: true, priority: 3, dependingTasks: null);
-
 			Task task2 = new Task(name: "Task2", description: "Task2 Test", duration: TimeSpan.FromMinutes(15), isParallel: false, priority: 3, dependingTasks: null);
 			Task task3 = new Task(name: "Task3", description: "Task3 Test", duration: TimeSpan.FromMinutes(25), isParallel: true, priority: 3, task1);
 			Task task4 = new Task(name: "Task4", description: "Task4 Test", duration: TimeSpan.FromMinutes(10), isParallel: false, priority: 3, task2);
@@ -226,17 +225,17 @@ namespace UnitTestProject.TaskScheduling
 
 			Assert.Equal(task1, list[0]);
 			Assert.Equal(task2, list[1]);
-			Assert.Equal(task1, list[2]);
-			Assert.Equal(task1, list[3]);
-			Assert.Equal(task1, list[4]);
-			Assert.Equal(task1, list[5]);
-			Assert.Equal(task1, list[6]);
+			Assert.Equal(task3, list[2]);
+			Assert.Equal(task4, list[3]);
+			Assert.Equal(task5, list[4]);
+			Assert.Equal(task6, list[5]);
+			Assert.Equal(task7, list[6]);
 
-			var other = System.Math.Min(15 + 10 + 15 + 5 + 30 + 15, 15 + 5 + 10 + 20 + 30 + 15); // = 90 15+5+10+20+30+15 = 95
+			var minutesToCompleteTaskList = System.Math.Min(15 + 10 + 15 + 5 + 30 + 15, 15 + 5 + 10 + 20 + 30 + 15); // = 90 15+5+10+20+30+15 = 95
 
 			Assert.Equal(7, list.Count);
 
-			Assert.Equal(TimeSpan.FromMinutes(other), si.Duration);
+			Assert.Equal(TimeSpan.FromMinutes(minutesToCompleteTaskList), si.Duration);
 		}
 	}
 }

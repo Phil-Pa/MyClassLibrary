@@ -110,7 +110,7 @@ namespace MyClassLibrary.Windows
 		[DllImport("user32.dll", SetLastError = true)]
 		private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
-		[DllImport("kernel32.dll", SetLastError = true)]
+		[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
 		private static extern IntPtr GetModuleHandle(string lpModuleName);
 
 		[DllImport("user32.dll")]

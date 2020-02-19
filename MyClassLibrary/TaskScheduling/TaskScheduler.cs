@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyClassLibrary.Time;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,12 +49,13 @@ namespace MyClassLibrary.TaskScheduling
 		private void HandleDependentTasks()
 		{
 
-			var map = CreateTaskDepthMap(_tasks);
+			var taskDepthMap = CreateTaskDepthMap(_tasks);
 
-			if (map.Values.Distinct().Count() == map.Values.Count)
-				HandleSingleDependentTasks(map);
+			// TODO: could be wrong
+			if (taskDepthMap.Values.Distinct().Count() == taskDepthMap.Values.Count)
+				HandleSingleDependentTasks(taskDepthMap);
 			else
-				HandleMultiDependentTasks(map);
+				HandleMultiDependentTasks(taskDepthMap);
 		}
 
 		private void HandleSingleDependentTasks(IDictionary<Task, int> map)
@@ -84,9 +86,9 @@ namespace MyClassLibrary.TaskScheduling
 			_tasks.ForEach(t => { _calculatedDuration += t.Duration; });
 		}
 
-		private void HandleMultiDependentTasks(IDictionary<Task, int> map)
+		private void HandleMultiDependentTasks(IDictionary<Task, int> taskDepthMap)
 		{
-			var taskLists = JoinToTasksLists(map);
+			var taskLists = JoinToTasksLists(taskDepthMap);
 
 			var resultTaskStackListForTaskDepthMap = new List<Task>();
 			var resultTaskList = new List<Task>();
@@ -180,19 +182,15 @@ namespace MyClassLibrary.TaskScheduling
 			}
 			else
 			{
+				// split parallel and non parallel
+
 				var parallelTasks = _tasks.Where(t => t.IsParallel);
 				TimeSpan maxParallelDuration = parallelTasks.Max(t => t.Duration);
+
 				var notParallelTasks = _tasks.Where(t => !t.IsParallel);
 				TimeSpan notParallelDuration = new TimeSpan(notParallelTasks.Sum(t => t.Duration.Ticks));
-				if (maxParallelDuration >
-				    notParallelDuration)
-				{
-					_calculatedDuration = maxParallelDuration;
-				}
-				else if (notParallelDuration >= maxParallelDuration)
-				{
-					_calculatedDuration = notParallelDuration;
-				}
+
+				_calculatedDuration = TimeUtils.Max(maxParallelDuration, notParallelDuration);
 
 				_tasks = _tasks.OrderBy(task => !task.IsParallel).ToList();
 			}

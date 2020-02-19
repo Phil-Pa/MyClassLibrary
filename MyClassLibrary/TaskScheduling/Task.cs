@@ -6,7 +6,7 @@ using System.Linq;
 namespace MyClassLibrary.TaskScheduling
 {
 	[DebuggerDisplay("{" + nameof(Name) + "}, " + ("{" + nameof(DependingTasksNames) + "}, " + ("{" + nameof(Duration) + "}, IsParallel=" + ("{" + nameof(IsParallel) + "}"))))]
-	public class Task
+	public class Task : ICloneable
 	{
 		public string Name { get; }
 		public string Description { get; }
@@ -98,6 +98,14 @@ namespace MyClassLibrary.TaskScheduling
 		public void RestoreDependingTasks(IEnumerable<Task>? dependentTasks)
 		{
 			DependingTasks = dependentTasks;
+		}
+
+		public object Clone()
+		{
+			if (DependingTasks == null)
+				return new Task(Name, Description, Duration, IsParallel, Priority);
+			else
+				return new Task(Name, Description, Duration, IsParallel, Priority, new List<Task>(DependingTasks).ToArray());
 		}
 	}
 }
