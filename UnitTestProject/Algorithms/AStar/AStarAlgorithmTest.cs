@@ -78,7 +78,7 @@ namespace UnitTestProject.Algorithms.AStar
 			watch.Stop();
 
 			Assert.True(result.Count > 0);
-			Assert.True(watch.ElapsedMilliseconds < 2000);
+			Assert.True(watch.ElapsedMilliseconds < 4000);
 		}
 	}
 }

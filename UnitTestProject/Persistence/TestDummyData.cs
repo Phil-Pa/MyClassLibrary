@@ -19,6 +19,8 @@ namespace UnitTestProject.Persistence
 				File.Delete(FileName);
 		}
 
+		// TODO: refactor tests
+
 		[Fact]
 		public void TestOneDummyData()
 		{
@@ -72,6 +74,27 @@ namespace UnitTestProject.Persistence
 				Assert.Equal(expected[i].Number, data[i].Number);
 				Assert.Equal(expected[i].Text, data[i].Text);
 			}
+		}
+
+		[Fact]
+		public void TestEnumData()
+		{
+			Setup();
+
+			using IPersistenceWriter writer = new BinaryPersistenceWriter(new FileStream(FileName, FileMode.CreateNew));
+
+			DummyEnum data = DummyEnum.Value1;
+			writer.Save(data);
+
+			writer.Close();
+
+			using IPersistenceReader reader = new BinaryPersistenceReader(new FileStream(FileName, FileMode.Open));
+
+			DummyEnum dummy = reader.Load<DummyEnum>();
+
+			reader.Close();
+
+			Assert.Equal(data, dummy);
 		}
 
 		private List<DummyData> GenerateDummyData()

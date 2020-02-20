@@ -14,10 +14,24 @@ namespace MyClassLibrary.Persistence
 		public T Load<T>()
 		{
 
+			// TODO: load enums, and lists of lists...
+
 			Type type = typeof(T);
 
 			T data = Activator.CreateInstance<T>();
 
+			if (type.IsEnum)
+			{
+				return (T)Enum.Parse(type, ReadString());
+			}
+			else
+			{
+				return LoadNonEnum(type, data);
+			}
+		}
+
+		private T LoadNonEnum<T>(Type type, T data)
+		{
 			PropertyInfo[] propertyInfos = type.GetProperties();
 
 			for (int i = 0; i < propertyInfos.Length; i++)

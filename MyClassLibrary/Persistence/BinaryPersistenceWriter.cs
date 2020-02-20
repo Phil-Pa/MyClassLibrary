@@ -17,6 +17,19 @@ namespace MyClassLibrary.Persistence
 
 			Type type = typeof(T);
 
+			if (type.IsEnum)
+			{
+				string enumValue = Enum.GetName(type, data);
+				Write(enumValue);
+			}
+			else
+			{
+				SaveNonEnum(type, data);
+			}
+		}
+
+		private void SaveNonEnum<T>(Type type, T data)
+		{
 			PropertyInfo[] propertyInfos = type.GetProperties();
 
 			for (int i = 0; i < propertyInfos.Length; i++)
