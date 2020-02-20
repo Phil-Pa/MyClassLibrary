@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MyClassLibrary.Persistence
 {
@@ -8,5 +9,6 @@ namespace MyClassLibrary.Persistence
 		string ReadString();
 		void Close();
 		T Load<T>();
+		IEnumerable<T> LoadAll<T>();
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MyClassLibrary.Persistence
 {
@@ -8,5 +9,6 @@ namespace MyClassLibrary.Persistence
 		void Write(string value);
 		void Close();
 		void Save<T>(T data);
+		void SaveAll<T>(IList<T> items);
 	}
 }

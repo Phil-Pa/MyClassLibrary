@@ -46,7 +46,7 @@ namespace UnitTestProject.Persistence
 		{
 			Setup();
 
-			using BinaryPersistenceWriter writer = new BinaryPersistenceWriter(new FileStream(FileName, FileMode.CreateNew));
+			using IPersistenceWriter writer = new BinaryPersistenceWriter(new FileStream(FileName, FileMode.CreateNew));
 
 			List<DummyData> data = GenerateDummyData();
 
@@ -59,7 +59,7 @@ namespace UnitTestProject.Persistence
 
 			writer.Close();
 
-			using BinaryPersistenceReader reader = new BinaryPersistenceReader(new FileStream(FileName, FileMode.Open));
+			using IPersistenceReader reader = new BinaryPersistenceReader(new FileStream(FileName, FileMode.Open));
 
 			data.Clear();
 

@@ -34,15 +34,5 @@ namespace MyClassLibrary.Persistence
 			writer.Write(Number);
 			writer.Write(Text);
 		}
-
-		//public static bool operator ==(DummyData a, DummyData b)
-		//{
-		//	return a.Number == b.Number && b.Text == a.Text;
-		//}
-
-		//public static bool operator !=(DummyData a, DummyData b)
-		//{
-		//	return !(a == b);
-		//}
 	}
 }
