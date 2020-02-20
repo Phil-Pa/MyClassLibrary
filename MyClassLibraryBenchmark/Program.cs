@@ -7,6 +7,7 @@ using System.Threading;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
+using MyClassLibrary.Algorithms.AStar;
 using MyClassLibrary.Encoding;
 using MyClassLibrary.Math;
 using MyClassLibrary.Math.Learning;
@@ -18,9 +19,64 @@ namespace MyClassLibraryBenchmark
 	{
 		private static void Main(string[] args)
 		{
-			var summary = BenchmarkRunner.Run<ShannonAlgorithmBenchmark>();
+			var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
 			Console.ReadKey();
+		}
+	}
+	
+	public class AStarAlgorithmBenchmark
+	{
+
+		private static readonly List<List<TileType>> input = new List<List<TileType>>()
+			{
+				new List<TileType>
+				{
+					TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.End
+				},
+				new List<TileType>
+				{
+					TileType.Walkable, TileType.Wall, TileType.Wall, TileType.Wall, TileType.Walkable
+				},
+				new List<TileType>
+				{
+					TileType.Walkable, TileType.Wall, TileType.Start, TileType.Wall, TileType.Wall
+				},
+				new List<TileType>
+				{
+					TileType.Walkable, TileType.Wall, TileType.Walkable, TileType.Walkable, TileType.Walkable
+				},
+				new List<TileType>
+				{
+					TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.Walkable
+				}
+			};
+
+		[Benchmark]
+		public List<List<TileType>> TestAStarAlgorithm()
+		{
+			
+
+			AStarAlgorithm aStarAlgorithm = new AStarAlgorithm();
+			var result = aStarAlgorithm.CalculatePath(Input);
+
+			return result;
+		}
+
+		[ParamsSource(nameof(InputSource))]
+		public List<List<TileType>> Input { get; set; }
+
+		public static IEnumerable<List<List<TileType>>> InputSource()
+		{
+			var result = new List<List<List<TileType>>>();
+			result.Add(input);
+
+			for (int i = 10; i < 100; i += 5)
+			{
+				result.Add(AStarAlgorithm.CreateRandomTileMap(i, 15));
+			}
+
+			return result;
 		}
 	}
 
