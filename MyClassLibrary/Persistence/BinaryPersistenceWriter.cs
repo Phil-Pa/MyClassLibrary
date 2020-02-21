@@ -7,7 +7,7 @@ namespace MyClassLibrary.Persistence
 {
 	public class BinaryPersistenceWriter : BinaryWriter, IPersistenceWriter
 	{
-		public BinaryPersistenceWriter(FileStream input) : base(input)
+		public BinaryPersistenceWriter(Stream input) : base(input)
 		{
 		}
 
@@ -36,6 +36,9 @@ namespace MyClassLibrary.Persistence
 			{
 				PropertyInfo info = propertyInfos[i];
 				var obj = info.GetValue(data);
+
+				// TODO: fix: writes 4 bytes if the value is an int and not bigger than a byte (255)
+
 				switch (obj)
 				{
 					case int value:

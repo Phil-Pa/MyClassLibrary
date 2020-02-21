@@ -7,7 +7,7 @@ namespace MyClassLibrary.Persistence
 {
 	public class BinaryPersistenceReader : BinaryReader, IPersistenceReader
 	{
-		public BinaryPersistenceReader(FileStream input) : base(input)
+		public BinaryPersistenceReader(Stream input) : base(input)
 		{
 		}
 
@@ -43,16 +43,20 @@ namespace MyClassLibrary.Persistence
 				var obj = info.GetValue(data);
 				switch (obj)
 				{
-					case int value:
+					case int _:
+						//if (BaseStream is StringStream ss1)
+						//	info.SetValue(data, ss1.Int32());
+						//else
+						//	info.SetValue(data, ReadInt32());
 						info.SetValue(data, ReadInt32());
 						break;
-					case string value:
+					case string _:
 						info.SetValue(data, ReadString());
 						break;
-					case char value:
+					case char _:
 						info.SetValue(data, ReadChar());
 						break;
-					case bool value:
+					case bool _:
 						info.SetValue(data, ReadBoolean());
 						break;
 					default:
