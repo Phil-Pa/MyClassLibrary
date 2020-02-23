@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -34,10 +35,7 @@ namespace UnitTestProject.Algorithms.AStar
 			}
 		};
 
-		[Fact]
-		public void BasicTest()
-		{
-			List<List<TileType>> input = new List<List<TileType>>()
+		private readonly List<List<TileType>> basicInput = new List<List<TileType>>()
 			{
 				new List<TileType>
 				{
@@ -61,8 +59,12 @@ namespace UnitTestProject.Algorithms.AStar
 				}
 			};
 
+		[Fact]
+		public void BasicTest()
+		{
+
 			AStarAlgorithm aStarAlgorithm = new AStarAlgorithm();
-			var result = aStarAlgorithm.CalculatePath(input);
+			var result = aStarAlgorithm.CalculatePath(basicInput);
 
 			Assert.Equal(correctWay, result);
 		}
@@ -79,6 +81,14 @@ namespace UnitTestProject.Algorithms.AStar
 
 			Assert.True(result.Count > 0);
 			Assert.True(watch.ElapsedMilliseconds < 5000);
+		}
+
+		[Fact]
+		public void TestNative()
+		{
+			var input = AStarAlgorithm.CreateRandomTileMapUnmanaged(1000, 30);
+			var result = AStarAlgorithm.CalculatePathUnmanaged(input);
+			//Assert.Equal(correctWay, result);
 		}
 	}
 }

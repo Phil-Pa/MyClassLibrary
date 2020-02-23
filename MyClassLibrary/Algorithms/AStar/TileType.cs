@@ -1,11 +1,12 @@
 ﻿namespace MyClassLibrary.Algorithms.AStar
 {
-	public enum TileType
+	public enum TileType : int
 	{
-		Wall,
-		Walkable,
-		Path,
-		Start,
-		End
+		Wall = 1,
+		Walkable = 2,
+		Path = 3,
+		Start = 4,
+		End = 5,
+		Test = 42
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MyClassLibrary.Algorithms.AStar
@@ -182,6 +183,18 @@ namespace MyClassLibrary.Algorithms.AStar
 			return gridData;
 		}
 
+		public static int[] CalculatePathUnmanaged(int[] gridData, bool diagonal = false)
+		{
+
+			if (!SetDllDirectory(@"C:\Users\Phil\source\projects\csharp\libraries\x64\Debug"))
+				throw new DllNotFoundException();
+
+			int size = gridData.Length;
+			NativeAStarAlgorithm(gridData, size, diagonal);
+
+			return gridData;
+		}
+
 		public static List<List<TileType>> CreateRandomTileMap(in int size, in int percentWalls, (int, int)? start = null, (int, int)? end = null)
 		{
 			if (start == null)
@@ -222,5 +235,54 @@ namespace MyClassLibrary.Algorithms.AStar
 			return tiles;
 		}
 
+		public static int[] CreateRandomTileMapUnmanaged(in int size, in int percentWalls, (int, int)? start = null, (int, int)? end = null)
+		{
+			if (start == null)
+				start = (0, size - 1);
+			if (end == null)
+				end = (size - 1, 0);
+
+			var tiles = new int[size * size];
+
+			int index = 0;
+
+			Random random = new Random();
+
+			for (int x = 0; x < size; x++)
+			{
+				for (int y = 0; y < size; y++)
+				{
+					if (x == start.Value.Item1 && y == start.Value.Item2)
+					{
+						tiles[index] = (int)TileType.Start;
+						continue;
+					}
+					else if (x == end.Value.Item1 && y == end.Value.Item2)
+					{
+						tiles[index] = (int)TileType.End;
+						continue;
+					}
+
+					TileType tileType;
+					if (random.Next(1, 100) <= percentWalls)
+						tileType = TileType.Wall;
+					else
+						tileType = TileType.Walkable;
+
+					tiles[index] = (int)tileType;
+
+					index++;
+				}
+			}
+
+			return tiles;
+		}
+
+
+		[DllImport("AStarAlgorithmCpp.dll", CallingConvention = CallingConvention.Cdecl)]
+		private static unsafe extern void NativeAStarAlgorithm(int[] gridData, int size, bool diagonal);
+
+		[DllImport("Kernel32.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+		private static extern bool SetDllDirectory(string lpPathName);
 	}
 }

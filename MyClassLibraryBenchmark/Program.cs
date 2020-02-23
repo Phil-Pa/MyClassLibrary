@@ -19,7 +19,10 @@ namespace MyClassLibraryBenchmark
 	{
 		private static void Main(string[] args)
 		{
-			var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
+			//var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
+
+			var input = AStarAlgorithm.CreateRandomTileMapUnmanaged(20000, 30);
+			var result = AStarAlgorithm.CalculatePathUnmanaged(input);
 
 			Console.ReadKey();
 		}
@@ -28,29 +31,26 @@ namespace MyClassLibraryBenchmark
 	public class AStarAlgorithmBenchmark
 	{
 
-		private static readonly List<List<TileType>> input = new List<List<TileType>>()
+		[Benchmark]
+		public int[] TestAStarAlgorithmUnmanaged()
+		{
+			return AStarAlgorithm.CalculatePathUnmanaged(InputUnmanaged);
+		}
+
+		[ParamsSource(nameof(InputSourceUnmanaged))]
+		public int[] InputUnmanaged { get; set; }
+
+		public static IEnumerable<int[]> InputSourceUnmanaged()
+		{
+			var result = new List<int[]>();
+
+			for (int i = 10; i < 100; i += 5)
 			{
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.End
-				},
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Wall, TileType.Wall, TileType.Wall, TileType.Walkable
-				},
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Wall, TileType.Start, TileType.Wall, TileType.Wall
-				},
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Wall, TileType.Walkable, TileType.Walkable, TileType.Walkable
-				},
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.Walkable
-				}
-			};
+				result.Add(AStarAlgorithm.CreateRandomTileMapUnmanaged(i, 15));
+			}
+
+			return result;
+		}
 
 		[Benchmark]
 		public List<List<TileType>> TestAStarAlgorithm()
@@ -69,7 +69,6 @@ namespace MyClassLibraryBenchmark
 		public static IEnumerable<List<List<TileType>>> InputSource()
 		{
 			var result = new List<List<List<TileType>>>();
-			result.Add(input);
 
 			for (int i = 10; i < 100; i += 5)
 			{
@@ -78,6 +77,8 @@ namespace MyClassLibraryBenchmark
 
 			return result;
 		}
+
+
 	}
 
 	public class ShannonAlgorithmBenchmark
