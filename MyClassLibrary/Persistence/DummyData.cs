@@ -23,13 +23,13 @@ namespace MyClassLibrary.Persistence
 			Text = text ?? throw new ArgumentNullException(nameof(text));
 		}
 
-		public void Load(IPersistenceReader reader)
+		public void Load(IPersistenceReader<DummyData> reader)
 		{
 			Number = reader.ReadInt32();
 			Text = reader.ReadString();
 		}
 
-		public void Save(IPersistenceWriter writer)
+		public void Save(IPersistenceWriter<DummyData> writer)
 		{
 			writer.Write(Number);
 			writer.Write(Text);

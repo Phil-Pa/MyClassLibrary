@@ -26,16 +26,16 @@ namespace UnitTestProject.Persistence
 		{
 			Setup();
 
-			using IPersistenceWriter writer = new BinaryPersistenceWriter(new FileStream(FileName, FileMode.CreateNew));
+			using IPersistenceWriter<DummyData> writer = new BinaryPersistenceWriter<DummyData>(new FileStream(FileName, FileMode.CreateNew));
 
 			DummyData data = new DummyData(1, "Hallo");
 			writer.Save(data);
 
 			writer.Close();
 
-			using IPersistenceReader reader = new BinaryPersistenceReader(new FileStream(FileName, FileMode.Open));
+			using IPersistenceReader<DummyData> reader = new BinaryPersistenceReader<DummyData>(new FileStream(FileName, FileMode.Open));
 
-			DummyData dummy = reader.Load<DummyData>();
+			DummyData dummy = reader.Load();
 
 			reader.Close();
 
@@ -48,7 +48,7 @@ namespace UnitTestProject.Persistence
 		{
 			Setup();
 
-			using IPersistenceWriter writer = new BinaryPersistenceWriter(new FileStream(FileName, FileMode.CreateNew));
+			using IPersistenceWriter<DummyData> writer = new BinaryPersistenceWriter<DummyData>(new FileStream(FileName, FileMode.CreateNew));
 
 			List<DummyData> data = GenerateDummyData();
 
@@ -61,11 +61,11 @@ namespace UnitTestProject.Persistence
 
 			writer.Close();
 
-			using IPersistenceReader reader = new BinaryPersistenceReader(new FileStream(FileName, FileMode.Open));
+			using IPersistenceReader<DummyData> reader = new BinaryPersistenceReader<DummyData>(new FileStream(FileName, FileMode.Open));
 
 			data.Clear();
 
-			data = reader.LoadAll<DummyData>().ToList();
+			data = reader.LoadAll().ToList();
 
 			reader.Close();
 
@@ -81,16 +81,16 @@ namespace UnitTestProject.Persistence
 		{
 			Setup();
 
-			using IPersistenceWriter writer = new BinaryPersistenceWriter(new FileStream(FileName, FileMode.CreateNew));
+			using IPersistenceWriter<DummyEnum> writer = new BinaryPersistenceWriter<DummyEnum>(new FileStream(FileName, FileMode.CreateNew));
 
 			DummyEnum data = DummyEnum.Value1;
 			writer.Save(data);
 
 			writer.Close();
 
-			using IPersistenceReader reader = new BinaryPersistenceReader(new FileStream(FileName, FileMode.Open));
+			using IPersistenceReader<DummyEnum> reader = new BinaryPersistenceReader<DummyEnum>(new FileStream(FileName, FileMode.Open));
 
-			DummyEnum dummy = reader.Load<DummyEnum>();
+			DummyEnum dummy = reader.Load();
 
 			reader.Close();
 

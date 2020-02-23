@@ -7,8 +7,8 @@ namespace MyClassLibrary.Persistence
 	public interface IBinaryData<T>
 	{
 
-		void Load(IPersistenceReader reader);
-		void Save(IPersistenceWriter writer);
+		void Load(IPersistenceReader<T> reader);
+		void Save(IPersistenceWriter<T> writer);
 
 	}
 }

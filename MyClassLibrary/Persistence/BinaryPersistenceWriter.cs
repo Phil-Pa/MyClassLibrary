@@ -5,13 +5,13 @@ using System.Reflection;
 
 namespace MyClassLibrary.Persistence
 {
-	public class BinaryPersistenceWriter : BinaryWriter, IPersistenceWriter
+	public class BinaryPersistenceWriter<T> : BinaryWriter, IPersistenceWriter<T>
 	{
 		public BinaryPersistenceWriter(Stream input) : base(input)
 		{
 		}
 
-		public void Save<T>(T data)
+		public void Save(T data)
 		{
 			// save all public properties
 
@@ -28,7 +28,7 @@ namespace MyClassLibrary.Persistence
 			}
 		}
 
-		private void SaveNonEnum<T>(Type type, T data)
+		private void SaveNonEnum(Type type, T data)
 		{
 			PropertyInfo[] propertyInfos = type.GetProperties();
 
@@ -59,7 +59,7 @@ namespace MyClassLibrary.Persistence
 			}
 		}
 
-		public void SaveAll<T>(IList<T> items)
+		public void SaveAll(IList<T> items)
 		{
 			int length = items.Count;
 

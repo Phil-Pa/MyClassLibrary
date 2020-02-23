@@ -28,10 +28,10 @@ namespace MyClassLibrary.Persistence
 			return CanCompressData && output.Length >= 10000;
 		}
 
-		private void InternalSave(Action<IPersistenceWriter> action)
+		private void InternalSave(Action<IPersistenceWriter<T>> action)
 		{
 			MemoryStream memoryStream = new MemoryStream();
-			using BinaryPersistenceWriter writer = new BinaryPersistenceWriter(memoryStream);
+			using BinaryPersistenceWriter<T> writer = new BinaryPersistenceWriter<T>(memoryStream);
 
 			// writes to string stream
 			action(writer);
@@ -70,9 +70,9 @@ namespace MyClassLibrary.Persistence
 			ss.Write(System.Text.Encoding.ASCII.GetBytes(File.ReadAllText(FileName)));
 			ss.Position = 0;
 
-			using BinaryPersistenceReader reader = new BinaryPersistenceReader(ss);
+			using BinaryPersistenceReader<T> reader = new BinaryPersistenceReader<T>(ss);
 
-			T result = reader.Load<T>();
+			T result = reader.Load();
 			reader.Close();
 			return result;
 		}
@@ -83,9 +83,9 @@ namespace MyClassLibrary.Persistence
 			ss.Write(System.Text.Encoding.ASCII.GetBytes(File.ReadAllText(FileName)));
 			ss.Position = 0;
 
-			using BinaryPersistenceReader reader = new BinaryPersistenceReader(ss);
+			using BinaryPersistenceReader<T> reader = new BinaryPersistenceReader<T>(ss);
 
-			var result = reader.LoadAll<T>();
+			var result = reader.LoadAll();
 			reader.Close();
 			return result;
 		}

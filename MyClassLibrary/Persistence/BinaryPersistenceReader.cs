@@ -5,13 +5,13 @@ using System.Reflection;
 
 namespace MyClassLibrary.Persistence
 {
-	public class BinaryPersistenceReader : BinaryReader, IPersistenceReader
+	public class BinaryPersistenceReader<T> : BinaryReader, IPersistenceReader<T>
 	{
 		public BinaryPersistenceReader(Stream input) : base(input)
 		{
 		}
 
-		public T Load<T>()
+		public T Load()
 		{
 
 			// TODO: load enums, and lists of lists...
@@ -30,7 +30,7 @@ namespace MyClassLibrary.Persistence
 			}
 		}
 
-		private T LoadNonEnum<T>(Type type, T data)
+		private T LoadNonEnum(Type type, T data)
 		{
 			PropertyInfo[] propertyInfos = type.GetProperties();
 
@@ -67,13 +67,13 @@ namespace MyClassLibrary.Persistence
 			return data;
 		}
 
-		public IEnumerable<T> LoadAll<T>()
+		public IEnumerable<T> LoadAll()
 		{
 			List<T> items = new List<T>();
 
 			while (BaseStream.Position < BaseStream.Length)
 			{
-				items.Add(Load<T>());
+				items.Add(Load());
 			}
 
 			return items;
