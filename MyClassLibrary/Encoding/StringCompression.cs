@@ -4,9 +4,16 @@ using System.IO.Compression;
 
 namespace MyClassLibrary.Encoding
 {
+	/// <summary>
+	/// Useful for string compression to minimize the amount of characters in a string
+	/// </summary>
 	public static class StringCompression
 	{
-
+		/// <summary>
+		/// Compresses a string using the zip format. use <see cref="Decompress(string)"/> to decompress
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns></returns>
 		public static string Compress(string str)
 		{
 			var buffer = System.Text.Encoding.UTF8.GetBytes(str);
@@ -27,6 +34,11 @@ namespace MyClassLibrary.Encoding
 			return Convert.ToBase64String(gZipBuffer);
 		}
 
+		/// <summary>
+		/// Decompresses a string compressed with <see cref="Compress(string)"/>
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns></returns>
 		public static string Decompress(string str)
 		{
 			var gZipBuffer = Convert.FromBase64String(str);

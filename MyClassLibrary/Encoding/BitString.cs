@@ -8,7 +8,11 @@ namespace MyClassLibrary.Encoding
 
 	public static class StringExtensions
 	{
-
+		/// <summary>
+		/// Reverses a string
+		/// </summary>
+		/// <param name="s"></param>
+		/// <returns></returns>
 		public static string Reverse(this string s)
 		{
 			var charArray = s.ToCharArray();
@@ -16,6 +20,13 @@ namespace MyClassLibrary.Encoding
 			return new string(charArray);
 		}
 
+		/// <summary>
+		/// Converts a character into a bit string
+		/// for example: the character 'a' is 65 in ASCII, so it would be converted to 1000001, and to 01000001 with numBits set to 8
+		/// </summary>
+		/// <param name="c"></param>
+		/// <param name="numBits"></param>
+		/// <returns></returns>
 		public static string AsBitString(this in char c, in int numBits = -1)
 		{
 			int number = c;
@@ -39,12 +50,23 @@ namespace MyClassLibrary.Encoding
 			return sb.ToString().Reverse();
 		}
 
+		/// <summary>
+		/// Converts a string into a string containing only 0s and 1s using <see cref="AsBitString(in char, in int)"/>
+		/// </summary>
+		/// <param name="s"></param>
+		/// <param name="numBits"></param>
+		/// <returns></returns>
 		public static string AsBitString(this string s, in int numBits = -1)
 		{
 			BitString bitStr = new BitString(s, numBits);
 			return bitStr.Bits;
 		}
 
+		/// <summary>
+		/// Only works with strings that only contain 0s and 1s. Makes the 0s to 1s and the 1s to 0s
+		/// </summary>
+		/// <param name="s"></param>
+		/// <returns></returns>
 		public static string FlipBits(this string s)
 		{
 			var chars = s.ToCharArray().ToList();
@@ -57,6 +79,9 @@ namespace MyClassLibrary.Encoding
 		}
 	}
 
+	/// <summary>
+	/// Wraps a string of 0s and 1s to a class with properties
+	/// </summary>
 	public class BitString
 	{
 
@@ -77,6 +102,9 @@ namespace MyClassLibrary.Encoding
 		}
 	}
 
+	/// <summary>
+	/// TODO:
+	/// </summary>
 	public readonly ref struct FastBitString
 	{
 
