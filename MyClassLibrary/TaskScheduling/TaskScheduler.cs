@@ -5,10 +5,8 @@ using System.Linq;
 
 namespace MyClassLibrary.TaskScheduling
 {
-
 	public class TaskScheduler
 	{
-
 		private List<Task> _tasks;
 		private readonly int _numberWorkers;
 
@@ -48,7 +46,6 @@ namespace MyClassLibrary.TaskScheduling
 
 		private void HandleDependentTasks()
 		{
-
 			var taskDepthMap = CreateTaskDepthMap(_tasks);
 
 			// TODO: could be wrong
@@ -60,12 +57,11 @@ namespace MyClassLibrary.TaskScheduling
 
 		private void HandleSingleDependentTasks(IDictionary<Task, int> map)
 		{
-
-			var deepestTaskValue = map.Values.Max();
+			int deepestTaskValue = map.Values.Max();
 
 			// check if multiple tasks have the deepest task value. usually, this should not be the case but if, then take the last task of them
 
-			var takeLastDeepestTask = map.Values.Count(depth => depth == deepestTaskValue) > 1;
+			bool takeLastDeepestTask = map.Values.Count(depth => depth == deepestTaskValue) > 1;
 
 			var deepestTask = takeLastDeepestTask ? map.Where((pair, _) => pair.Value == deepestTaskValue).Last().Key : map.Where((pair, _) => pair.Value == deepestTaskValue).First().Key;
 
@@ -93,7 +89,7 @@ namespace MyClassLibrary.TaskScheduling
 			var resultTaskStackListForTaskDepthMap = new List<Task>();
 			var resultTaskList = new List<Task>();
 			Task? generatedTask = null;
-			var generatedNewTask = false;
+			bool generatedNewTask = false;
 
 			foreach (var taskList in taskLists)
 			{
@@ -115,23 +111,23 @@ namespace MyClassLibrary.TaskScheduling
 				else
 				{
 					// clear depending tasks so we don't have recursion
-					Task dependingTask = taskList.First().DependingTasks.First();
+					var dependingTask = taskList.First().DependingTasks.First();
 
 					var dependentTaskMap = new Dictionary<Task, IEnumerable<Task>?>();
 
-					foreach (Task task in taskList)
+					foreach (var task in taskList)
 					{
 						// cleared tasks are restored for later
 						dependentTaskMap.Add(task, task.DependingTasks);
 
 						task.ClearDependingTasks();
 					}
-					TaskScheduler scheduler = new TaskScheduler(taskList, _numberWorkers);
+					var scheduler = new TaskScheduler(taskList, _numberWorkers);
 					var sequence = scheduler.CalculateTaskSequence() ?? throw new Exception("sequence should not be null");
 
 					var list = sequence.ToList();
 
-					foreach (Task task in list)
+					foreach (var task in list)
 					{
 						task.RestoreDependingTasks(dependentTaskMap[task]);
 					}
@@ -141,7 +137,7 @@ namespace MyClassLibrary.TaskScheduling
 					if (generatedNewTask)
 						dependingTask = resultTaskList.Last();
 
-					SchedulingInformation si = scheduler.GetSchedulingInformation();
+					var si = scheduler.GetSchedulingInformation();
 					generatedTask = new Task("Generated Sub task of " + string.Join(", ", taskList.Select(task => task.Name)), "", si.Duration, false, (int)taskList.Average(t => t.Priority), dependingTask);
 					resultTaskStackListForTaskDepthMap.Add(generatedTask);
 					generatedNewTask = true;
@@ -159,7 +155,7 @@ namespace MyClassLibrary.TaskScheduling
 		private static IEnumerable<List<Task>> JoinToTasksLists(IDictionary<Task, int> map)
 		{
 			var taskLists = new List<List<Task>>();
-			foreach (var depth in map.Values.Distinct())
+			foreach (int depth in map.Values.Distinct())
 			{
 				var list = new List<Task>();
 				var filteredList = map.Where((pair, i) => pair.Value == depth).Select(pair => pair.Key).ToList();
@@ -185,10 +181,10 @@ namespace MyClassLibrary.TaskScheduling
 				// split parallel and non parallel
 
 				var parallelTasks = _tasks.Where(t => t.IsParallel);
-				TimeSpan maxParallelDuration = parallelTasks.Max(t => t.Duration);
+				var maxParallelDuration = parallelTasks.Max(t => t.Duration);
 
 				var notParallelTasks = _tasks.Where(t => !t.IsParallel);
-				TimeSpan notParallelDuration = new TimeSpan(notParallelTasks.Sum(t => t.Duration.Ticks));
+				var notParallelDuration = new TimeSpan(notParallelTasks.Sum(t => t.Duration.Ticks));
 
 				_calculatedDuration = TimeUtils.Max(maxParallelDuration, notParallelDuration);
 

@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MyClassLibrary.Math;
+﻿using MyClassLibrary.Math;
+using System;
 using Xunit;
 
 namespace UnitTestProject.Math
 {
 	public class FractionTest
 	{
-
 		[Fact]
 		public void TestEmptyFraction()
 		{
-			Fraction fraction = new Fraction();
+			var fraction = new Fraction();
 			Assert.Equal(0, fraction.Numerator);
 			Assert.Equal(0, fraction.Denominator);
 		}
@@ -27,7 +24,7 @@ namespace UnitTestProject.Math
 		[Fact]
 		public void TestFractionToFloat()
 		{
-			Fraction fraction = new Fraction(3, 5);
+			var fraction = new Fraction(3, 5);
 
 			Assert.Equal(3f / 5f, fraction.ToFloat());
 		}
@@ -35,11 +32,11 @@ namespace UnitTestProject.Math
 		[Fact]
 		public void TestFractionEqual()
 		{
-			Fraction fraction1 = new Fraction(3, 5);
-			Fraction fraction2 = new Fraction(3, 5);
+			var fraction1 = new Fraction(3, 5);
+			var fraction2 = new Fraction(3, 5);
 
-			Fraction fraction3 = new Fraction(3, 6);
-			Fraction fraction4 = new Fraction(-6, -10);
+			var fraction3 = new Fraction(3, 6);
+			var fraction4 = new Fraction(-6, -10);
 
 			Assert.True(fraction1 == fraction2);
 			Assert.True(fraction1 != fraction3);
@@ -51,9 +48,9 @@ namespace UnitTestProject.Math
 		[Fact]
 		public void TestFractionLessAndGreater()
 		{
-			Fraction fraction1 = new Fraction(3, 5);
-			Fraction fraction3 = new Fraction(3, 6);
-			Fraction fraction4 = new Fraction(-6, 10);
+			var fraction1 = new Fraction(3, 5);
+			var fraction3 = new Fraction(3, 6);
+			var fraction4 = new Fraction(-6, 10);
 
 			Assert.True(fraction1 > fraction3);
 			Assert.True(fraction1 > fraction4);
@@ -62,8 +59,8 @@ namespace UnitTestProject.Math
 		[Fact]
 		public void TestHashCode()
 		{
-			Fraction fraction1 = new Fraction(3, 5);
-			Fraction fraction3 = new Fraction(3, 6);
+			var fraction1 = new Fraction(3, 5);
+			var fraction3 = new Fraction(3, 6);
 
 			Assert.False(fraction3.GetHashCode() == fraction1.GetHashCode());
 		}

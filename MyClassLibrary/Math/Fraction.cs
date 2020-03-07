@@ -4,7 +4,6 @@ namespace MyClassLibrary.Math
 {
 	public readonly struct Fraction : IComparable<Fraction>
 	{
-
 		public int Numerator { get; }
 		public int Denominator { get; }
 
@@ -19,10 +18,10 @@ namespace MyClassLibrary.Math
 
 		public float ToFloat()
 		{
-			return (float) Numerator / Denominator;
+			return (float)Numerator / Denominator;
 		}
 
-		public static bool operator==(in Fraction a, in Fraction b)
+		public static bool operator ==(in Fraction a, in Fraction b)
 		{
 			return System.Math.Abs(System.Math.Abs(a.ToFloat()) - System.Math.Abs(b.ToFloat())) < float.Epsilon;
 		}
@@ -66,6 +65,5 @@ namespace MyClassLibrary.Math
 		{
 			return HashCode.Combine(Numerator, Denominator);
 		}
-
 	}
 }

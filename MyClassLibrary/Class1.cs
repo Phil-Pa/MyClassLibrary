@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MyClassLibrary
+﻿namespace MyClassLibrary
 {
 	public class Class1
 	{

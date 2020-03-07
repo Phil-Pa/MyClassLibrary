@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MyClassLibrary.TaskScheduling;
+﻿using MyClassLibrary.TaskScheduling;
+using System;
 using Xunit;
 
 namespace UnitTestProject.TaskScheduling
 {
 	public class TaskTest
 	{
-
 		[Fact]
 		public void TestConstructor()
 		{
-			Task task = new Task("", "", TimeSpan.FromMinutes(5), false, 3, null);
+			var task = new Task("", "", TimeSpan.FromMinutes(5), false, 3, null);
 
 			Assert.Equal("", task.Name);
 			Assert.Equal("", task.Description);
@@ -27,23 +24,23 @@ namespace UnitTestProject.TaskScheduling
 		{
 			Assert.Throws<ArgumentException>(() =>
 			{
-				Task task = new Task("", "", TimeSpan.MaxValue, false, 0, null); });
-
-			Assert.Throws<ArgumentException>(() =>
-			{
-				Task task = new Task("", "", TimeSpan.MaxValue, false, 11, null);
+				var task = new Task("", "", TimeSpan.MaxValue, false, 0, null);
 			});
 
 			Assert.Throws<ArgumentException>(() =>
 			{
-				Task task = new Task("", "", TimeSpan.MaxValue, false, -23, null);
+				var task = new Task("", "", TimeSpan.MaxValue, false, 11, null);
 			});
 
 			Assert.Throws<ArgumentException>(() =>
 			{
-				Task task = new Task("", "", TimeSpan.MaxValue, false, 432, null);
+				var task = new Task("", "", TimeSpan.MaxValue, false, -23, null);
+			});
+
+			Assert.Throws<ArgumentException>(() =>
+			{
+				var task = new Task("", "", TimeSpan.MaxValue, false, 432, null);
 			});
 		}
-
 	}
 }

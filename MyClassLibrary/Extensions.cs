@@ -87,6 +87,5 @@ namespace MyClassLibrary
 		{
 			return c >= lowerLimit && c <= upperLimit;
 		}
-
 	}
 }

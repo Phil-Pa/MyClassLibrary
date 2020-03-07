@@ -1,18 +1,16 @@
-﻿using System;
+﻿using MyClassLibrary.Encoding;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using MyClassLibrary.Encoding;
 using Xunit;
 
 namespace UnitTestProject.Encoding
 {
 	public class ShannonAlgorithmTest
 	{
-
 		[Fact]
 		public void TestSimple()
 		{
-
 			var encodingMap = new Dictionary<char, string>
 			{
 				{'a', "0"}, {'b', "10"}, {'c', "110"}
@@ -20,7 +18,7 @@ namespace UnitTestProject.Encoding
 
 			IEncodingAlgorithm encodingAlgorithm = new ShannonAlgorithm(true, encodingMap);
 
-			var encoded = encodingAlgorithm.Encode("abcabcbac");
+			string encoded = encodingAlgorithm.Encode("abcabcbac");
 
 			Assert.Equal("010110010110100110", encoded);
 		}
@@ -30,11 +28,11 @@ namespace UnitTestProject.Encoding
 		{
 			IEncodingAlgorithm encodingAlgorithm = new ShannonAlgorithm();
 
-			var text = File.ReadAllText("E:/share/data.txt");
+			string text = File.ReadAllText("E:/share/data.txt");
 
-			var encoded = encodingAlgorithm.Encode(text);
+			string encoded = encodingAlgorithm.Encode(text);
 
-			var decoded = encodingAlgorithm.Decode(encoded);
+			string decoded = encodingAlgorithm.Decode(encoded);
 			decoded = encodingAlgorithm.Decode(encoded);
 
 			Assert.Equal(text, decoded);
@@ -48,7 +46,6 @@ namespace UnitTestProject.Encoding
 
 			Assert.Throws<ArgumentException>(() => encodingAlgorithm.Decode(""));
 
-
 			encodingAlgorithm = new ShannonAlgorithm(true, new Dictionary<char, string>
 			{
 				{ '4', "0011" }
@@ -56,6 +53,5 @@ namespace UnitTestProject.Encoding
 
 			Assert.Throws<Exception>(() => encodingAlgorithm.Encode("5"));
 		}
-
 	}
 }

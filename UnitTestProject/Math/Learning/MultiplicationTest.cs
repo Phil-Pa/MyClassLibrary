@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MyClassLibrary.Math.Learning;
+﻿using MyClassLibrary.Math.Learning;
+using System;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +19,7 @@ namespace UnitTestProject.Math.Learning
 		{
 			Assert.Throws<ArgumentException>(() =>
 			{
-				var (result, calculation) = Multiplication.DoMultiply(-2, 0);
+				(int result, string calculation) = Multiplication.DoMultiply(-2, 0);
 			});
 		}
 
@@ -30,7 +28,7 @@ namespace UnitTestProject.Math.Learning
 		{
 			Assert.Throws<ArgumentException>(() =>
 			{
-				var (result, calculation) = Multiplication.DoMultiply(int.MaxValue / 2, int.MaxValue / 2);
+				(int result, string calculation) = Multiplication.DoMultiply(int.MaxValue / 2, int.MaxValue / 2);
 			});
 		}
 
@@ -40,7 +38,7 @@ namespace UnitTestProject.Math.Learning
 		[InlineData(4, 4, 16, " 4*4\n+ 16\n= 16")]
 		public void TestSimpleMultiplication(int a, int b, int correctResult, string calculationResult)
 		{
-			var (result, calculation) = Multiplication.DoMultiply(a, b);
+			(int result, string calculation) = Multiplication.DoMultiply(a, b);
 
 			_testOutputHelper.WriteLine(calculation);
 
@@ -53,7 +51,7 @@ namespace UnitTestProject.Math.Learning
 		[InlineData(1121, 312, 349752, " 1121*312\n+       2\n+      1 \n+     3  \n+      4 \n+     2  \n+    6   \n+     2  \n+    1   \n+   3    \n+    2   \n+   1    \n+  3     \n=  349752")]
 		public void TestSimpleMultiplicationWithSpacesAfterTempResult(int a, int b, int correctResult, string calculationResult)
 		{
-			var (result, calculation) = Multiplication.DoMultiply(a, b);
+			(int result, string calculation) = Multiplication.DoMultiply(a, b);
 
 			_testOutputHelper.WriteLine(calculation);
 
@@ -66,7 +64,7 @@ namespace UnitTestProject.Math.Learning
 		[InlineData(28341, 39653, 1123805673, "")]
 		public void TestDifficultMultiplication(int a, int b, int correctResult, string calculationResult)
 		{
-			var (result, calculation) = Multiplication.DoMultiply(a, b);
+			(int result, string calculation) = Multiplication.DoMultiply(a, b);
 
 			_testOutputHelper.WriteLine(calculation);
 
@@ -76,6 +74,5 @@ namespace UnitTestProject.Math.Learning
 			Assert.Equal(correctResult, result);
 			Assert.Equal(calculationResult, calculation);
 		}
-
 	}
 }

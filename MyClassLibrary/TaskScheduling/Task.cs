@@ -15,8 +15,7 @@ namespace MyClassLibrary.TaskScheduling
 		public IEnumerable<Task>? DependingTasks { get; private set; }
 		public int Priority { get; }
 
-		public bool IsDependingOnOtherTasks
-		{
+		public bool IsDependingOnOtherTasks {
 			get
 			{
 				if (DependingTasks == null)
@@ -26,8 +25,7 @@ namespace MyClassLibrary.TaskScheduling
 			}
 		}
 
-		private string DependingTasksNames
-		{
+		private string DependingTasksNames {
 			get
 			{
 				if (!IsDependingOnOtherTasks)
@@ -37,15 +35,14 @@ namespace MyClassLibrary.TaskScheduling
 			}
 		}
 
-		public int DependingTasksDepth
-		{
+		public int DependingTasksDepth {
 			get
 			{
 				if (DependingTasks == null)
 					return 0;
 
-				var depth = 0;
-				Task task = this;
+				int depth = 0;
+				var task = this;
 				while (true)
 				{
 					task = task.DependingTasks.First();
@@ -88,11 +85,10 @@ namespace MyClassLibrary.TaskScheduling
 
 		public void AddSingleDependentTask(Task? task)
 		{
-
 			if (task == null)
 				return;
 
-			DependingTasks = new List<Task> {task};
+			DependingTasks = new List<Task> { task };
 		}
 
 		public void RestoreDependingTasks(IEnumerable<Task>? dependentTasks)

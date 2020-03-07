@@ -1,9 +1,6 @@
 ﻿using MyClassLibrary.Algorithms.AStar;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace UnitTestProject.Algorithms.AStar
@@ -11,84 +8,20 @@ namespace UnitTestProject.Algorithms.AStar
 	public class AStarAlgorithmTest
 	{
 
-		private readonly List<List<TileType>> correctWay = new List<List<TileType>>()
-		{
-			new List<TileType>
-			{
-				TileType.Path, TileType.Path, TileType.Path, TileType.Path, TileType.End
-			},
-			new List<TileType>
-			{
-				TileType.Path, TileType.Wall, TileType.Wall, TileType.Wall, TileType.Walkable
-			},
-			new List<TileType>
-			{
-				TileType.Path, TileType.Wall, TileType.Start, TileType.Wall, TileType.Wall
-			},
-			new List<TileType>
-			{
-				TileType.Path, TileType.Wall, TileType.Path, TileType.Walkable, TileType.Walkable
-			},
-			new List<TileType>
-			{
-				TileType.Path, TileType.Path, TileType.Path, TileType.Walkable, TileType.Walkable
-			}
-		};
-
-		private readonly List<List<TileType>> basicInput = new List<List<TileType>>()
-			{
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.End
-				},
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Wall, TileType.Wall, TileType.Wall, TileType.Walkable
-				},
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Wall, TileType.Start, TileType.Wall, TileType.Wall
-				},
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Wall, TileType.Walkable, TileType.Walkable, TileType.Walkable
-				},
-				new List<TileType>
-				{
-					TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.Walkable, TileType.Walkable
-				}
-			};
-
 		[Fact]
 		public void BasicTest()
 		{
-
-			AStarAlgorithm aStarAlgorithm = new AStarAlgorithm();
-			var result = aStarAlgorithm.CalculatePath(basicInput);
-
-			Assert.Equal(correctWay, result);
+			
 		}
 
 		[Fact]
 		public void TestPerformance()
 		{
+			var grid = AStarAlgorithm.CreateGrid(2500, 5);
 
-			var input = AStarAlgorithm.CreateRandomTileMap(100, 30);
-			AStarAlgorithm aStarAlgorithm = new AStarAlgorithm();
-			var watch = Stopwatch.StartNew();
-			var result = aStarAlgorithm.CalculatePath(input);
-			watch.Stop();
+			AStarAlgorithm myAStarAlgorithm = new AStarAlgorithm(grid);
 
-			Assert.True(result.Count > 0);
-			Assert.True(watch.ElapsedMilliseconds < 5000);
-		}
-
-		[Fact]
-		public void TestNative()
-		{
-			var input = AStarAlgorithm.CreateRandomTileMapUnmanaged(1000, 30);
-			var result = AStarAlgorithm.CalculatePathUnmanaged(input);
-			//Assert.Equal(correctWay, result);
+			var result = myAStarAlgorithm.FindPath();
 		}
 	}
 }

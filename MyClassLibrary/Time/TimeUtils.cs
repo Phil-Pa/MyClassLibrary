@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace MyClassLibrary.Time
 {
@@ -15,7 +13,7 @@ namespace MyClassLibrary.Time
 		public static TimeSpan Max(params TimeSpan[] timeSpans)
 		{
 			Debug.Assert(timeSpans.Length >= 2);
-			TimeSpan max = timeSpans[0];
+			var max = timeSpans[0];
 
 			for (int i = 1; i < timeSpans.Length; i++)
 			{
@@ -33,7 +31,7 @@ namespace MyClassLibrary.Time
 		public static TimeSpan Min(params TimeSpan[] timeSpans)
 		{
 			Debug.Assert(timeSpans.Length >= 2);
-			TimeSpan min = timeSpans[0];
+			var min = timeSpans[0];
 
 			for (int i = 1; i < timeSpans.Length; i++)
 			{

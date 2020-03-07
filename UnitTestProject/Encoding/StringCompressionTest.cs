@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MyClassLibrary.Encoding;
+﻿using MyClassLibrary.Encoding;
 using Xunit;
 
 namespace UnitTestProject.Encoding
@@ -13,9 +10,9 @@ namespace UnitTestProject.Encoding
 		{
 			const string sampleText = "hallo hier ist mein beispiel text";
 
-			var compressed = StringCompression.Compress(sampleText);
+			string compressed = StringCompression.Compress(sampleText);
 
-			var decompressed = StringCompression.Decompress(compressed);
+			string decompressed = StringCompression.Decompress(compressed);
 			Assert.Equal(sampleText, decompressed);
 		}
 	}

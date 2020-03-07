@@ -5,16 +5,14 @@ using System.Threading;
 
 namespace MyClassLibrary.Windows
 {
-
 	public class GlobalKeyboardHook : IDisposable
 	{
+		private enum WM : uint
+		{
+			KEYDOWN = 0x0100
+		}
 
-        private enum WM : uint
-        {
-            KEYDOWN = 0x0100
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential)]
 		public class KBDLLHOOKSTRUCT
 		{
 			public uint vkCode;
@@ -41,8 +39,8 @@ namespace MyClassLibrary.Windows
 
 			public POINT(int x, int y)
 			{
-				this.X = x;
-				this.Y = y;
+				X = x;
+				Y = y;
 			}
 
 			public static implicit operator System.Drawing.Point(POINT p)
@@ -56,20 +54,18 @@ namespace MyClassLibrary.Windows
 			}
 		}
 
-
 		[StructLayout(LayoutKind.Sequential)]
 		public struct MSG
 		{
-			IntPtr hwnd;
-			uint message;
-			UIntPtr wParam;
-			IntPtr lParam;
-			int time;
-			POINT pt;
+			private readonly IntPtr hwnd;
+			private readonly uint message;
+			private readonly UIntPtr wParam;
+			private readonly IntPtr lParam;
+			private readonly int time;
+			private POINT pt;
 		}
 
-
-        public event Action<int>? OnKeyDown = null;
+		public event Action<int>? OnKeyDown = null;
 
 		static GlobalKeyboardHook()
 		{
@@ -98,10 +94,10 @@ namespace MyClassLibrary.Windows
 			WH_MOUSE_LL = 14
 		}
 
-		delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
+		private delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
 
 		[DllImport("user32.dll", SetLastError = true)]
-		static extern IntPtr SetWindowsHookEx(HookType hookType, HookProc lpfn, IntPtr hMod, uint dwThreadId);
+		private static extern IntPtr SetWindowsHookEx(HookType hookType, HookProc lpfn, IntPtr hMod, uint dwThreadId);
 
 		[DllImport("user32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
@@ -127,7 +123,7 @@ namespace MyClassLibrary.Windows
 
 		private readonly object _lock = new object();
 
-        private bool shouldStop = false;
+		private bool shouldStop = false;
 
 		private readonly Thread thread;
 
@@ -135,40 +131,39 @@ namespace MyClassLibrary.Windows
 
 		public GlobalKeyboardHook()
 		{
-            thread = new Thread(Keylogger)
-            {
-                IsBackground = true,
-                Name = "Keylogger Thread"
-            };
-        }
+			thread = new Thread(Keylogger)
+			{
+				IsBackground = true,
+				Name = "Keylogger Thread"
+			};
+		}
 
 		private IntPtr LowLevelKeyboardProc(int code, IntPtr wParam, IntPtr lParam)
 		{
 			if (code >= 0 && wParam == (IntPtr)WM.KEYDOWN)
 			{
-				KBDLLHOOKSTRUCT kbd = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
+				var kbd = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
 
-                var handler = OnKeyDown;
-                handler?.Invoke((int)kbd.vkCode);
+				var handler = OnKeyDown;
+				handler?.Invoke((int)kbd.vkCode);
 			}
 			return CallNextHookEx(hHook, code, wParam, lParam);
 		}
-        
+
 		private void Keylogger()
 		{
-			IntPtr hExe = GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName);
+			var hExe = GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName);
 			hHook = SetWindowsHookEx(HookType.WH_KEYBOARD_LL, LowLevelKeyboardProc, hExe, 0);
 
-			while (GetMessage(out MSG msg, IntPtr.Zero, 0, 0) != 0)
+			while (GetMessage(out var msg, IntPtr.Zero, 0, 0) != 0)
 			{
-
-                lock (_lock)
-                {
-                    if (shouldStop)
-                    {
-                        break;
-                    }
-                }
+				lock (_lock)
+				{
+					if (shouldStop)
+					{
+						break;
+					}
+				}
 
 				TranslateMessage(ref msg);
 				DispatchMessage(ref msg);
@@ -176,25 +171,26 @@ namespace MyClassLibrary.Windows
 
 			UnhookWindowsHookEx(hHook);
 
-            Debug.WriteLine(thread.Name + " has left the Keylogger() proc");
+			Debug.WriteLine(thread.Name + " has left the Keylogger() proc");
 		}
 
 		public void Start()
 		{
-            Debug.WriteLine(thread.Name + " started");
+			Debug.WriteLine(thread.Name + " started");
 			thread.Start();
 		}
 
 		public void Stop()
 		{
-            lock (_lock)
-            {
-                shouldStop = true;
-            }
-            Debug.WriteLine(thread.Name + " should stop");
+			lock (_lock)
+			{
+				shouldStop = true;
+			}
+			Debug.WriteLine(thread.Name + " should stop");
 		}
 
 		#region IDisposable Support
+
 		private bool disposedValue = false; // Dient zur Erkennung redundanter Aufrufe.
 
 		protected virtual void Dispose(bool disposing)
@@ -206,33 +202,33 @@ namespace MyClassLibrary.Windows
 					// TODO: verwalteten Zustand (verwaltete Objekte) entsorgen.
 				}
 
-                // TODO: nicht verwaltete Ressourcen (nicht verwaltete Objekte) freigeben und Finalizer weiter unten überschreiben.
-                UnhookWindowsHookEx(hHook);
-                // TODO: große Felder auf Null setzen.
-                hHook = IntPtr.Zero;
+				// TODO: nicht verwaltete Ressourcen (nicht verwaltete Objekte) freigeben und Finalizer weiter unten überschreiben.
+				UnhookWindowsHookEx(hHook);
+				// TODO: große Felder auf Null setzen.
+				hHook = IntPtr.Zero;
 
-                Debug.WriteLine("Hook is disposed");
+				Debug.WriteLine("Hook is disposed");
 
 				disposedValue = true;
 			}
-        }
+		}
 
 		// TODO: Finalizer nur überschreiben, wenn Dispose(bool disposing) weiter oben Code für die Freigabe nicht verwalteter Ressourcen enthält.
-		 ~GlobalKeyboardHook()
-		 {
-		   // Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in Dispose(bool disposing) weiter oben ein.
-		   Dispose(false);
-         }
+		~GlobalKeyboardHook()
+		{
+			// Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in Dispose(bool disposing) weiter oben ein.
+			Dispose(false);
+		}
 
-    // Dieser Code wird hinzugefügt, um das Dispose-Muster richtig zu implementieren.
-    void IDisposable.Dispose()
+		// Dieser Code wird hinzugefügt, um das Dispose-Muster richtig zu implementieren.
+		void IDisposable.Dispose()
 		{
 			// Ändern Sie diesen Code nicht. Fügen Sie Bereinigungscode in Dispose(bool disposing) weiter oben ein.
 			Dispose(true);
 			// TODO: Auskommentierung der folgenden Zeile aufheben, wenn der Finalizer weiter oben überschrieben wird.
 			GC.SuppressFinalize(this);
 		}
-		#endregion
 
+		#endregion IDisposable Support
 	}
 }

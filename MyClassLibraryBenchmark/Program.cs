@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Jobs;
-using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Attributes;
 using MyClassLibrary.Algorithms.AStar;
 using MyClassLibrary.Encoding;
-using MyClassLibrary.Math;
 using MyClassLibrary.Math.Learning;
-using MyClassLibrary.Windows;
+using System;
+using System.Collections.Generic;
 
 namespace MyClassLibraryBenchmark
 {
@@ -21,43 +13,20 @@ namespace MyClassLibraryBenchmark
 		{
 			//var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
-			var input = AStarAlgorithm.CreateRandomTileMapUnmanaged(20000, 30);
-			var result = AStarAlgorithm.CalculatePathUnmanaged(input);
+			var grid = AStarAlgorithm.CreateGrid(1000, 10);
+			AStarAlgorithm algorithm = new AStarAlgorithm(grid);
+			var path = algorithm.FindPath();
 
 			Console.ReadKey();
 		}
 	}
-	
+
 	public class AStarAlgorithmBenchmark
 	{
-
-		[Benchmark]
-		public int[] TestAStarAlgorithmUnmanaged()
-		{
-			return AStarAlgorithm.CalculatePathUnmanaged(InputUnmanaged);
-		}
-
-		[ParamsSource(nameof(InputSourceUnmanaged))]
-		public int[] InputUnmanaged { get; set; }
-
-		public static IEnumerable<int[]> InputSourceUnmanaged()
-		{
-			var result = new List<int[]>();
-
-			for (int i = 10; i < 100; i += 5)
-			{
-				result.Add(AStarAlgorithm.CreateRandomTileMapUnmanaged(i, 15));
-			}
-
-			return result;
-		}
-
 		[Benchmark]
 		public List<List<TileType>> TestAStarAlgorithm()
 		{
-			
-
-			AStarAlgorithm aStarAlgorithm = new AStarAlgorithm();
+			var aStarAlgorithm = new AStarAlgorithm();
 			var result = aStarAlgorithm.CalculatePath(Input);
 
 			return result;
@@ -77,13 +46,10 @@ namespace MyClassLibraryBenchmark
 
 			return result;
 		}
-
-
 	}
 
 	public class ShannonAlgorithmBenchmark
 	{
-
 		[ParamsSource(nameof(TextSource))]
 		public string Text { get; set; }
 
@@ -101,16 +67,14 @@ namespace MyClassLibraryBenchmark
 		[Benchmark]
 		public string TestCompress()
 		{
-
 			return StringCompression.Compress(Text);
 		}
 
 		[Benchmark]
 		public string TestDecompress()
 		{
-
-			var compressed = StringCompression.Compress(Text);
-			var decompressed = StringCompression.Decompress(compressed);
+			string compressed = StringCompression.Compress(Text);
+			string decompressed = StringCompression.Decompress(compressed);
 
 			return decompressed;
 		}
@@ -118,7 +82,6 @@ namespace MyClassLibraryBenchmark
 
 	public class MultiplyBenchmark
 	{
-
 		// , 16, 32, 64, 128, 256, 512, 1024, 2048, 2048 * 2, 2048 * 2 * 2, 2048 * 2 * 2 * 2
 		[Params(2, 96, 147, 3795, 99999)]
 		public int MulA { get; set; }
@@ -131,6 +94,5 @@ namespace MyClassLibraryBenchmark
 		{
 			return Multiplication.DoMultiply(MulA, MulB).result;
 		}
-
 	}
 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -9,7 +7,6 @@ namespace UnitTestProject
 {
 	public class FileStreamTest
 	{
-
 		private const string FileName = "testfile.txt";
 
 		public FileStreamTest(ITestOutputHelper testOutput)
@@ -17,11 +14,10 @@ namespace UnitTestProject
 			if (File.Exists(FileName))
 				File.Delete(FileName);
 		}
-		
+
 		[Fact]
 		public void Test()
 		{
-
 			using Stream fs = new FileStream(FileName, FileMode.Create);
 
 			Assert.Equal(0, fs.Position);
@@ -77,10 +73,8 @@ namespace UnitTestProject
 			read = fs.Read(readBuffer, 0, readBuffer.Length);
 
 			Assert.Equal(5, read);
-			
 
 			fs.Close();
 		}
-
 	}
 }

@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace MyClassLibrary.Math.Learning
 {
+	/// <summary>
+	/// Static Multiplication class providing the <see cref="DoMultiply(in int, in int)"/> method for multiplying in writing
+	/// </summary>
 	public static class Multiplication
 	{
-
 		private const string NewLine = "\n";
 
 		public static (int result, string calculation) DoMultiply(in int a, in int b)
 		{
-
 			if (a < 0 || b < 0)
 				throw new ArgumentException("cant multiply negative numbers");
 
@@ -29,7 +29,7 @@ namespace MyClassLibrary.Math.Learning
 
 			string aTimesB = " " + strA + "*" + strB;
 
-			StringBuilder sb = new StringBuilder(aTimesB + NewLine);
+			var sb = new StringBuilder(aTimesB + NewLine);
 
 			int numDigitsA = strA.Length;
 			int numDigitsB = strB.Length;
@@ -48,7 +48,7 @@ namespace MyClassLibrary.Math.Learning
 
 			if (lines.Count > 1)
 			{
-				StringBuilder overflow = new StringBuilder(aTimesBLength + 1);
+				var overflow = new StringBuilder(aTimesBLength + 1);
 				overflow.Append(new string(' ', aTimesBLength + 1));
 				overflow[0] = 'ü';
 				overflow[overflow.Capacity - 1] = '\n';
@@ -66,9 +66,9 @@ namespace MyClassLibrary.Math.Learning
 
 					if (columnSum >= 10)
 					{
-						var columnSumAsChar = columnSum.ToString()[0];
+						char columnSumAsChar = columnSum.ToString()[0];
 
-						StringBuilder lineBuilder = new StringBuilder(new string(' ', aTimesBLength))
+						var lineBuilder = new StringBuilder(new string(' ', aTimesBLength))
 						{
 							[i] = columnSumAsChar
 						};
@@ -102,7 +102,7 @@ namespace MyClassLibrary.Math.Learning
 			int tempResult = strA[i].ToInt() * strB[j].ToInt();
 			string strTempResult = tempResult.ToString();
 
-			var (spacesBeforeResult, spacesAfterResult) =
+			(string spacesBeforeResult, string spacesAfterResult) =
 				GetTempResultSpaces(strA.Length, strB.Length, strTempResult.Length, aTimesBLength, i, j);
 
 			sb.Append("+").Append(spacesBeforeResult).Append(strTempResult).Append(spacesAfterResult).Append(NewLine);
@@ -110,7 +110,7 @@ namespace MyClassLibrary.Math.Learning
 
 		private static (string spacesBeforeResult, string spacesAfterResult) GetTempResultSpaces(
 			in int aLength, in int bLength,
-			in int tempResultLength, in int aTimesBLength, 
+			in int tempResultLength, in int aTimesBLength,
 			in int i, in int j)
 		{
 			// length of something like " 4*6" must be 4
@@ -125,15 +125,14 @@ namespace MyClassLibrary.Math.Learning
 			string spaces =
 				new string(' ', aTimesBLength - tempResultLength - spacesAfterTempResult.Length - 1); // -1 for the + sign
 
-			var spacesBeforeResult = spaces;
-			var spacesAfterResult = spacesAfterTempResult;
+			string spacesBeforeResult = spaces;
+			string spacesAfterResult = spacesAfterTempResult;
 
 			return (spacesBeforeResult, spacesAfterResult);
 		}
 
 		private static int GetTempAfterSpaces(in int i, in int j)
 		{
-
 			int x = 1;
 			while (true)
 			{

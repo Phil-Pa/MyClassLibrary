@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MyClassLibrary.Encoding;
+﻿using MyClassLibrary.Encoding;
+using System;
 using Xunit;
 
 namespace UnitTestProject.Encoding
 {
 	public class BitStringTest
 	{
-
 		[Fact]
 		public void TestReverse()
 		{
@@ -20,9 +17,9 @@ namespace UnitTestProject.Encoding
 		[Fact]
 		public void TestBitString()
 		{
-			BitString bitString = new BitString("A");
+			var bitString = new BitString("A");
 			Assert.Equal("1000001", bitString.Bits);
-			
+
 			bitString = new BitString("AB");
 			Assert.Equal("10000011000010", bitString.Bits);
 
@@ -33,16 +30,15 @@ namespace UnitTestProject.Encoding
 		[Fact]
 		public void TestAsBitString()
 		{
-			var str = "hallo".AsBitString();
+			string str = "hallo".AsBitString();
 			Assert.Equal(new BitString("hallo").Bits, str);
 		}
 
 		[Fact]
 		public void TestFlipBits()
 		{
-			var bits = "A".AsBitString().FlipBits();
+			string bits = "A".AsBitString().FlipBits();
 			Assert.Equal("0111110", bits);
 		}
-
 	}
 }

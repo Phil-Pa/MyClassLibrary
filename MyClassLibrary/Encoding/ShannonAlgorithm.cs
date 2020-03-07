@@ -1,14 +1,16 @@
-﻿using System;
+﻿using MyClassLibrary.Math;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MyClassLibrary.Math;
 
 namespace MyClassLibrary.Encoding
 {
+	/// <summary>
+	/// A class for using the Shannon-Fano Algorithm
+	/// </summary>
 	public class ShannonAlgorithm : IEncodingAlgorithm
 	{
-
 		private IDictionary<string, char>? _decodingMap;
 		private IDictionary<char, string>? _encodingMap;
 		private readonly bool _enableErrorChecking;
@@ -29,9 +31,9 @@ namespace MyClassLibrary.Encoding
 			if (_enableErrorChecking)
 				CheckSymbolsAreInEncodingMap(str);
 
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 
-			foreach (var c in str)
+			foreach (char c in str)
 			{
 				sb.Append(encodingMap[c]);
 			}
@@ -42,13 +44,13 @@ namespace MyClassLibrary.Encoding
 		private static List<(Fraction, char)> BuildProbabilityMap(string str)
 		{
 			var chars = str.ToCharArray().Distinct().ToList();
-			var numChars = str.Length;
+			int numChars = str.Length;
 			var map = new List<ValueTuple<Fraction, char>>();
 
-			foreach (var c in chars)
+			foreach (char c in chars)
 			{
-				var c1 = c;
-				var charCount = str.Count(character => c1 == character);
+				char c1 = c;
+				int charCount = str.Count(character => c1 == character);
 				map.Add(new ValueTuple<Fraction, char>(new Fraction(charCount, numChars), c));
 			}
 
@@ -61,7 +63,7 @@ namespace MyClassLibrary.Encoding
 			var map = new Dictionary<char, string>();
 
 			var chars = pMap.Select(tuple => tuple.Item2).Distinct();
-			foreach (var c in chars)
+			foreach (char c in chars)
 			{
 				map[c] = "";
 			}
@@ -71,7 +73,7 @@ namespace MyClassLibrary.Encoding
 
 		private static void AddToEncodingMap(IDictionary<char, string> map, IEnumerable<(Fraction, char)> list, string symbol)
 		{
-			foreach ((Fraction, char) pair in list)
+			foreach (var pair in list)
 			{
 				map[pair.Item2] += symbol;
 			}
@@ -87,22 +89,23 @@ namespace MyClassLibrary.Encoding
 				case 1:
 					AddToEncodingMap(map, new List<(Fraction, char)> { pMap[0] }, "1");
 					return;
+
 				case 2:
 					AddToEncodingMap(map, new List<(Fraction, char)> { pMap[0] }, "0");
 					AddToEncodingMap(map, new List<(Fraction, char)> { pMap[1] }, "1");
 					return;
 			}
 
-			var limit = 0.5f / (iteration + 1);
-			var fractionSum = pMap.Sum(tuple => tuple.Item1.ToFloat());
+			float limit = 0.5f / (iteration + 1);
+			float fractionSum = pMap.Sum(tuple => tuple.Item1.ToFloat());
 			if (fractionSum <= limit)
 				limit = fractionSum / 2;
 
-			var sum = 0f;
+			float sum = 0f;
 
 			var zeroList = new List<ValueTuple<Fraction, char>>();
 
-			foreach ((Fraction, char) tuple in pMap)
+			foreach (var tuple in pMap)
 			{
 				sum += tuple.Item1.ToFloat();
 				zeroList.Add(tuple);
@@ -125,12 +128,12 @@ namespace MyClassLibrary.Encoding
 		{
 			var map = CreateEncodingMap(pMap);
 
-			var iteration = 0;
-			var sum = 0f;
+			int iteration = 0;
+			float sum = 0f;
 
 			var zeroList = new List<(Fraction, char)>();
 
-			foreach ((Fraction, char) pair in pMap)
+			foreach (var pair in pMap)
 			{
 				sum += pair.Item1.ToFloat();
 				zeroList.Add(pair);
@@ -138,7 +141,7 @@ namespace MyClassLibrary.Encoding
 				if (sum >= 0.5f / (iteration + 1))
 				{
 					var oneList = pMap.Where(p => !zeroList.Select(tuple => tuple.Item2).Contains(p.Item2)).ToList();
-					
+
 					AddToEncodingMap(map, zeroList, "0");
 					AddToEncodingMap(map, oneList, "1");
 					iteration++;
@@ -158,7 +161,7 @@ namespace MyClassLibrary.Encoding
 			if (_encodingMap == null)
 				return;
 
-			foreach (var c in str)
+			foreach (char c in str)
 			{
 				if (!_encodingMap.Keys.Contains(c))
 					throw new Exception($"{c} is not in encoding map");
@@ -179,11 +182,11 @@ namespace MyClassLibrary.Encoding
 
 			StringBuilder sb = new StringBuilder(), result = new StringBuilder();
 
-			foreach (var c in str)
+			foreach (char c in str)
 			{
 				sb.Append(c);
 
-				var tempStr = sb.ToString();
+				string tempStr = sb.ToString();
 
 				if (decodingMap.ContainsKey(tempStr))
 				{
