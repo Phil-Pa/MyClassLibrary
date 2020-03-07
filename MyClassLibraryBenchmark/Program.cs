@@ -21,33 +21,6 @@ namespace MyClassLibraryBenchmark
 		}
 	}
 
-	public class AStarAlgorithmBenchmark
-	{
-		[Benchmark]
-		public List<List<TileType>> TestAStarAlgorithm()
-		{
-			var aStarAlgorithm = new AStarAlgorithm();
-			var result = aStarAlgorithm.CalculatePath(Input);
-
-			return result;
-		}
-
-		[ParamsSource(nameof(InputSource))]
-		public List<List<TileType>> Input { get; set; }
-
-		public static IEnumerable<List<List<TileType>>> InputSource()
-		{
-			var result = new List<List<List<TileType>>>();
-
-			for (int i = 10; i < 100; i += 5)
-			{
-				result.Add(AStarAlgorithm.CreateRandomTileMap(i, 15));
-			}
-
-			return result;
-		}
-	}
-
 	public class ShannonAlgorithmBenchmark
 	{
 		[ParamsSource(nameof(TextSource))]

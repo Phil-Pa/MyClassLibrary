@@ -23,7 +23,7 @@ namespace MyClassLibrary.Algorithms.AStar
 			size = (int)System.Math.Sqrt(grid.Length);
 		}
 
-		private List<Tile> GetNeighbours(Tile node)
+		public List<Tile> GetNeighbours(Tile node, bool diagonal)
 		{
 			List<Tile> neighbours = new List<Tile>();
 
@@ -39,7 +39,19 @@ namespace MyClassLibrary.Algorithms.AStar
 
 					if (checkX >= 0 && checkX < size && checkY >= 0 && checkY < size)
 					{
-						neighbours.Add(grid[checkX, checkY]);
+						if (diagonal)
+						{
+							neighbours.Add(grid[checkX, checkY]);
+						}
+						else
+						{
+
+							var distX = System.Math.Abs(node.GridX - checkX);
+							var distY = System.Math.Abs(node.GridY - checkY);
+
+							if (Math.Math.Hypot(distX, distY) <= 1)
+								neighbours.Add(grid[checkX, checkY]);
+						}
 					}
 				}
 			}
@@ -90,7 +102,7 @@ namespace MyClassLibrary.Algorithms.AStar
 			return 14 * dstX + 10 * (dstY - dstX);
 		}
 
-		public unsafe List<Tile> FindPath()
+		public unsafe List<Tile> FindPath(bool diagonal = true)
 		{
 			Tile startNode = FindNode(grid, TileType.Start);
 			Tile targetNode = FindNode(grid, TileType.End);
@@ -110,7 +122,7 @@ namespace MyClassLibrary.Algorithms.AStar
 					return path;
 				}
 
-				var neighbours = GetNeighbours(currentNode);
+				var neighbours = GetNeighbours(currentNode, diagonal);
 
 				for (int i = 0; i < neighbours.Count; i++)
 				{
