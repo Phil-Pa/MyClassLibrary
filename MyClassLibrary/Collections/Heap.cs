@@ -62,12 +62,9 @@
 			{
 				int childIndexLeft = item.HeapIndex * 2 + 1;
 				int childIndexRight = item.HeapIndex * 2 + 2;
-				int swapIndex = 0;
-
 				if (childIndexLeft < Count)
 				{
-					swapIndex = childIndexLeft;
-
+					int swapIndex = childIndexLeft;
 					if (childIndexRight < Count)
 					{
 						if (items[childIndexLeft].CompareTo(items[childIndexRight]) < 0)

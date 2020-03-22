@@ -26,7 +26,7 @@ namespace MyClassLibrary.Encoding
 		/// <param name="c"></param>
 		/// <param name="numBits"></param>
 		/// <returns></returns>
-		public static string AsBitString(this in char c, in int numBits = -1)
+		public static string ToBitString(this in char c, in int numBits = -1)
 		{
 			int number = c;
 			var sb = new StringBuilder();
@@ -35,8 +35,8 @@ namespace MyClassLibrary.Encoding
 
 			while (number >= 1)
 			{
-				sb.Append(number % 2);
-				number /= 2;
+				number = System.Math.DivRem(number, 2, out int remainder);
+				sb.Append(remainder);
 				++i;
 			}
 
@@ -50,7 +50,7 @@ namespace MyClassLibrary.Encoding
 		}
 
 		/// <summary>
-		/// Converts a string into a string containing only 0s and 1s using <see cref="AsBitString(in char, in int)"/>
+		/// Converts a string into a string containing only 0s and 1s using <see cref="ToBitString(in char, in int)"/>
 		/// </summary>
 		/// <param name="s"></param>
 		/// <param name="numBits"></param>
@@ -68,11 +68,16 @@ namespace MyClassLibrary.Encoding
 		/// <returns></returns>
 		public static string FlipBits(this string s)
 		{
-			var chars = s.ToCharArray().ToList();
-			chars.ForEach(c => Debug.Assert(c == '0' || c == '1'));
+			int length = s.Length;
+			var sb = new StringBuilder(length);
 
-			var sb = new StringBuilder();
-			chars.ForEach(c => { sb.Append(c == '0' ? 1 : 0); });
+			for (int i = 0; i < length; i++)
+			{
+				if (s[i] == '0')
+					sb.Append('1');
+				else
+					sb.Append('0');
+			}
 
 			return sb.ToString();
 		}
@@ -103,30 +108,9 @@ namespace MyClassLibrary.Encoding
 		private string AsciiToBitString(string asciiString)
 		{
 			var sb = new StringBuilder();
-			asciiString.ToCharArray().ToList().ForEach(c => sb.Append(c.AsBitString(NumBits)));
+			for (int i = 0; i < asciiString.Length; ++i)
+				sb.Append(asciiString[i].ToBitString(NumBits));
 			return sb.ToString();
-		}
-	}
-
-	/// <summary>
-	/// TODO:
-	/// </summary>
-	public readonly ref struct FastBitString
-	{
-		public int NumBits { get; }
-		public Span<byte> Bits { get; }
-
-		public FastBitString(in Span<char> asciiData, in int numBits = -1)
-		{
-			int length = asciiData.Length;
-
-			for (int i = 0; i < length; i++)
-			{
-				char character = asciiData[i];
-				byte b = character.ToByte();
-			}
-
-			throw new NotImplementedException();
 		}
 	}
 }

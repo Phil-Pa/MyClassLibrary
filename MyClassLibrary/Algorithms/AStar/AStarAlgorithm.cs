@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MyClassLibrary.Algorithms.AStar
 {
@@ -10,6 +11,8 @@ namespace MyClassLibrary.Algorithms.AStar
 	{
 
 		private readonly Tile[,] grid;
+
+		private readonly Tile[] neighBourBuffer = new Tile[8];
 
 		private List<Tile> path = new List<Tile>();
 
@@ -23,9 +26,9 @@ namespace MyClassLibrary.Algorithms.AStar
 			size = (int)System.Math.Sqrt(grid.Length);
 		}
 
-		public List<Tile> GetNeighbours(Tile node, bool diagonal)
+		public int GetNeighbours(Tile node, bool diagonal)
 		{
-			List<Tile> neighbours = new List<Tile>();
+			int index = 0;
 
 			for (int x = -1; x <= 1; x++)
 			{
@@ -41,7 +44,7 @@ namespace MyClassLibrary.Algorithms.AStar
 					{
 						if (diagonal)
 						{
-							neighbours.Add(grid[checkX, checkY]);
+							neighBourBuffer[index++] = grid[checkX, checkY];
 						}
 						else
 						{
@@ -50,13 +53,13 @@ namespace MyClassLibrary.Algorithms.AStar
 							var distY = System.Math.Abs(node.GridY - checkY);
 
 							if (Math.Math.Hypot(distX, distY) <= 1)
-								neighbours.Add(grid[checkX, checkY]);
+								neighBourBuffer[index++] = grid[checkX, checkY];
 						}
 					}
 				}
 			}
 
-			return neighbours;
+			return index;
 		}
 
 		public static Tile[,] CreateGrid(int size, int percentWalls)
@@ -102,13 +105,15 @@ namespace MyClassLibrary.Algorithms.AStar
 			return 14 * dstX + 10 * (dstY - dstX);
 		}
 
-		public unsafe List<Tile> FindPath(bool diagonal = true)
+		public List<Tile> FindPath(bool diagonal = true)
 		{
 			Tile startNode = FindNode(grid, TileType.Start);
 			Tile targetNode = FindNode(grid, TileType.End);
 
-			Heap<Tile> openSet = new Heap<Tile>(grid.Length);
-			HashSet<Tile> closedSet = new HashSet<Tile>();
+			int gridLength = grid.Length;
+
+			Heap<Tile> openSet = new Heap<Tile>(gridLength);
+			Heap<Tile> closedSet = new Heap<Tile>(gridLength);
 			openSet.Add(startNode);
 
 			while (openSet.Count > 0)
@@ -122,11 +127,11 @@ namespace MyClassLibrary.Algorithms.AStar
 					return path;
 				}
 
-				var neighbours = GetNeighbours(currentNode, diagonal);
+				var neighBoursLength = GetNeighbours(currentNode, diagonal);
 
-				for (int i = 0; i < neighbours.Count; i++)
+				for (int i = 0; i < neighBoursLength; i++)
 				{
-					Tile neighbour = neighbours[i];
+					Tile neighbour = neighBourBuffer[i];
 
 					if (!neighbour.IsWalkable || closedSet.Contains(neighbour))
 					{
@@ -136,7 +141,7 @@ namespace MyClassLibrary.Algorithms.AStar
 					int newMovementCostToNeighbour = currentNode.GCost + GetDistance(currentNode, neighbour);
 					if (newMovementCostToNeighbour < neighbour.GCost || !openSet.Contains(neighbour))
 					{
-						neighbours[i].GCost = newMovementCostToNeighbour;
+						neighBourBuffer[i].GCost = newMovementCostToNeighbour;
 						neighbour.HCost = GetDistance(neighbour, targetNode);
 						neighbour.Parent = currentNode;
 
@@ -155,9 +160,9 @@ namespace MyClassLibrary.Algorithms.AStar
 			throw new Exception();
 		}
 
-		private unsafe void RetracePath(Tile startNode, Tile endNode)
+		private void RetracePath(Tile startNode, Tile endNode)
 		{
-			List<Tile> path = new List<Tile>();
+			List<Tile> path = new List<Tile>(size);
 			Tile currentNode = endNode;
 
 			while (currentNode != startNode)

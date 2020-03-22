@@ -4,6 +4,7 @@ using MyClassLibrary.Encoding;
 using MyClassLibrary.Math.Learning;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MyClassLibraryBenchmark
 {
@@ -13,9 +14,18 @@ namespace MyClassLibraryBenchmark
 		{
 			//var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
-			var grid = AStarAlgorithm.CreateGrid(1000, 10);
-			AStarAlgorithm algorithm = new AStarAlgorithm(grid);
-			var path = algorithm.FindPath();
+			var watch = Stopwatch.StartNew();
+
+			for (int i = 0; i < 5; i++)
+			{
+				var grid = AStarAlgorithm.CreateGrid(2000, 10);
+				AStarAlgorithm algorithm = new AStarAlgorithm(grid);
+				var path = algorithm.FindPath();
+			}
+
+			watch.Stop();
+
+			Console.WriteLine(watch.ElapsedMilliseconds);
 
 			Console.ReadKey();
 		}
