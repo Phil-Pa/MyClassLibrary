@@ -5,7 +5,7 @@ namespace MyClassLibrary.Time
 {
 	public static class TimeUtils
 	{
-		public static TimeSpan Max(in TimeSpan t1, in TimeSpan t2)
+		private static TimeSpan Max2(in TimeSpan t1, in TimeSpan t2)
 		{
 			return t1 > t2 ? t1 : t2;
 		}
@@ -17,13 +17,13 @@ namespace MyClassLibrary.Time
 
 			for (int i = 1; i < timeSpans.Length; i++)
 			{
-				max = Max(max, timeSpans[i]);
+				max = Max2(max, timeSpans[i]);
 			}
 
 			return max;
 		}
 
-		public static TimeSpan Min(in TimeSpan t1, in TimeSpan t2)
+		private static TimeSpan Min2(in TimeSpan t1, in TimeSpan t2)
 		{
 			return t1 > t2 ? t2 : t1;
 		}
@@ -35,7 +35,7 @@ namespace MyClassLibrary.Time
 
 			for (int i = 1; i < timeSpans.Length; i++)
 			{
-				min = Min(min, timeSpans[i]);
+				min = Min2(min, timeSpans[i]);
 			}
 
 			return min;

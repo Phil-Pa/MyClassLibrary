@@ -15,12 +15,13 @@ namespace MyClassLibraryBenchmark
 			//var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
 			var watch = Stopwatch.StartNew();
+			var grid = AStarAlgorithm.CreateGrid(2000, 10);
+			AStarAlgorithm algorithm = new AStarAlgorithm(grid);
 
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 1; i++)
 			{
-				var grid = AStarAlgorithm.CreateGrid(2000, 10);
-				AStarAlgorithm algorithm = new AStarAlgorithm(grid);
 				var path = algorithm.FindPath();
+				Console.WriteLine(path.Count);
 			}
 
 			watch.Stop();
