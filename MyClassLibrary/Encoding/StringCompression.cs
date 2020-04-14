@@ -18,8 +18,10 @@ namespace MyClassLibrary.Encoding
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes(str);
 			var memoryStream = new MemoryStream();
-			using var gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true);
-			gZipStream.Write(buffer, 0, buffer.Length);
+			using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
+			{
+				gZipStream.Write(buffer, 0, buffer.Length);
+			}
 
 			memoryStream.Position = 0;
 
