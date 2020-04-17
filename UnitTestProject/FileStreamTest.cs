@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace UnitTestProject
 {
@@ -9,7 +8,7 @@ namespace UnitTestProject
 	{
 		private const string FileName = "testfile.txt";
 
-		public FileStreamTest(ITestOutputHelper testOutput)
+		public FileStreamTest()
 		{
 			if (File.Exists(FileName))
 				File.Delete(FileName);

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace MyClassLibrary.Algorithms
@@ -74,6 +73,7 @@ namespace MyClassLibrary.Algorithms
 		#region Equals/==
 		public static bool operator ==(Transition a, Transition b)
 		{
+			// ReSharper disable once PossibleNullReferenceException
 			return a.Equals(b);
 		}
 

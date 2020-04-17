@@ -19,7 +19,7 @@ namespace UnitTestProject.Math.Learning
 		{
 			Assert.Throws<ArgumentException>(() =>
 			{
-				(int result, string calculation) = Multiplication.DoMultiply(-2, 0);
+				Multiplication.DoMultiply(-2, 0);
 			});
 		}
 

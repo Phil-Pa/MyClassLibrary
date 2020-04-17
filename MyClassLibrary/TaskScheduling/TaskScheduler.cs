@@ -24,6 +24,8 @@ namespace MyClassLibrary.TaskScheduling
 
 		public IEnumerable<Task>? CalculateTaskSequence()
 		{
+			// TODO: handle multiple workers
+
 			if (_tasks.IsEmpty())
 				return null;
 
@@ -47,12 +49,120 @@ namespace MyClassLibrary.TaskScheduling
 		private void HandleDependentTasks()
 		{
 			var taskDepthMap = CreateTaskDepthMap(_tasks);
-
 			// TODO: could be wrong
 			if (taskDepthMap.Values.Distinct().Count() == taskDepthMap.Values.Count)
+			{
 				HandleSingleDependentTasks(taskDepthMap);
+			}
 			else
-				HandleMultiDependentTasks(taskDepthMap);
+			{
+				// TODO: good implementation
+				// HandleMultiDependentTasks(taskDepthMap);
+
+				HandleTasksUsingPermutations();
+			}
+		}
+
+		private void HandleTasksUsingPermutations()
+		{
+			var listOfTasks = _tasks.GetPermutations(_tasks.Count);
+			var ofTasks = listOfTasks as IEnumerable<Task>[] ?? listOfTasks.ToArray();
+			int count = ofTasks.Count();
+
+			TimeSpan duration = TimeSpan.MaxValue;
+			IEnumerable<Task> tasksResult = _tasks;
+
+			for (int i = 0; i < count; i++)
+			{
+				var list = ofTasks.ElementAt(i);
+				var enumerable = list as Task[] ?? list.ToArray();
+				if (!SatifiesDependencies(enumerable))
+					continue;
+
+				var listDuration = SimulateTaskExecution(enumerable);
+				duration = TimeUtils.Min(duration, listDuration);
+				tasksResult = enumerable;
+			}
+
+			if (Equals(tasksResult, _tasks))
+			{
+				// error, found nothing
+				throw new Exception();
+			}
+
+			_tasks = tasksResult.ToList();
+			_calculatedDuration = duration;
+		}
+
+		/// <summary>
+		/// Note: does not check for correct task execution, for example depending tasks
+		/// </summary>
+		/// <param name="tasks"></param>
+		/// <returns></returns>
+		public static TimeSpan SimulateTaskExecution(IEnumerable<Task> tasks)
+		{
+			TimeSpan duration = TimeSpan.Zero;
+
+			var enumerable = tasks.ToList();
+			if (enumerable.Any(task => task.IsDependingOnOtherTasks))
+				return duration;
+
+			var array = enumerable.ToArray();
+
+			Array.Sort(array, (a, b) => b.IsParallel.CompareTo(a.IsParallel));
+
+			var parallelTasks = new List<Task>();
+
+			foreach (var task in array)
+			{
+				// if we dont have any parallel task running
+
+				// if we have a parallel task running
+
+				// if we encounter a parallel task while we are doing a parallel task
+
+				if (task.IsParallel)
+				{
+					parallelTasks.Add(task);
+				}
+				else
+				{
+					duration += task.Duration;
+					for (int i = 0; i < parallelTasks.Count; i++)
+					{
+						var pt = parallelTasks[i];
+						pt.Duration -= task.Duration;
+						if (pt.Duration > TimeSpan.Zero)
+							continue;
+
+						parallelTasks.RemoveAt(i);
+						i--;
+					}
+				}
+			}
+
+			parallelTasks.ForEach(task => duration += task.Duration);
+
+			return duration;
+		}
+
+		private static bool SatifiesDependencies(IEnumerable<Task> tasks)
+		{
+			var enumerable = tasks.ToList();
+			int count = enumerable.Count();
+			List<Task> tasksDone = new List<Task>();
+			for (int i = 0; i < count; i++)
+			{
+				Task task = enumerable.ElementAt(i);
+				if (task.IsDependingOnOtherTasks)
+				{
+					if (!tasksDone.ContainsAll(task.DependingTasks!))
+						return false;
+				}
+				tasksDone.Add(task);
+			}
+
+			return true;
 		}
 
 		private void HandleSingleDependentTasks(IDictionary<Task, int> map)

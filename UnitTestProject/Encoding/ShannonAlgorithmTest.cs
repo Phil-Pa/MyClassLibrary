@@ -32,6 +32,7 @@ namespace UnitTestProject.Encoding
 
 			string encoded = encodingAlgorithm.Encode(text);
 
+			// ReSharper disable once RedundantAssignment
 			string decoded = encodingAlgorithm.Decode(encoded);
 			decoded = encodingAlgorithm.Decode(encoded);
 

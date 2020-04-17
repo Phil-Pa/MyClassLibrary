@@ -6,7 +6,7 @@ using System.Text;
 namespace MyClassLibrary.Math.Learning
 {
 	/// <summary>
-	/// Static Multiplication class providing the <see cref="DoMultiply(in int, in int)"/> method for multiplying in writing
+	/// Static Multiplication class providing the <see cref="DoMultiply"/> method for multiplying in writing
 	/// </summary>
 	public static class Multiplication
 	{
@@ -46,41 +46,39 @@ namespace MyClassLibrary.Math.Learning
 
 			var lines = sb.ToString().Split(NewLine)[1..^1].Select(str => str.Substring(1)).ToList();
 
-			if (lines.Count > 1)
+			if (lines.Count <= 1)
+				return CalculateFinalResult(a, b, aTimesB, sb);
+
+			var overflow = new StringBuilder(aTimesBLength + 1);
+			overflow.Append(new string(' ', aTimesBLength + 1));
+			overflow[0] = 'ü';
+			overflow[overflow.Capacity - 1] = '\n';
+
+			int length = lines[0].Length;
+			bool hasOverflow = false;
+
+			Debug.Assert(lines.All(str => str.Length == length));
+
+			for (int i = length - 1; i >= 0; i--)
 			{
-				var overflow = new StringBuilder(aTimesBLength + 1);
-				overflow.Append(new string(' ', aTimesBLength + 1));
-				overflow[0] = 'ü';
-				overflow[overflow.Capacity - 1] = '\n';
+				int columnSum = lines.Sum(str => str[i].ToInt());
 
-				int length = lines[0].Length;
-				bool hasOverflow = false;
+				if (columnSum < 10)
+					continue;
 
-				Debug.Assert(lines.All(str => str.Length == length));
+				char columnSumAsChar = columnSum.ToString()[0];
 
-				for (int i = length - 1; i >= 0; i--)
+				var lineBuilder = new StringBuilder(new string(' ', aTimesBLength))
 				{
-					int columnSum = lines.Sum(str => str[i].ToInt());
-
-					var values = lines.Select(str => str[i].ToInt()).ToList();
-
-					if (columnSum >= 10)
-					{
-						char columnSumAsChar = columnSum.ToString()[0];
-
-						var lineBuilder = new StringBuilder(new string(' ', aTimesBLength))
-						{
-							[i] = columnSumAsChar
-						};
-						lines.Add(lineBuilder.ToString());
-						hasOverflow = true;
-						overflow[i] = columnSumAsChar;
-					}
-				}
-
-				if (hasOverflow)
-					sb.Append(overflow.ToString());
+					[i] = columnSumAsChar
+				};
+				lines.Add(lineBuilder.ToString());
+				hasOverflow = true;
+				overflow[i] = columnSumAsChar;
 			}
+
+			if (hasOverflow)
+				sb.Append(overflow.ToString());
 
 			return CalculateFinalResult(a, b, aTimesB, sb);
 		}

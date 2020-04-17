@@ -118,9 +118,9 @@ namespace UnitTestProject.TaskScheduling
 		[Fact]
 		public void TestMixedTasks2()
 		{
-			var task1 = new Task(name: "Task1", description: "Task1 Test", duration: TimeSpan.FromMinutes(20), isParallel: true, priority: 3, dependingTasks: null);
+			var task1 = new Task(name: "Task1", description: "Task1 Test", duration: TimeSpan.FromMinutes(20), isParallel: false, priority: 3, dependingTasks: null);
 
-			var task2 = new Task(name: "Task1", description: "Task1 Test", duration: TimeSpan.FromMinutes(10), isParallel: false, priority: 3, dependingTasks: null);
+			var task2 = new Task(name: "Task1", description: "Task1 Test", duration: TimeSpan.FromMinutes(10), isParallel: true, priority: 3, dependingTasks: null);
 
 			var tasks = new List<Task> { task1, task2 };
 
@@ -131,8 +131,8 @@ namespace UnitTestProject.TaskScheduling
 
 			var si = scheduler.GetSchedulingInformation();
 
-			Assert.Equal(task1, list[0]);
-			Assert.Equal(task2, list[1]);
+			Assert.Equal(task1, list[1]);
+			Assert.Equal(task2, list[0]);
 
 			Assert.Equal(2, list.Count);
 

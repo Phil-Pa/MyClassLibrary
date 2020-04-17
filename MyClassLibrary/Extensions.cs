@@ -95,8 +95,8 @@ namespace MyClassLibrary
 
 		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
 		{
-			if (source == null) throw new ArgumentNullException("source");
-			if (rng == null) throw new ArgumentNullException("rng");
+			if (source == null) throw new ArgumentNullException(nameof(source));
+			if (rng == null) throw new ArgumentNullException(nameof(rng));
 
 			return source.ShuffleIterator(rng);
 		}
@@ -112,6 +112,21 @@ namespace MyClassLibrary
 
 				buffer[j] = buffer[i];
 			}
+		}
+
+		public static IEnumerable<IEnumerable<T>> GetPermutations<T>(this IEnumerable<T> list, int length)
+		{
+			if (length == 1) return list.Select(t => new[] { t });
+
+			var enumerable = list as T[] ?? list.ToArray();
+			return GetPermutations(enumerable, length - 1)
+				.SelectMany(t => enumerable.Where(e => !t.Contains(e)),
+					(t1, t2) => t1.Concat(new[] { t2 }));
+		}
+
+		public static bool ContainsAll<T>(this IEnumerable<T> list, IEnumerable<T> items)
+		{
+			return items.All(list.Contains);
 		}
 	}
 }

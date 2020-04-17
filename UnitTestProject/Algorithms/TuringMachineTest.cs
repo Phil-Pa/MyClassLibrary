@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MyClassLibrary.Algorithms;
@@ -13,7 +12,6 @@ namespace UnitTestProject.Algorithms
 		[Fact]
 		public void Test()
 		{
-
 			List<int> states = new List<int> {1, 2, 3};
 			List<int> endStates = new List<int> {3};
 
@@ -38,7 +36,6 @@ namespace UnitTestProject.Algorithms
 		public void TestDouble()
 		{
 			List<int> states = new List<int> { 0, 1, 2, 3, 4 };
-			List<int> endStates = new List<int>();
 
 			List<Transition> transitions = new List<Transition> {
 				new Transition(0, '_', '_', StateMoveOption.Stop, 0),
@@ -64,7 +61,7 @@ namespace UnitTestProject.Algorithms
 					sb.Append('a');
 
 				var band = sb.ToString().ToList();
-				TuringMachine turingMachine = new TuringMachine(band, states, 0, endStates, transitions);
+				TuringMachine turingMachine = new TuringMachine(band, states, 0, new List<int>(), transitions);
 
 				for (int j = 0; j < i; j++)
 					sb.Append('a');
@@ -84,7 +81,10 @@ namespace UnitTestProject.Algorithms
 			Transition result = new Transition(1, 'a', 'a', StateMoveOption.Left, 1);
 			Assert.True(result == tran);
 
-			var transitions = Transition.CreateTransitions("1 a a l 1,1 a a l 1,1 a a l 1,1 a a l 1");
+			var transitions = Transition.CreateTransitions("1 a a l 1," +
+			                                               "1 a a l 1," +
+			                                               "1 a a l 1," +
+			                                               "1 a a l 1");
 			Assert.Equal(4, transitions.Count);
 
 			for (int i = 0; i < 4; i++)

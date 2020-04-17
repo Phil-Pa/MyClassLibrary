@@ -6,7 +6,7 @@
 	/// <typeparam name="T"></typeparam>
 	public class Heap<T> where T : IHeapItem<T>
 	{
-		private readonly T[] items;
+		private readonly T[] _items;
 
 		/// <summary>
 		/// The Number of the items in the Heap
@@ -15,7 +15,7 @@
 
 		public Heap(int maxHeapSize)
 		{
-			items = new T[maxHeapSize];
+			_items = new T[maxHeapSize];
 		}
 
 		/// <summary>
@@ -25,18 +25,18 @@
 		public void Add(T item)
 		{
 			item.HeapIndex = Count;
-			items[Count] = item;
+			_items[Count] = item;
 			SortUp(item);
 			Count++;
 		}
 
 		public T RemoveFirst()
 		{
-			var firstItem = items[0];
+			var firstItem = _items[0];
 			Count--;
-			items[0] = items[Count];
-			items[0].HeapIndex = 0;
-			SortDown(items[0]);
+			_items[0] = _items[Count];
+			_items[0].HeapIndex = 0;
+			SortDown(_items[0]);
 			return firstItem;
 		}
 
@@ -53,7 +53,7 @@
 		/// <returns></returns>
 		public bool Contains(T item)
 		{
-			return Equals(items[item.HeapIndex], item);
+			return Equals(_items[item.HeapIndex], item);
 		}
 
 		private void SortDown(T item)
@@ -67,15 +67,15 @@
 					int swapIndex = childIndexLeft;
 					if (childIndexRight < Count)
 					{
-						if (items[childIndexLeft].CompareTo(items[childIndexRight]) < 0)
+						if (_items[childIndexLeft].CompareTo(_items[childIndexRight]) < 0)
 						{
 							swapIndex = childIndexRight;
 						}
 					}
 
-					if (item.CompareTo(items[swapIndex]) < 0)
+					if (item.CompareTo(_items[swapIndex]) < 0)
 					{
-						Swap(item, items[swapIndex]);
+						Swap(item, _items[swapIndex]);
 					}
 					else
 					{
@@ -95,7 +95,7 @@
 
 			while (true)
 			{
-				var parentItem = items[parentIndex];
+				var parentItem = _items[parentIndex];
 				if (item.CompareTo(parentItem) > 0)
 				{
 					Swap(item, parentItem);
@@ -111,8 +111,8 @@
 
 		private void Swap(T itemA, T itemB)
 		{
-			items[itemA.HeapIndex] = itemB;
-			items[itemB.HeapIndex] = itemA;
+			_items[itemA.HeapIndex] = itemB;
+			_items[itemB.HeapIndex] = itemA;
 			int itemAIndex = itemA.HeapIndex;
 			itemA.HeapIndex = itemB.HeapIndex;
 			itemB.HeapIndex = itemAIndex;

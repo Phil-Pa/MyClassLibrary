@@ -10,7 +10,7 @@ namespace MyClassLibrary.TaskScheduling
 	{
 		public string Name { get; }
 		public string Description { get; }
-		public TimeSpan Duration { get; }
+		public TimeSpan Duration { get; set; }
 		public bool IsParallel { get; }
 		public IEnumerable<Task>? DependingTasks { get; private set; }
 		public int Priority { get; }
@@ -26,6 +26,7 @@ namespace MyClassLibrary.TaskScheduling
 		}
 
 		private string DependingTasksNames {
+			// ReSharper disable once UnusedMember.Local
 			get
 			{
 				if (!IsDependingOnOtherTasks)

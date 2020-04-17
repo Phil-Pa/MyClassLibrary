@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 
 namespace MyClassLibrary.Encoding
@@ -40,17 +38,17 @@ namespace MyClassLibrary.Encoding
 				++i;
 			}
 
-			if (numBits != -1)
-			{
-				while (i++ < numBits)
-					sb.Append(0);
-			}
+			if (numBits == -1)
+				return sb.ToString().Reverse();
+
+			while (i++ < numBits)
+				sb.Append(0);
 
 			return sb.ToString().Reverse();
 		}
 
 		/// <summary>
-		/// Converts a string into a string containing only 0s and 1s using <see cref="ToBitString(in char, in int)"/>
+		/// Converts a string into a string containing only 0s and 1s using <see cref="ToBitString"/>
 		/// </summary>
 		/// <param name="s"></param>
 		/// <param name="numBits"></param>

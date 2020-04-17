@@ -5,17 +5,18 @@ using MyClassLibrary.Math.Learning;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace MyClassLibraryBenchmark
 {
 	internal static class Program
 	{
-		private static void Main(string[] args)
+		private static void Main()
 		{
 			//var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
 			var watch = Stopwatch.StartNew();
-			var grid = AStarAlgorithm.CreateGrid(2000, 10);
+			var grid = AStarAlgorithm.CreateGrid(200, 10);
 			AStarAlgorithm algorithm = new AStarAlgorithm(grid);
 
 			for (int i = 0; i < 1; i++)
@@ -28,7 +29,7 @@ namespace MyClassLibraryBenchmark
 
 			Console.WriteLine(watch.ElapsedMilliseconds);
 
-			Console.ReadKey();
+			//Console.ReadKey();
 		}
 	}
 

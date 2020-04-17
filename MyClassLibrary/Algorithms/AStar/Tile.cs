@@ -1,17 +1,14 @@
 ﻿using MyClassLibrary.Collections;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace MyClassLibrary.Algorithms.AStar
 {
 	[DebuggerDisplay("{" + nameof(GridX) + "}, " + "{" + nameof(GridY) + "}, {" + nameof(Type) + "}")]
-	public unsafe class Tile : IHeapItem<Tile>
+	public class Tile : IHeapItem<Tile>
 	{
 		public TileType Type { get; set; }
 
-		public int FCost {
+		private int FCost {
 			get
 			{
 				return GCost + HCost;
@@ -20,9 +17,9 @@ namespace MyClassLibrary.Algorithms.AStar
 
 		public int GCost { get; set; }
 		public int HCost { get; set; }
-		public int GridX { get; set; }
-		public int GridY { get; set; }
-		public Tile Parent { get; set; }
+		public int GridX { get; }
+		public int GridY { get; }
+		public Tile? Parent { get; set; }
 
 		public bool IsWalkable {
 			get
@@ -33,11 +30,11 @@ namespace MyClassLibrary.Algorithms.AStar
 
 		public int HeapIndex { get; set; }
 
-		public Tile(TileType type, int _gridX, int _gridY)
+		public Tile(TileType type, int gridX, int gridY)
 		{
 			Type = type;
-			GridX = _gridX;
-			GridY = _gridY;
+			GridX = gridX;
+			GridY = gridY;
 			Parent = null;
 			HeapIndex = 0;
 			GCost = 0;
@@ -67,17 +64,38 @@ namespace MyClassLibrary.Algorithms.AStar
 
 		public override int GetHashCode()
 		{
-			return GridX.GetHashCode() * 4 + GridY.GetHashCode() ^ Type.GetHashCode();
+			return GridX.GetHashCode() * 4 + GridY.GetHashCode() ^ FCost.GetHashCode();
 		}
 
 		public static bool operator ==(Tile left, Tile right)
 		{
+			// ReSharper disable once PossibleNullReferenceException
 			return left.Equals(right);
 		}
 
 		public static bool operator !=(Tile left, Tile right)
 		{
 			return !(left == right);
+		}
+
+		public static bool operator <(Tile left, Tile right)
+		{
+			return left is null ? !(right is null) : left.CompareTo(right) < 0;
+		}
+
+		public static bool operator <=(Tile left, Tile right)
+		{
+			return left is null ? !(right is null) : left.CompareTo(right) <= 0;
+		}
+
+		public static bool operator >(Tile left, Tile right)
+		{
+			return left is null ? !(right is null) : left.CompareTo(right) > 0;
+		}
+
+		public static bool operator >=(Tile left, Tile right)
+		{
+			return left is null ? !(right is null) : left.CompareTo(right) >= 0;
 		}
 	}
 }

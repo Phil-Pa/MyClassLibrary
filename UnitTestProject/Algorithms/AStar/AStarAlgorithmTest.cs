@@ -1,6 +1,4 @@
 ﻿using MyClassLibrary.Algorithms.AStar;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Xunit;
 
 namespace UnitTestProject.Algorithms.AStar
@@ -22,6 +20,8 @@ namespace UnitTestProject.Algorithms.AStar
 			AStarAlgorithm myAStarAlgorithm = new AStarAlgorithm(grid);
 
 			var result = myAStarAlgorithm.FindPath(false);
+
+			Assert.True(result.Count > 0);
 		}
 
 	}

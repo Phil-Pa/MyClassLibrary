@@ -1,32 +1,29 @@
 ﻿using MyClassLibrary.Collections;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyClassLibrary.Algorithms.AStar
 {
 	public class AStarAlgorithm
 	{
 
-		private readonly Tile[,] grid;
+		private readonly Tile[,] _grid;
 
-		private readonly Tile[] neighBourBuffer = new Tile[8];
+		private readonly Tile[] _neighBourBuffer = new Tile[8];
 
-		private List<Tile> path = new List<Tile>();
+		private List<Tile> _path = new List<Tile>();
 
-		private readonly int size;
+		private readonly int _size;
 
-		private static readonly Random random = new Random();
+		private static readonly Random Random = new Random();
 
 		public AStarAlgorithm(Tile[,] grid)
 		{
-			this.grid = grid;
-			size = (int)System.Math.Sqrt(grid.Length);
+			_grid = grid;
+			_size = (int)System.Math.Sqrt(grid.Length);
 		}
 
-		public int GetNeighbours(Tile node, bool diagonal)
+		private int GetNeighbours(Tile node, bool diagonal)
 		{
 			int index = 0;
 
@@ -40,21 +37,21 @@ namespace MyClassLibrary.Algorithms.AStar
 					int checkX = node.GridX + x;
 					int checkY = node.GridY + y;
 
-					if (checkX >= 0 && checkX < size && checkY >= 0 && checkY < size)
+					if (checkX < 0 || checkX >= _size || checkY < 0 || checkY >= _size)
+						continue;
+
+					if (diagonal)
 					{
-						if (diagonal)
-						{
-							neighBourBuffer[index++] = grid[checkX, checkY];
-						}
-						else
-						{
+						_neighBourBuffer[index++] = _grid[checkX, checkY];
+					}
+					else
+					{
 
-							var distX = System.Math.Abs(node.GridX - checkX);
-							var distY = System.Math.Abs(node.GridY - checkY);
+						var distX = System.Math.Abs(node.GridX - checkX);
+						var distY = System.Math.Abs(node.GridY - checkY);
 
-							if (Math.Math.Hypot(distX, distY) <= 1)
-								neighBourBuffer[index++] = grid[checkX, checkY];
-						}
+						if (Math.Math.Hypot(distX, distY) <= 1)
+							_neighBourBuffer[index++] = _grid[checkX, checkY];
 					}
 				}
 			}
@@ -65,13 +62,12 @@ namespace MyClassLibrary.Algorithms.AStar
 		public static Tile[,] CreateGrid(int size, int percentWalls)
 		{
 			Tile[,] grid = new Tile[size, size];
-			TileType type = TileType.Walkable;
 
 			for (int x = 0; x < size; x++)
 			{
 				for (int y = 0; y < size; y++)
 				{
-					type = random.Next(0, 101) <= percentWalls ? TileType.Wall : TileType.Walkable;
+					var type = Random.Next(0, 101) <= percentWalls ? TileType.Wall : TileType.Walkable;
 					grid[x, y] = new Tile(type, x, y);
 				}
 			}
@@ -84,15 +80,15 @@ namespace MyClassLibrary.Algorithms.AStar
 
 		private Tile FindNode(Tile[,] nodes, TileType type)
 		{
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < _size; i++)
 			{
-				for (int j = 0; j < size; j++)
+				for (int j = 0; j < _size; j++)
 				{
 					if (nodes[i, j].Type == type)
 						return nodes[i, j];
 				}
 			}
-			throw new Exception();
+			throw new Exception("could not find node");
 		}
 
 		private static int GetDistance(Tile nodeA, Tile nodeB)
@@ -107,10 +103,10 @@ namespace MyClassLibrary.Algorithms.AStar
 
 		public List<Tile> FindPath(bool diagonal = true)
 		{
-			Tile startNode = FindNode(grid, TileType.Start);
-			Tile targetNode = FindNode(grid, TileType.End);
+			Tile startNode = FindNode(_grid, TileType.Start);
+			Tile targetNode = FindNode(_grid, TileType.End);
 
-			int gridLength = grid.Length;
+			int gridLength = _grid.Length;
 
 			Heap<Tile> openSet = new Heap<Tile>(gridLength);
 			Heap<Tile> closedSet = new Heap<Tile>(gridLength);
@@ -124,14 +120,14 @@ namespace MyClassLibrary.Algorithms.AStar
 				if (currentNode == targetNode)
 				{
 					RetracePath(startNode, targetNode);
-					return path;
+					return _path;
 				}
 
 				var neighBoursLength = GetNeighbours(currentNode, diagonal);
 
 				for (int i = 0; i < neighBoursLength; i++)
 				{
-					Tile neighbour = neighBourBuffer[i];
+					Tile neighbour = _neighBourBuffer[i];
 
 					if (!neighbour.IsWalkable || closedSet.Contains(neighbour))
 					{
@@ -139,44 +135,44 @@ namespace MyClassLibrary.Algorithms.AStar
 					}
 
 					int newMovementCostToNeighbour = currentNode.GCost + GetDistance(currentNode, neighbour);
-					if (newMovementCostToNeighbour < neighbour.GCost || !openSet.Contains(neighbour))
-					{
-						neighBourBuffer[i].GCost = newMovementCostToNeighbour;
-						neighbour.HCost = GetDistance(neighbour, targetNode);
-						neighbour.Parent = currentNode;
+					if (newMovementCostToNeighbour >= neighbour.GCost && openSet.Contains(neighbour))
+						continue;
 
-						if (!openSet.Contains(neighbour))
-						{
-							openSet.Add(neighbour);
-						}
-						else
-						{
-							openSet.UpdateItem(neighbour);
-						}
+					_neighBourBuffer[i].GCost = newMovementCostToNeighbour;
+					neighbour.HCost = GetDistance(neighbour, targetNode);
+					neighbour.Parent = currentNode;
+
+					if (!openSet.Contains(neighbour))
+					{
+						openSet.Add(neighbour);
+					}
+					else
+					{
+						openSet.UpdateItem(neighbour);
 					}
 				}
 			}
 
-			throw new Exception();
+			throw new Exception("could not find path");
 		}
 
 		private void RetracePath(Tile startNode, Tile endNode)
 		{
-			List<Tile> path = new List<Tile>(size);
+			List<Tile> path = new List<Tile>(_size);
 			Tile currentNode = endNode;
 
-			while (currentNode != startNode)
+			while (currentNode! != startNode)
 			{
-				if (currentNode.Type != TileType.Start && currentNode.Type != TileType.End)
+				if (currentNode!.Type != TileType.Start && currentNode.Type != TileType.End)
 					currentNode.Type = TileType.Path;
 
 				path.Add(currentNode);
-				currentNode = currentNode.Parent;
+				currentNode = currentNode.Parent!;
 			}
 
 			path.Reverse();
 
-			this.path = path;
+			_path = path;
 		}
 
 	}
