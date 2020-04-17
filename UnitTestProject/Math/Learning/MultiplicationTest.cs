@@ -28,7 +28,7 @@ namespace UnitTestProject.Math.Learning
 		{
 			Assert.Throws<ArgumentException>(() =>
 			{
-				(int result, string calculation) = Multiplication.DoMultiply(int.MaxValue / 2, int.MaxValue / 2);
+				Multiplication.DoMultiply(int.MaxValue / 2, int.MaxValue / 2);
 			});
 		}
 

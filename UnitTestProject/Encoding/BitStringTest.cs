@@ -1,5 +1,4 @@
 ﻿using MyClassLibrary.Encoding;
-using System;
 using Xunit;
 
 namespace UnitTestProject.Encoding
