@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Moq;
 using MyClassLibrary.CodeCounter;
 using MyClassLibrary.Collections.Graph;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace UnitTestProject.CodeCounter
 {
@@ -43,9 +45,9 @@ namespace UnitTestProject.CodeCounter
 			converterMock.SetupGet(it => it.Nodes).Returns(nodesResult);
 			converterMock.SetupGet(it => it.Edges).Returns(edgesResult);
 
-			var analyzer = new DirectoryAnalyzer<Language, CodeStats>(converterMock.Object, Path, new CodeStats(0, 0, 0));
+			var analyzer = new DirectoryAnalyzer<Language, CodeStats>(converterMock.Object, Path, new CodeStats(0, 0, 0), null);
 			var stats = analyzer.GetTotalStats();
-			
+
 			Assert.Equal(492, stats[Language.C].CodeLines);
 			Assert.Equal(122, stats[Language.C].CommentLines);
 			Assert.Equal(86, stats[Language.C].BlankLines);

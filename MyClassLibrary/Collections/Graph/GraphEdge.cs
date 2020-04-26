@@ -10,7 +10,6 @@ namespace MyClassLibrary.Collections.Graph
 
 		public GraphEdge(IGraphNode<T> startNode, IGraphNode<T> endNode, TV? edgeValue = null)
 		{
-
 			Debug.WriteLine("Created edge with nodes with ids: " + startNode.Id + ", " + endNode.Id);
 
 			StartNode = startNode;

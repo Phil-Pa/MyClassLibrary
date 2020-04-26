@@ -16,12 +16,13 @@ namespace MyClassLibrary.CodeCounter
 
 		private readonly IAddable<TV> _defaultValue;
 		
-		public DirectoryAnalyzer(IDirectoryTreeToGraphConverter<T, TV> converter, string path, IAddable<TV> defaultValue)
+		public DirectoryAnalyzer(IDirectoryTreeToGraphConverter<T, TV> converter, string path, IAddable<TV> defaultValue, IFileInterpreter<TV> fileInterpreter)
 		{
+			// TODO: refactor
 			_converter = converter;
 			_path = path;
 			this._defaultValue = defaultValue;
-			converter.Convert(path);
+			// converter.Convert(path, fileInterpreter);
 			_graph = new Graph<Tuple<string, IDictionary<T, IAddable<TV>>>, object>(converter.Nodes, converter.Edges);
 			
 			// TODO: uncomment asserts when they are working
@@ -36,7 +37,7 @@ namespace MyClassLibrary.CodeCounter
 			foreach (var node in _graph.Nodes)
 			{
 				Debug.Assert(node.NodeValue != null, "node value must not be null");
-				var directoryStats = node.NodeValue.Item2;
+				var directoryStats = node.NodeValue!.Item2;
 				foreach (var (languageKey, statsValue) in directoryStats)
 				{
 					if (!map.ContainsKey(languageKey))

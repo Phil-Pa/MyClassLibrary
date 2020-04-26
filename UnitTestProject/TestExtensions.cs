@@ -63,5 +63,13 @@ namespace UnitTestProject
 			});
 		}
 
+		[Fact]
+		public void TestGetFileExtension()
+		{
+			Assert.Null("fdskfds".GetFileExtension());
+			Assert.Equal(".cs", "fds.cs".GetFileExtension());
+			Assert.Equal(".gitignore", ".gitignore".GetFileExtension());
+			Assert.Equal(".cs", "fjdks.xaml.fmds.cs".GetFileExtension());
+		}
 	}
 }

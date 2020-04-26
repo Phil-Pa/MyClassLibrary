@@ -113,5 +113,19 @@ namespace MyClassLibrary
 		{
 			return items.All(list.Contains!);
 		}
+
+		public static string? GetFileExtension(this string str)
+		{
+			for (var i = str.Length - 1; i >= 0; i--)
+			{
+				var ch = str[i];
+				if (ch == '.')
+				{
+					return str.Substring(i);
+				}
+			}
+
+			return null;
+		}
 	}
 }
