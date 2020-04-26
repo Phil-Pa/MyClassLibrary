@@ -1,22 +1,62 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
 namespace MyClassLibrary.CodeCounter
 {
-	internal class CodeReader : IFileInterpreter<CodeStats>
+	internal class CodeReader : IFileInterpreter<Language, CodeStats>
 	{
-		private readonly Language _language;
-		private readonly IEnumerable<string> _lines;
 
-		public CodeReader(Language language, IEnumerable<string> lines)
+		private Language _language;
+		public CodeReader()
 		{
-			_language = language;
-			_lines = lines;
+		}
+		private bool IsEmptyLine(string line)
+		{
+			throw new System.NotImplementedException();
 		}
 
-		public IAddable<CodeStats> Interpret(IEnumerable<string> lines)
+		private bool IsCommentEnd(string line)
 		{
+			throw new System.NotImplementedException();
+		}
+
+		private bool IsCommentStart(string line)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		private bool IsSingleCommentLine(string line)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public (Language, IAddable<CodeStats>) Interpret(string fileExtension, IEnumerable<string> lines)
+		{
+			switch (fileExtension)
+			{
+				case ".c":
+					_language = Language.C;
+					break;
+				case ".h":
+				case ".hpp":
+					_language = Language.CCppHeader;
+					break;
+				case ".java":
+					_language = Language.Java;
+					break;
+				case ".cs":
+					_language = Language.CSharp;
+					break;
+				case ".cpp":
+					_language = Language.Cpp;
+					break;
+				default:
+					throw new Exception();
+			}
+			
+			
 			int commentLines = 0, blankLines = 0, codeLines = 0;
 
 			bool isInMultiCommentLine = false;
@@ -58,27 +98,7 @@ namespace MyClassLibrary.CodeCounter
 
 			Debug.Assert(enumerable.Count() == commentLines + blankLines + codeLines);
 
-			return new CodeStats(codeLines, commentLines, blankLines);
-		}
-
-		private bool IsEmptyLine(string line)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		private bool IsCommentEnd(string line)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		private bool IsCommentStart(string line)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		private bool IsSingleCommentLine(string line)
-		{
-			throw new System.NotImplementedException();
+			return (language, new CodeStats(codeLines, commentLines, blankLines));
 		}
 	}
 }

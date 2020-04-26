@@ -16,7 +16,7 @@ namespace MyClassLibrary.CodeCounter
 
 		private readonly IAddable<TV> _defaultValue;
 		
-		public DirectoryAnalyzer(IDirectoryTreeToGraphConverter<T, TV> converter, string path, IAddable<TV> defaultValue, IFileInterpreter<TV> fileInterpreter)
+		public DirectoryAnalyzer(IDirectoryTreeToGraphConverter<T, TV> converter, string path, IAddable<TV> defaultValue, IFileInterpreter<T, TV> fileInterpreter)
 		{
 			// TODO: refactor
 			_converter = converter;

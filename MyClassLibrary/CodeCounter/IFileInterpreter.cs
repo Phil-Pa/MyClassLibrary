@@ -2,8 +2,8 @@
 
 namespace MyClassLibrary.CodeCounter
 {
-	public interface IFileInterpreter<T>
+	public interface IFileInterpreter<T, TV>
 	{
-		IAddable<T> Interpret(IEnumerable<string> lines);
+		(T, IAddable<TV>) Interpret(string fileExtension, IEnumerable<string> lines);
 	}
 }

@@ -10,19 +10,19 @@ namespace MyClassLibrary.CodeCounter
 	public interface IDirectoryTreeToGraphConverter<T, TV>
 	{
 		// TODO: should we pass the file interpreter via convert or with ctor of deriving classes?
-		void Convert(string path, IFileInterpreter<TV> fileInterpreter);
+		void Convert(string path, IFileInterpreter<T, TV> fileInterpreter);
 
 		IEnumerable<IGraphNode<Tuple<string, IDictionary<T, IAddable<TV>>>>> Nodes { get; }
 		IEnumerable<IGraphEdge<Tuple<string, IDictionary<T, IAddable<TV>>>, object>> Edges { get; }
 	}
 
-	public class DirectoryTreeToGraphConverter : IDirectoryTreeToGraphConverter<Language, CodeStats>
+	public class DirectoryTreeToGraphConverter<T, TV> : IDirectoryTreeToGraphConverter<Language, CodeStats>
 	{
 		private readonly IFileReader _fileReader;
 		private readonly IDirectoryReader _directoryReader;
 		private readonly List<IGraphNode<Tuple<string, IDictionary<Language, IAddable<CodeStats>>>>> _nodes;
 		private readonly List<IGraphEdge<Tuple<string, IDictionary<Language, IAddable<CodeStats>>>, object>> _edges;
-		private IFileInterpreter<CodeStats> _fileInterpreter;
+		private IFileInterpreter<Language, CodeStats> _fileInterpreter;
 
 		public DirectoryTreeToGraphConverter(IFileReader fileReader, IDirectoryReader directoryReader)
 		{
@@ -32,7 +32,7 @@ namespace MyClassLibrary.CodeCounter
 			_edges = new List<IGraphEdge<Tuple<string, IDictionary<Language, IAddable<CodeStats>>>, object>>();
 		}
 
-		public void Convert(string path, IFileInterpreter<CodeStats> fileInterpreter)
+		public void Convert(string path, IFileInterpreter<Language, CodeStats> fileInterpreter)
 		{
 			_fileInterpreter = fileInterpreter;
 			ConvertInternal(path);
@@ -77,36 +77,12 @@ namespace MyClassLibrary.CodeCounter
 
 		private void ProcessFile(string file, IDictionary<Language, IAddable<CodeStats>> map)
 		{
-			// TODO: extract dependency
-			Language language;
 			var fileExtension = file.GetFileExtension();
 			Debug.Assert(fileExtension != null);
 
-			switch (fileExtension)
-			{
-				case ".c":
-					language = Language.C;
-					break;
-				case ".h":
-				case ".hpp":
-					language = Language.CCppHeader;
-					break;
-				case ".java":
-					language = Language.Java;
-					break;
-				case ".cs":
-					language = Language.CSharp;
-					break;
-				case ".cpp":
-					language = Language.Cpp;
-					break;
-				default:
-					throw new Exception();
-			}
-
 			var lines = _fileReader.ReadLines(file);
-			IAddable<CodeStats> stats = _fileInterpreter.Interpret(lines);
-			map.Add(language, stats);
+			var (lang, stats) = _fileInterpreter.Interpret(fileExtension, lines);
+			map.Add(lang, stats);
 		}
 
 		public IEnumerable<IGraphNode<Tuple<string, IDictionary<Language, IAddable<CodeStats>>>>> Nodes => _nodes;
