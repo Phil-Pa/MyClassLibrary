@@ -8,12 +8,7 @@ namespace MyClassLibrary.Algorithms.AStar
 	{
 		public TileType Type { get; set; }
 
-		private int FCost {
-			get
-			{
-				return GCost + HCost;
-			}
-		}
+		private int FCost => GCost + HCost;
 
 		public int GCost { get; set; }
 		public int HCost { get; set; }
@@ -21,12 +16,7 @@ namespace MyClassLibrary.Algorithms.AStar
 		public int GridY { get; }
 		public Tile? Parent { get; set; }
 
-		public bool IsWalkable {
-			get
-			{
-				return Type != TileType.Wall && Type != TileType.Path;
-			}
-		}
+		public bool IsWalkable => Type != TileType.Wall && Type != TileType.Path;
 
 		public int HeapIndex { get; set; }
 
@@ -43,7 +33,7 @@ namespace MyClassLibrary.Algorithms.AStar
 
 		public int CompareTo(Tile nodeToCompare)
 		{
-			int compare = FCost.CompareTo(nodeToCompare.FCost);
+			var compare = FCost.CompareTo(nodeToCompare.FCost);
 			if (compare == 0)
 			{
 				compare = HCost.CompareTo(nodeToCompare.HCost);

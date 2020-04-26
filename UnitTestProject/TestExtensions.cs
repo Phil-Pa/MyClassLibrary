@@ -26,7 +26,7 @@ namespace UnitTestProject
 				1, 2, 3, 4
 			};
 
-			for (int i = 2; i < 10; i++)
+			for (var i = 2; i < 10; i++)
 			{
 				var permutations = list.GetPermutations(list.Count);
 				_output.WriteLine(permutations.Count().ToString());

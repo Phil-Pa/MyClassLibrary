@@ -17,7 +17,7 @@ namespace UnitTestProject.Algorithms.AStar
 		{
 			var grid = AStarAlgorithm.CreateGrid(10, 5);
 
-			AStarAlgorithm myAStarAlgorithm = new AStarAlgorithm(grid);
+			var myAStarAlgorithm = new AStarAlgorithm(grid);
 
 			var result = myAStarAlgorithm.FindPath(false);
 

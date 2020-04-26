@@ -1,7 +1,7 @@
 ﻿namespace MyClassLibrary.Encoding
 {
 	/// <summary>
-	/// can encode and decode a string
+	/// Can encode and decode a string
 	/// </summary>
 	public interface IEncodingAlgorithm
 	{

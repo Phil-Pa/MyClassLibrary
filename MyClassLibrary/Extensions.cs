@@ -14,7 +14,7 @@ namespace MyClassLibrary
 
 		public static int ToInt(this string str)
 		{
-			bool success = int.TryParse(str, out int result);
+			var success = int.TryParse(str, out var result);
 			if (success)
 				return result;
 			else
@@ -34,9 +34,9 @@ namespace MyClassLibrary
 		public static byte ToByte(this char c)
 		{
 			if (c < '0' || c > '9')
-				return 0;
+				return 0; 
 
-			double result = char.GetNumericValue(c);
+			var result = char.GetNumericValue(c);
 			Debug.Assert(result >= byte.MinValue && result <= byte.MaxValue);
 			return (byte)result;
 		}
@@ -105,9 +105,9 @@ namespace MyClassLibrary
 			this IEnumerable<T> source, Random rng)
 		{
 			var buffer = source.ToList();
-			for (int i = 0; i < buffer.Count; i++)
+			for (var i = 0; i < buffer.Count; i++)
 			{
-				int j = rng.Next(i, buffer.Count);
+				var j = rng.Next(i, buffer.Count);
 				yield return buffer[j];
 
 				buffer[j] = buffer[i];
@@ -116,7 +116,8 @@ namespace MyClassLibrary
 
 		public static IEnumerable<IEnumerable<T>> GetPermutations<T>(this IEnumerable<T> list, int length)
 		{
-			if (length == 1) return list.Select(t => new[] { t });
+			if (length == 1)
+				return list.Select(t => new[] { t });
 
 			var enumerable = list as T[] ?? list.ToArray();
 			return GetPermutations(enumerable, length - 1)
@@ -126,7 +127,7 @@ namespace MyClassLibrary
 
 		public static bool ContainsAll<T>(this IEnumerable<T> list, IEnumerable<T> items)
 		{
-			return items.All(list.Contains);
+			return items.All(list.Contains!);
 		}
 	}
 }

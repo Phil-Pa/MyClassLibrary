@@ -48,14 +48,14 @@ namespace UnitTestProject
 			// try to read both written values
 
 			// create buffer
-			byte[] readBuffer = new byte[fs.Length];
+			var readBuffer = new byte[fs.Length];
 
 			// goto begin
 			//fs.Seek(0, SeekOrigin.Begin);
 			fs.Position = 0;
 
 			// read all from begin to end
-			int read = fs.Read(readBuffer, 0, readBuffer.Length);
+			var read = fs.Read(readBuffer, 0, readBuffer.Length);
 
 			// verify results
 			Assert.Equal(2, read);

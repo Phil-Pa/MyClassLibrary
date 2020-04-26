@@ -31,14 +31,14 @@ namespace MyClassLibrary.Math.Learning
 
 			var sb = new StringBuilder(aTimesB + NewLine);
 
-			int numDigitsA = strA.Length;
-			int numDigitsB = strB.Length;
+			var numDigitsA = strA.Length;
+			var numDigitsB = strB.Length;
 
-			int aTimesBLength = aTimesB.Length;
+			var aTimesBLength = aTimesB.Length;
 
-			for (int i = numDigitsA - 1; i >= 0; i--)
+			for (var i = numDigitsA - 1; i >= 0; i--)
 			{
-				for (int j = numDigitsB - 1; j >= 0; j--)
+				for (var j = numDigitsB - 1; j >= 0; j--)
 				{
 					CalculateTempResult(strA, i, strB, j, aTimesBLength, sb);
 				}
@@ -54,19 +54,19 @@ namespace MyClassLibrary.Math.Learning
 			overflow[0] = 'ü';
 			overflow[overflow.Capacity - 1] = '\n';
 
-			int length = lines[0].Length;
-			bool hasOverflow = false;
+			var length = lines[0].Length;
+			var hasOverflow = false;
 
 			Debug.Assert(lines.All(str => str.Length == length));
 
-			for (int i = length - 1; i >= 0; i--)
+			for (var i = length - 1; i >= 0; i--)
 			{
-				int columnSum = lines.Sum(str => str[i].ToInt());
+				var columnSum = lines.Sum(str => str[i].ToInt());
 
 				if (columnSum < 10)
 					continue;
 
-				char columnSumAsChar = columnSum.ToString()[0];
+				var columnSumAsChar = columnSum.ToString()[0];
 
 				var lineBuilder = new StringBuilder(new string(' ', aTimesBLength))
 				{
@@ -85,10 +85,10 @@ namespace MyClassLibrary.Math.Learning
 
 		private static (int result, string calculation) CalculateFinalResult(in int a, in int b, string aTimesB, StringBuilder sb)
 		{
-			int intResult = a * b;
-			string strResult = intResult.ToString();
+			var intResult = a * b;
+			var strResult = intResult.ToString();
 
-			string spacesResult = new string(' ', aTimesB.Length - intResult.ToString().Length - 1); // -1 for = sign
+			var spacesResult = new string(' ', aTimesB.Length - intResult.ToString().Length - 1); // -1 for = sign
 
 			sb.Append("=").Append(spacesResult).Append(strResult);
 
@@ -97,10 +97,10 @@ namespace MyClassLibrary.Math.Learning
 
 		private static void CalculateTempResult(string strA, in int i, string strB, in int j, in int aTimesBLength, StringBuilder sb)
 		{
-			int tempResult = strA[i].ToInt() * strB[j].ToInt();
-			string strTempResult = tempResult.ToString();
+			var tempResult = strA[i].ToInt() * strB[j].ToInt();
+			var strTempResult = tempResult.ToString();
 
-			(string spacesBeforeResult, string spacesAfterResult) =
+			(var spacesBeforeResult, var spacesAfterResult) =
 				GetTempResultSpaces(strA.Length, strB.Length, strTempResult.Length, aTimesBLength, i, j);
 
 			sb.Append("+").Append(spacesBeforeResult).Append(strTempResult).Append(spacesAfterResult).Append(NewLine);
@@ -116,22 +116,22 @@ namespace MyClassLibrary.Math.Learning
 			if (aLength == 1 && bLength == 1)
 				return (new string(' ', 4 - 1 - tempResultLength), string.Empty);
 
-			int numSpaces = GetTempAfterSpaces(aLength - i, bLength - j);
+			var numSpaces = GetTempAfterSpaces(aLength - i, bLength - j);
 
-			string spacesAfterTempResult = new string(' ', numSpaces);
+			var spacesAfterTempResult = new string(' ', numSpaces);
 
-			string spaces =
+			var spaces =
 				new string(' ', aTimesBLength - tempResultLength - spacesAfterTempResult.Length - 1); // -1 for the + sign
 
-			string spacesBeforeResult = spaces;
-			string spacesAfterResult = spacesAfterTempResult;
+			var spacesBeforeResult = spaces;
+			var spacesAfterResult = spacesAfterTempResult;
 
 			return (spacesBeforeResult, spacesAfterResult);
 		}
 
 		private static int GetTempAfterSpaces(in int i, in int j)
 		{
-			int x = 1;
+			var x = 1;
 			while (true)
 			{
 				if (i == x || j == x)

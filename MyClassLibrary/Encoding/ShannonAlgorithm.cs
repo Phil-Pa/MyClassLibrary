@@ -33,7 +33,7 @@ namespace MyClassLibrary.Encoding
 
 			var sb = new StringBuilder();
 
-			foreach (char c in str)
+			foreach (var c in str)
 			{
 				sb.Append(encodingMap[c]);
 			}
@@ -44,13 +44,13 @@ namespace MyClassLibrary.Encoding
 		private static List<(Fraction, char)> BuildProbabilityMap(string str)
 		{
 			var chars = str.ToCharArray().Distinct().ToList();
-			int numChars = str.Length;
+			var numChars = str.Length;
 			var map = new List<ValueTuple<Fraction, char>>();
 
-			foreach (char c in chars)
+			foreach (var c in chars)
 			{
-				char c1 = c;
-				int charCount = str.Count(character => c1 == character);
+				var c1 = c;
+				var charCount = str.Count(character => c1 == character);
 				map.Add(new ValueTuple<Fraction, char>(new Fraction(charCount, numChars), c));
 			}
 
@@ -63,7 +63,7 @@ namespace MyClassLibrary.Encoding
 			var map = new Dictionary<char, string>();
 
 			var chars = pMap.Select(tuple => tuple.Item2).Distinct();
-			foreach (char c in chars)
+			foreach (var c in chars)
 			{
 				map[c] = "";
 			}
@@ -96,12 +96,12 @@ namespace MyClassLibrary.Encoding
 					return;
 			}
 
-			float limit = 0.5f / (iteration + 1);
-			float fractionSum = pMap.Sum(tuple => tuple.Item1.ToFloat());
+			var limit = 0.5f / (iteration + 1);
+			var fractionSum = pMap.Sum(tuple => tuple.Item1.ToFloat());
 			if (fractionSum <= limit)
 				limit = fractionSum / 2;
 
-			float sum = 0f;
+			var sum = 0f;
 
 			var zeroList = new List<ValueTuple<Fraction, char>>();
 
@@ -128,8 +128,8 @@ namespace MyClassLibrary.Encoding
 		{
 			var map = CreateEncodingMap(pMap);
 
-			int iteration = 0;
-			float sum = 0f;
+			var iteration = 0;
+			var sum = 0f;
 
 			var zeroList = new List<(Fraction, char)>();
 
@@ -161,7 +161,7 @@ namespace MyClassLibrary.Encoding
 			if (_encodingMap == null)
 				return;
 
-			foreach (char c in str)
+			foreach (var c in str)
 			{
 				if (!_encodingMap.Keys.Contains(c))
 					throw new Exception($"{c} is not in encoding map");
@@ -182,11 +182,11 @@ namespace MyClassLibrary.Encoding
 
 			StringBuilder sb = new StringBuilder(), result = new StringBuilder();
 
-			foreach (char c in str)
+			foreach (var c in str)
 			{
 				sb.Append(c);
 
-				string tempStr = sb.ToString();
+				var tempStr = sb.ToString();
 
 				if (decodingMap.ContainsKey(tempStr))
 				{

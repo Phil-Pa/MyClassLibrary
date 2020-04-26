@@ -43,10 +43,10 @@ namespace MyClassLibrary.Encoding
 		{
 			byte[] gZipBuffer = Convert.FromBase64String(str);
 			using var memoryStream = new MemoryStream();
-			int dataLength = BitConverter.ToInt32(gZipBuffer, 0);
+			var dataLength = BitConverter.ToInt32(gZipBuffer, 0);
 			memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
 
-			byte[] buffer = new byte[dataLength];
+			var buffer = new byte[dataLength];
 
 			memoryStream.Position = 0;
 			using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))

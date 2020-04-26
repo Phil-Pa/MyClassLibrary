@@ -15,7 +15,7 @@ namespace MyClassLibrary.Time
 			Debug.Assert(timeSpans.Length >= 2);
 			var max = timeSpans[0];
 
-			for (int i = 1; i < timeSpans.Length; i++)
+			for (var i = 1; i < timeSpans.Length; i++)
 			{
 				max = Max2(max, timeSpans[i]);
 			}
@@ -33,7 +33,7 @@ namespace MyClassLibrary.Time
 			Debug.Assert(timeSpans.Length >= 2);
 			var min = timeSpans[0];
 
-			for (int i = 1; i < timeSpans.Length; i++)
+			for (var i = 1; i < timeSpans.Length; i++)
 			{
 				min = Min2(min, timeSpans[i]);
 			}

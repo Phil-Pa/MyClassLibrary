@@ -29,14 +29,14 @@ namespace UnitTestProject.Encoding
 		[Fact]
 		public void TestAsBitString()
 		{
-			string str = "hallo".AsBitString();
+			var str = "hallo".AsBitString();
 			Assert.Equal(new BitString("hallo").Bits, str);
 		}
 
 		[Fact]
 		public void TestFlipBits()
 		{
-			string bits = "A".AsBitString().FlipBits();
+			var bits = "A".AsBitString().FlipBits();
 			Assert.Equal("0111110", bits);
 		}
 	}

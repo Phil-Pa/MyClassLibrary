@@ -10,7 +10,7 @@ namespace UnitTestProject.Encoding
 		[Fact]
 		public void TestBase64Conversion()
 		{
-			string result = _numberConverter.Convert(10, 2, "128");
+			var result = _numberConverter.Convert(10, 2, "128");
 			Assert.Equal("10000000", result);
 
 			result = _numberConverter.Convert(64, 10, "+-aA");

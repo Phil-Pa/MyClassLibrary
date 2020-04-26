@@ -2,6 +2,9 @@
 
 namespace MyClassLibrary.Math
 {
+	/// <summary>
+	/// Represents a mathematical fraction
+	/// </summary>
 	public readonly struct Fraction : IComparable<Fraction>
 	{
 		public int Numerator { get; }
@@ -41,7 +44,7 @@ namespace MyClassLibrary.Math
 			return a.ToFloat() > b.ToFloat();
 		}
 
-		public bool Equals(in Fraction other)
+		private bool Equals(in Fraction other)
 		{
 			return Numerator == other.Numerator && Denominator == other.Denominator;
 		}
@@ -50,10 +53,7 @@ namespace MyClassLibrary.Math
 		{
 			if (this < other)
 				return -1;
-			else if (this == other)
-				return 0;
-			else // (this > other)
-				return 1;
+			return this == other ? 0 : 1;
 		}
 
 		public override bool Equals(object? obj)

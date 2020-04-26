@@ -33,14 +33,14 @@ namespace MyClassLibrary.Math
 
 		private static BigInteger ToDecimal(string str, int @base)
 		{
-			int len = str.Length;
+			var len = str.Length;
 			var power = BigInteger.One;
 			var num = BigInteger.Zero;
-			int i = len - 1;
+			var i = len - 1;
 
 			while (i >= 0)
 			{
-				int q = Evaluate(str[i]);
+				var q = Evaluate(str[i]);
 				var u = new BigInteger(q);
 				num += u * power;
 				power *= @base;

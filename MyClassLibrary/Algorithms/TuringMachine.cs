@@ -40,11 +40,11 @@ namespace MyClassLibrary.Algorithms
 			if (!match.Success)
 				throw new Exception("str does not match regex for creation");
 
-			int startState = int.Parse(match.Groups[1].Value);
-			char readingChar = match.Groups[2].Value[0];
-			char writingChar = match.Groups[3].Value[0];
+			var startState = int.Parse(match.Groups[1].Value);
+			var readingChar = match.Groups[2].Value[0];
+			var writingChar = match.Groups[3].Value[0];
 
-			char optionChar = match.Groups[4].Value[0];
+			var optionChar = match.Groups[4].Value[0];
 
 			var option = optionChar switch {
 				'!' => StateMoveOption.Stop,
@@ -53,7 +53,7 @@ namespace MyClassLibrary.Algorithms
 				_ => throw new Exception("invalid state move option")
 			};
 
-			int endState = int.Parse(match.Groups[5].Value);
+			var endState = int.Parse(match.Groups[5].Value);
 
 			return new Transition(startState, readingChar, writingChar, option, endState);
 		}
@@ -183,7 +183,7 @@ namespace MyClassLibrary.Algorithms
 			}
 
 			// read char
-			char readChar = _band[_position];
+			var readChar = _band[_position];
 
 			// get current transition
 			_currentTransition = _transitions.First(tr => tr.StartState == _currentState && tr.ReadingChar == readChar);

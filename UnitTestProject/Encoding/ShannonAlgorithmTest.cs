@@ -18,7 +18,7 @@ namespace UnitTestProject.Encoding
 
 			IEncodingAlgorithm encodingAlgorithm = new ShannonAlgorithm(true, encodingMap);
 
-			string encoded = encodingAlgorithm.Encode("abcabcbac");
+			var encoded = encodingAlgorithm.Encode("abcabcbac");
 
 			Assert.Equal("010110010110100110", encoded);
 		}
@@ -28,12 +28,12 @@ namespace UnitTestProject.Encoding
 		{
 			IEncodingAlgorithm encodingAlgorithm = new ShannonAlgorithm();
 
-			string text = File.ReadAllText("E:/share/data.txt");
+			var text = File.ReadAllText("E:/share/data.txt");
 
-			string encoded = encodingAlgorithm.Encode(text);
+			var encoded = encodingAlgorithm.Encode(text);
 
 			// ReSharper disable once RedundantAssignment
-			string decoded = encodingAlgorithm.Decode(encoded);
+			var decoded = encodingAlgorithm.Decode(encoded);
 			decoded = encodingAlgorithm.Decode(encoded);
 
 			Assert.Equal(text, decoded);

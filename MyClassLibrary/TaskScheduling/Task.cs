@@ -5,23 +5,22 @@ using System.Linq;
 
 namespace MyClassLibrary.TaskScheduling
 {
-	[DebuggerDisplay("{" + nameof(Name) + "}, " + ("{" + nameof(DependingTasksNames) + "}, " + ("{" + nameof(Duration) + "}, IsParallel=" + ("{" + nameof(IsParallel) + "}"))))]
-	public class Task : ICloneable
+	[DebuggerDisplay("Id=" + "{" + nameof(Id) + "}, " + "{" + nameof(Name) + "}, " + "{" + nameof(DependingTasksNames) + "}, " + "{" + nameof(Duration) + "}, IsParallel=" + "{" + nameof(IsParallel) + "}")]
+	public class Task : ICloneable, IEquatable<Task>
 	{
+		private static int _idCounter;
+		public int Id { get; }
 		public string Name { get; }
 		public string Description { get; }
 		public TimeSpan Duration { get; set; }
 		public bool IsParallel { get; }
-		public IEnumerable<Task>? DependingTasks { get; private set; }
+		public IEnumerable<Task> DependingTasks { get; private set; }
 		public int Priority { get; }
 
 		public bool IsDependingOnOtherTasks {
 			get
 			{
-				if (DependingTasks == null)
-					return false;
-
-				return !DependingTasks.IsEmpty();
+				return DependingTasks.IsNotEmpty();
 			}
 		}
 
@@ -36,46 +35,23 @@ namespace MyClassLibrary.TaskScheduling
 			}
 		}
 
-		public int DependingTasksDepth {
-			get
-			{
-				if (DependingTasks == null)
-					return 0;
-
-				int depth = 0;
-				var task = this;
-				while (true)
-				{
-					task = task.DependingTasks.First();
-					depth++;
-
-					if (task.DependingTasks == null)
-						break;
-				}
-
-				return depth;
-			}
-		}
-
 		public Task(string name, string description, in TimeSpan duration, in bool isParallel,
-			in int priority, params Task[] dependingTasks)
+			in int priority, IEnumerable<Task>? dependingTasks)
 		{
 			CheckPriorityRange(priority);
-
+			Id = _idCounter++;
+			Debug.WriteLine("Task Id = " + Id);
 			Name = name;
 			Description = description;
 			Duration = duration;
 			IsParallel = isParallel;
 			Priority = priority;
-			if (dependingTasks == null)
-				DependingTasks = null;
-			else
-				DependingTasks = dependingTasks.Length == 0 ? null : dependingTasks;
+			DependingTasks = dependingTasks ?? new List<Task>();
 		}
 
 		public void ClearDependingTasks()
 		{
-			DependingTasks = null;
+			DependingTasks = new List<Task>();
 		}
 
 		private static void CheckPriorityRange(in int priority)
@@ -84,25 +60,41 @@ namespace MyClassLibrary.TaskScheduling
 				throw new ArgumentException("priority must be between 1 and 10, but it is " + priority);
 		}
 
-		public void AddSingleDependentTask(Task? task)
+		public void AddSingleDependentTask(Task task)
 		{
-			if (task == null)
-				return;
 
 			DependingTasks = new List<Task> { task };
 		}
 
-		public void RestoreDependingTasks(IEnumerable<Task>? dependentTasks)
+		public void SetDependingTasks(IEnumerable<Task> dependentTasks)
 		{
 			DependingTasks = dependentTasks;
 		}
 
 		public object Clone()
 		{
-			if (DependingTasks == null)
-				return new Task(Name, Description, Duration, IsParallel, Priority);
-			else
-				return new Task(Name, Description, Duration, IsParallel, Priority, new List<Task>(DependingTasks).ToArray());
+			return DependingTasks == null
+				? new Task(Name, Description, Duration, IsParallel, Priority, null)
+				: new Task(Name, Description, Duration, IsParallel, Priority, new List<Task>(DependingTasks).ToArray());
+		}
+
+		public bool Equals(Task? other)
+		{
+			if (other is null) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return Id == other.Id;
+		}
+
+		public override bool Equals(object? obj)
+		{
+			if (obj is null) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			return obj.GetType() == GetType() && Equals((Task) obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return Id;
 		}
 	}
 }

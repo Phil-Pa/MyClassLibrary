@@ -18,8 +18,8 @@ namespace MyClassLibrary.Encoding
 		}
 
 		/// <summary>
-		/// Converts a character into a bit string
-		/// for example: the character 'a' is 65 in ASCII, so it would be converted to 1000001, and to 01000001 with numBits set to 8
+		/// Converts a character into a bit string like "101011001"
+		/// For example: the character 'a' is 65 in ASCII, so it would be converted to 1000001, and to 01000001 with numBits set to 8
 		/// </summary>
 		/// <param name="c"></param>
 		/// <param name="numBits"></param>
@@ -29,11 +29,11 @@ namespace MyClassLibrary.Encoding
 			int number = c;
 			var sb = new StringBuilder();
 
-			int i = 0;
+			var i = 0;
 
 			while (number >= 1)
 			{
-				number = System.Math.DivRem(number, 2, out int remainder);
+				number = System.Math.DivRem(number, 2, out var remainder);
 				sb.Append(remainder);
 				++i;
 			}
@@ -64,17 +64,25 @@ namespace MyClassLibrary.Encoding
 		/// </summary>
 		/// <param name="s"></param>
 		/// <returns></returns>
+		/// <exception cref="ArgumentException"></exception>
 		public static string FlipBits(this string s)
 		{
-			int length = s.Length;
+			var length = s.Length;
 			var sb = new StringBuilder(length);
 
-			for (int i = 0; i < length; i++)
+			for (var i = 0; i < length; i++)
 			{
-				if (s[i] == '0')
-					sb.Append('1');
-				else
-					sb.Append('0');
+				switch (s[i])
+				{
+					case '0':
+						sb.Append('1');
+						break;
+					case '1':
+						sb.Append('0');
+						break;
+					default:
+						throw new ArgumentException(s);
+				}
 			}
 
 			return sb.ToString();
@@ -93,10 +101,15 @@ namespace MyClassLibrary.Encoding
 		public int NumBits { get; }
 
 		/// <summary>
-		/// The bits as string
+		/// The bits as string like "110101001"
 		/// </summary>
 		public string Bits { get; }
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="asciiString"></param>
+		/// <param name="numBits"></param>
 		public BitString(string asciiString, in int numBits = -1)
 		{
 			NumBits = numBits;
@@ -106,7 +119,7 @@ namespace MyClassLibrary.Encoding
 		private string AsciiToBitString(string asciiString)
 		{
 			var sb = new StringBuilder();
-			for (int i = 0; i < asciiString.Length; ++i)
+			for (var i = 0; i < asciiString.Length; ++i)
 				sb.Append(asciiString[i].ToBitString(NumBits));
 			return sb.ToString();
 		}
