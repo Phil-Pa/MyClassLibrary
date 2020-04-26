@@ -20,7 +20,7 @@ namespace MyClassLibrary.TaskScheduling
 		public bool IsDependingOnOtherTasks {
 			get
 			{
-				return DependingTasks.IsNotEmpty();
+				return !DependingTasks.IsEmpty();
 			}
 		}
 

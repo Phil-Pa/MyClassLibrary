@@ -17,8 +17,8 @@ namespace MyClassLibrary
 			var success = int.TryParse(str, out var result);
 			if (success)
 				return result;
-			else
-				throw new ArgumentException("str can no be converted to an int");
+			
+			throw new ArgumentException("str can no be converted to an int");
 		}
 
 		[DebuggerHidden]
@@ -30,17 +30,6 @@ namespace MyClassLibrary
 			return (int)char.GetNumericValue(c);
 		}
 
-		[DebuggerHidden]
-		public static byte ToByte(this char c)
-		{
-			if (c < '0' || c > '9')
-				return 0; 
-
-			var result = char.GetNumericValue(c);
-			Debug.Assert(result >= byte.MinValue && result <= byte.MaxValue);
-			return (byte)result;
-		}
-
 		public static int Count<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
 		{
 			return Enumerable.Count(enumerable, predicate);
@@ -49,11 +38,6 @@ namespace MyClassLibrary
 		public static bool IsEmpty<T>(this IEnumerable<T> enumerable)
 		{
 			return !enumerable.Any();
-		}
-
-		public static bool IsNotEmpty<T>(this IEnumerable<T> enumerable)
-		{
-			return !IsEmpty(enumerable);
 		}
 
 		public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> enumerable)

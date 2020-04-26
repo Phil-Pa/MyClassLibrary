@@ -1,4 +1,5 @@
-﻿using MyClassLibrary.Encoding;
+﻿using System;
+using MyClassLibrary.Encoding;
 using Xunit;
 
 namespace UnitTestProject.Encoding
@@ -38,6 +39,11 @@ namespace UnitTestProject.Encoding
 		{
 			var bits = "A".AsBitString().FlipBits();
 			Assert.Equal("0111110", bits);
+
+			Assert.Throws<ArgumentException>(() =>
+			{
+				"afds".FlipBits();
+			});
 		}
 	}
 }

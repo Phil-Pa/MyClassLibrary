@@ -1,6 +1,7 @@
 ﻿using MyClassLibrary.Math;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -158,11 +159,10 @@ namespace MyClassLibrary.Encoding
 
 		private void CheckSymbolsAreInEncodingMap(string str)
 		{
-			if (_encodingMap == null)
-				return;
 
 			foreach (var c in str)
 			{
+				Debug.Assert(_encodingMap != null);
 				if (!_encodingMap.Keys.Contains(c))
 					throw new Exception($"{c} is not in encoding map");
 			}

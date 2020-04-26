@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Xunit;
 
 using MyClassLibrary;
@@ -32,6 +33,34 @@ namespace UnitTestProject
 				_output.WriteLine(permutations.Count().ToString());
 			}
 			
+		}
+
+		[Fact]
+		public void TestContainsOnly()
+		{
+
+			var list = new List<int>
+			{
+				2, 2, 2, 2
+			};
+
+			Assert.True(list.ContainsOnly(2));
+			
+			list.Add(3);
+			
+			Assert.False(list.ContainsOnly(2));
+		}
+
+		[Fact]
+		public void TestToInt()
+		{
+			const string str = "1232";
+			Assert.Equal(1232, str.ToInt());
+
+			Assert.Throws<ArgumentException>(() =>
+			{
+				"283ha34".ToInt();
+			});
 		}
 
 	}
