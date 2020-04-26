@@ -14,19 +14,19 @@ namespace MyClassLibrary.CodeCounter
 		IEnumerable<string>? GetFiles(string path);
 	}
 
-	internal class DirectoryReader : IDirectoryReader
+	public class DirectoryReader : IDirectoryReader
 	{
 		public IEnumerable<string>? GetDirectories(string path)
 		{
-			var dirs = Directory.EnumerateDirectories(path, null, SearchOption.TopDirectoryOnly);
+			var dirs = Directory.EnumerateDirectories(path, "*", SearchOption.TopDirectoryOnly);
 			var directories = dirs.ToList();
 			return directories.Any() ? directories : null;
 		}
 
 		public IEnumerable<string>? GetFiles(string path)
 		{
-			var fs = Directory.EnumerateFiles(path, null, SearchOption.TopDirectoryOnly);
-			var files = fs.ToList();
+			var fs = Directory.EnumerateFiles(path, "*", SearchOption.TopDirectoryOnly);
+			var files = fs.ToList().Where(file => file != null);
 			return files.Any() ? files : null;
 		}
 	}

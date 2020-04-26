@@ -7,6 +7,7 @@ namespace MyClassLibrary.CodeCounter
 		public int CodeLines { get; }
 		public int CommentLines { get; }
 		public int BlankLines { get; }
+		public static IAddable<CodeStats> Default { get; } = new CodeStats(0, 0, 0);
 
 		public CodeStats(int codeLines, int commentLines, int blankLines)
 		{
@@ -21,12 +22,17 @@ namespace MyClassLibrary.CodeCounter
 		}
 
 
-		public CodeStats Add(IAddable<CodeStats> other)
+		public IAddable<CodeStats> Add(IAddable<CodeStats> other)
 		{
 			if (other is CodeStats stats)
 				return this + stats;
 			
 			throw new ArgumentException(other.ToString());
+		}
+
+		public override string ToString()
+		{
+			return CodeLines + ", " + CommentLines + ", " + BlankLines;
 		}
 	}
 }

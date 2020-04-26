@@ -5,34 +5,32 @@ using System.Linq;
 
 namespace MyClassLibrary.CodeCounter
 {
-	internal class CodeReader : IFileInterpreter<Language, CodeStats>
+	public class CodeReader : IFileInterpreter<Language, CodeStats>
 	{
 
 		private Language _language;
-		public CodeReader()
+
+		private static bool IsEmptyLine(string line)
 		{
-		}
-		private bool IsEmptyLine(string line)
-		{
-			throw new System.NotImplementedException();
+			return line.ContainsOnly(' ') || line == string.Empty;
 		}
 
-		private bool IsCommentEnd(string line)
+		private static bool IsCommentEnd(string line)
 		{
-			throw new System.NotImplementedException();
+			return line.TrimEnd().EndsWith("*/");
 		}
 
-		private bool IsCommentStart(string line)
+		private static bool IsCommentStart(string line)
 		{
-			throw new System.NotImplementedException();
+			return line.TrimStart().StartsWith("/*");
 		}
 
-		private bool IsSingleCommentLine(string line)
+		private static bool IsSingleCommentLine(string line)
 		{
-			throw new System.NotImplementedException();
+			return line.TrimStart().StartsWith("//");
 		}
 
-		public (Language, IAddable<CodeStats>) Interpret(string fileExtension, IEnumerable<string> lines)
+		public (Language, IAddable<CodeStats>)? Interpret(string fileExtension, IEnumerable<string> lines)
 		{
 			switch (fileExtension)
 			{
@@ -46,6 +44,9 @@ namespace MyClassLibrary.CodeCounter
 				case ".java":
 					_language = Language.Java;
 					break;
+				case ".kt":
+					_language = Language.Kotlin;
+					break;
 				case ".cs":
 					_language = Language.CSharp;
 					break;
@@ -53,13 +54,13 @@ namespace MyClassLibrary.CodeCounter
 					_language = Language.Cpp;
 					break;
 				default:
-					throw new Exception();
+					return null;
 			}
 			
 			
 			int commentLines = 0, blankLines = 0, codeLines = 0;
 
-			bool isInMultiCommentLine = false;
+			var isInMultiCommentLine = false;
 
 			var enumerable = lines.ToList();
 			foreach (var line in enumerable)
@@ -96,9 +97,16 @@ namespace MyClassLibrary.CodeCounter
 					codeLines++;
 			}
 
-			Debug.Assert(enumerable.Count() == commentLines + blankLines + codeLines);
+			Debug.Assert(enumerable.Count == commentLines + blankLines + codeLines);
 
-			return (language, new CodeStats(codeLines, commentLines, blankLines));
+			return (_language, new CodeStats(codeLines, commentLines, blankLines));
+		}
+
+		private readonly string[] fileExtensions = new[] {".c", ".cpp", ".h", ".hpp", ".java", ".kt", ".cs"};
+
+		public bool SupportsFileExtension(string fileExtension)
+		{
+			return fileExtensions.Contains(fileExtension);
 		}
 	}
 }

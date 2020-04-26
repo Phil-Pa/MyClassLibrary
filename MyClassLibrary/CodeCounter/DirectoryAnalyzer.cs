@@ -11,18 +11,17 @@ namespace MyClassLibrary.CodeCounter
 		// string is the path of the directory where a language has code stats
 		
 		private readonly IGraph<Tuple<string, IDictionary<T, IAddable<TV>>>, object> _graph;
-		private readonly IDirectoryTreeToGraphConverter<T, TV> _converter;
 		private readonly string _path;
 
 		private readonly IAddable<TV> _defaultValue;
 		
 		public DirectoryAnalyzer(IDirectoryTreeToGraphConverter<T, TV> converter, string path, IAddable<TV> defaultValue, IFileInterpreter<T, TV> fileInterpreter)
 		{
+			// TODO: what if directory structure changes?
 			// TODO: refactor
-			_converter = converter;
 			_path = path;
-			this._defaultValue = defaultValue;
-			// converter.Convert(path, fileInterpreter);
+			_defaultValue = defaultValue;
+			converter.Convert(path, fileInterpreter);
 			_graph = new Graph<Tuple<string, IDictionary<T, IAddable<TV>>>, object>(converter.Nodes, converter.Edges);
 			
 			// TODO: uncomment asserts when they are working

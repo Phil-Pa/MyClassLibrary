@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Moq;
 using MyClassLibrary.CodeCounter;
@@ -12,8 +11,15 @@ namespace UnitTestProject.CodeCounter
 {
 	public class AnalyzerTest
 	{
+		private readonly ITestOutputHelper _outputHelper;
 		private const string Path = "E:/Test";
 
+
+		public AnalyzerTest(ITestOutputHelper outputHelper)
+		{
+			_outputHelper = outputHelper;
+		}
+		
 		[Fact]
 		public void TestTotalCodeStats()
 		{
@@ -51,6 +57,25 @@ namespace UnitTestProject.CodeCounter
 			Assert.Equal(492, stats[Language.C].CodeLines);
 			Assert.Equal(122, stats[Language.C].CommentLines);
 			Assert.Equal(86, stats[Language.C].BlankLines);
+		}
+
+		[Fact]
+		public void Test()
+		{
+			var fileInterpreter = new CodeReader();
+			var fileReader = new FileReader();
+			var directoryReader = new DirectoryReader();
+			var converter = new DirectoryTreeToGraphConverter<Language, CodeStats>(fileReader, directoryReader);
+			var analyzer = new DirectoryAnalyzer<Language, CodeStats>(converter, "C:\\UE4\\UnrealEngine-release\\Engine\\Source", CodeStats.Default, fileInterpreter);
+
+			var stats = analyzer.GetTotalStats();
+
+			foreach (var (key, value) in stats)
+			{
+				_outputHelper.WriteLine(key + "\t" + value);
+			}
+			
+			
 		}
 	}
 }

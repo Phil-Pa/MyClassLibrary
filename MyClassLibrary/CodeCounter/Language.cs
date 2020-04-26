@@ -4,6 +4,7 @@
 	{
 		CSharp,
 		Java,
+		Kotlin,
 		Cpp,
 		C,
 		CCppHeader
