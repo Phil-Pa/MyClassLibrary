@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace MyClassLibrary.Collections
+namespace MyClassLibrary.Collections.Graph
 {
 	[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
 	public class Graph<T, TV> : IGraph<T, TV> where T : class where TV : class

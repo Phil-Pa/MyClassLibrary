@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MyClassLibrary.Collections;
+using MyClassLibrary.Collections.Graph;
 
 namespace MyClassLibrary.CodeCounter
 {

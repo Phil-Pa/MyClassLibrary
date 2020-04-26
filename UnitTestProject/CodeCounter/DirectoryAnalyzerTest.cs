@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using MyClassLibrary.CodeCounter;
-using MyClassLibrary.Collections;
+using MyClassLibrary.Collections.Graph;
 using Xunit;
 
 namespace UnitTestProject.CodeCounter
