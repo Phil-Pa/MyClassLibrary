@@ -23,7 +23,7 @@ namespace MyClassLibrary.Collections
 			_adjacencyMatrix = new List<List<int>>();
 
 			Validate();
-			Analyze();
+			// TODO: Analyze();
 		}
 
 		private void Validate()
