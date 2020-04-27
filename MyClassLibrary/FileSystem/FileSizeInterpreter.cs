@@ -6,7 +6,7 @@ using MyClassLibrary.FileSystem.CodeCounter;
 namespace MyClassLibrary.FileSystem
 {
 
-	public readonly struct MyInt : IAddable<MyInt>
+	public readonly struct MyInt : IAddable<MyInt>, IComparable<MyInt>
 	{
 		private int Value { get; }
 		public static readonly IAddable<MyInt> Default = new MyInt(0);
@@ -27,14 +27,31 @@ namespace MyClassLibrary.FileSystem
 		{
 			return Value + "B, " + Value / 1024 + "KB, " + Value / 1024 / 1024 + "MB";
 		}
-	}
+
+        public int CompareTo(MyInt other)
+        {
+            return Value.CompareTo(other.Value);
+        }
+    }
 	
 	public class FileSizeInterpreter : IFileInterpreter<string, MyInt>
 	{
 
-		public (string, IAddable<MyInt>)? Interpret(string fileExtension, IEnumerable<string> lines)
-		{
-			var sum = lines.Sum(line => line.Length);
+		public (string, IAddable<MyInt>)? Interpret(string fileExtension, IList<string> lines)
+        {
+            if (!fileExtension.Contains('.'))
+                fileExtension = "no_extension";
+
+            if (fileExtension.StartsWith(".git"))
+                fileExtension = ".gitfile";
+
+            var sum = 0;
+            for (var i = 0; i < lines.Count; i++)
+            {
+                sum += lines[i].Length;
+            }
+
+            // var sum = lines.Sum(line => line.Length);
 
 			return (fileExtension, new MyInt(sum));
 		}

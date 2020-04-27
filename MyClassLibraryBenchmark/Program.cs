@@ -5,6 +5,7 @@ using MyClassLibrary.Math.Learning;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using MyClassLibrary.FileSystem;
 using MyClassLibrary.FileSystem.CodeCounter;
 using MyClassLibrary.TaskScheduling;
@@ -15,9 +16,10 @@ namespace MyClassLibraryBenchmark
 {
 	internal static class Program
 	{
-		private static void Main()
-		{
-			//var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
+		private static void Main(string[] args)
+        {
+
+            //var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
 			//var task1 = new Task(name: "Task1", description: "Task1 Test", duration: TimeSpan.FromMinutes(20), isParallel: true, priority: 3, dependingTasks: null);
 			//var task2 = new Task(name: "Task2", description: "Task2 Test", duration: TimeSpan.FromMinutes(15), isParallel: false, priority: 3, dependingTasks: null);
@@ -46,23 +48,33 @@ namespace MyClassLibraryBenchmark
 
 			//Console.WriteLine(watch.ElapsedMilliseconds);
 
+            const string path = @"C:\Users\Phil\source\projects\csharp\libraries";
+
 			var fileInterpreter = new CodeReader();
 			var fileReader = new FileReader();
 			var directoryReader = new DirectoryReader();
 			var converter = new DirectoryTreeToGraphConverter<Language, CodeStats>(fileReader, directoryReader);
-			var analyzer = new DirectoryAnalyzer<Language, CodeStats>(converter, @"C:\test", CodeStats.Default, fileInterpreter);
-			
-			//var fileInterpreter = new FileSizeInterpreter();
-			//var converter = new DirectoryTreeToGraphConverter<string, MyInt>(fileReader, directoryReader);
-			//var analyzer = new DirectoryAnalyzer<string, MyInt>(converter, "C:/test", MyInt.Default, fileInterpreter);
+			var analyzer = new DirectoryAnalyzer<Language, CodeStats>(converter, path, CodeStats.Default, fileInterpreter);
 
-			var stats = analyzer.GetTotalStats();
+            var stats = analyzer.GetTotalStats();
 
+            var fileInterpreter2 = new FileSizeInterpreter();
+            var converter2 = new DirectoryTreeToGraphConverter<string, MyInt>(fileReader, directoryReader);
+            var analyzer2 = new DirectoryAnalyzer<string, MyInt>(converter2, path, MyInt.Default, fileInterpreter2);
+
+            var stats2 = analyzer2.GetTotalStats().ToList();
+            stats2.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
+            
             foreach (var (key, value) in stats)
-			{
-				Console.WriteLine(key + "\t" + value);
-			}
+            {
+                Console.WriteLine(key + "\t" + value);
+            }
 
+            foreach (var (key, value) in stats2)
+            {
+                Console.WriteLine(key + "\t" + value);
+            }
+            
 			//Console.ReadKey();
 		}
 	}

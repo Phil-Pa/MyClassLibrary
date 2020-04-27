@@ -5,7 +5,7 @@ namespace MyClassLibrary.FileSystem
 	public interface IFileReader
 	{
 
-		IEnumerable<string> ReadLines(string path);
+		IList<string> ReadLines(string path);
 
 	}
 }

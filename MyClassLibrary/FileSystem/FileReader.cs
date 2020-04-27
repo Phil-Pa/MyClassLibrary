@@ -5,9 +5,16 @@ namespace MyClassLibrary.FileSystem
 {
 	public class FileReader : IFileReader
 	{
-		public IEnumerable<string> ReadLines(string path)
-		{
-			return File.ReadLines(path);
-		}
+		public IList<string> ReadLines(string path)
+        {
+            var lines = new List<string>();
+            using StreamReader reader = new StreamReader(path);
+            while (!reader.EndOfStream)
+            {
+                lines.Add(reader.ReadLine());
+            }
+            
+            return lines;
+        }
 	}
 }

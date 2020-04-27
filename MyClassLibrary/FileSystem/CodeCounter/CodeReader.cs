@@ -29,7 +29,7 @@ namespace MyClassLibrary.FileSystem.CodeCounter
 			return line.TrimStart().StartsWith("//");
 		}
 
-		public (Language, IAddable<CodeStats>)? Interpret(string fileExtension, IEnumerable<string> lines)
+		public (Language, IAddable<CodeStats>)? Interpret(string fileExtension, IList<string> lines)
 		{
 			switch (fileExtension)
 			{
