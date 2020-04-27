@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Moq;
-using MyClassLibrary.CodeCounter;
 using MyClassLibrary.Collections.Graph;
+using MyClassLibrary.FileSystem;
+using MyClassLibrary.FileSystem.CodeCounter;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace UnitTestProject.CodeCounter
+namespace UnitTestProject.FileSystem.CodeCounter
 {
 	public class AnalyzerTest
 	{

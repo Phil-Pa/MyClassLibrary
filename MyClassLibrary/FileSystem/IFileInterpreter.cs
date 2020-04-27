@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using MyClassLibrary.FileSystem.CodeCounter;
 
-namespace MyClassLibrary.CodeCounter
+namespace MyClassLibrary.FileSystem
 {
 	public interface IFileInterpreter<T, TV>
 	{

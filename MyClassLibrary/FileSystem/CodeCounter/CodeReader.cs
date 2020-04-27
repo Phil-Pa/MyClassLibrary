@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace MyClassLibrary.CodeCounter
+namespace MyClassLibrary.FileSystem.CodeCounter
 {
 	public class CodeReader : IFileInterpreter<Language, CodeStats>
 	{
@@ -77,8 +76,8 @@ namespace MyClassLibrary.CodeCounter
 					continue;
 				}
 
-				bool isCommentStart = IsCommentStart(line);
-				bool isCommentEnd = IsCommentEnd(line);
+				var isCommentStart = IsCommentStart(line);
+				var isCommentEnd = IsCommentEnd(line);
 
 				if (isCommentStart && !isCommentEnd)
 				{
@@ -91,7 +90,7 @@ namespace MyClassLibrary.CodeCounter
 
 				if (IsEmptyLine(line))
 					blankLines++;
-				else if (isInMultiCommentLine || (isCommentStart && isCommentEnd))
+				else if (isInMultiCommentLine || isCommentStart && isCommentEnd)
 					commentLines++;
 				else
 					codeLines++;
@@ -102,11 +101,11 @@ namespace MyClassLibrary.CodeCounter
 			return (_language, new CodeStats(codeLines, commentLines, blankLines));
 		}
 
-		private readonly string[] fileExtensions = new[] {".c", ".cpp", ".h", ".hpp", ".java", ".kt", ".cs"};
+		private readonly string[] _fileExtensions = {".c", ".cpp", ".h", ".hpp", ".java", ".kt", ".cs"};
 
 		public bool SupportsFileExtension(string fileExtension)
 		{
-			return fileExtensions.Contains(fileExtension);
+			return _fileExtensions.Contains(fileExtension);
 		}
 	}
 }

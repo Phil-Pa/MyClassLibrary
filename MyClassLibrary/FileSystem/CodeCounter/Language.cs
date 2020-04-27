@@ -1,4 +1,4 @@
-﻿namespace MyClassLibrary.CodeCounter
+﻿namespace MyClassLibrary.FileSystem.CodeCounter
 {
 	public enum Language
 	{

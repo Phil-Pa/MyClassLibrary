@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace MyClassLibrary.CodeCounter
+namespace MyClassLibrary.FileSystem
 {
 	public class FileReader : IFileReader
 	{

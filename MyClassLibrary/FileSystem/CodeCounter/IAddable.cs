@@ -1,4 +1,4 @@
-﻿namespace MyClassLibrary.CodeCounter
+﻿namespace MyClassLibrary.FileSystem.CodeCounter
 {
 	public interface IAddable<T>
 	{

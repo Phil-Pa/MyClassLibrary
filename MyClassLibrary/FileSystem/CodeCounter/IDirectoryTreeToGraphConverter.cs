@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using MyClassLibrary.Collections.Graph;
 
-namespace MyClassLibrary.CodeCounter
+namespace MyClassLibrary.FileSystem.CodeCounter
 {
 	public interface IDirectoryTreeToGraphConverter<T, TV>
 	{
@@ -85,8 +84,10 @@ namespace MyClassLibrary.CodeCounter
 		private void ProcessFile(string file, IDictionary<T, IAddable<TV>> map)
 		{
 			var fileExtension = file.GetFileExtension();
-			Debug.Assert(fileExtension != null);
-			
+
+			if (fileExtension == null)
+				return;
+
 			if (_fileInterpreter == null)
 				throw new Exception("interpreter must not be null, should have been set before in this class");
 

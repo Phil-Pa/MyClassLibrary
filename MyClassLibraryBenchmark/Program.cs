@@ -1,11 +1,12 @@
-﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes;
 using MyClassLibrary.Algorithms.AStar;
 using MyClassLibrary.Encoding;
 using MyClassLibrary.Math.Learning;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using MyClassLibrary.CodeCounter;
+using MyClassLibrary.FileSystem;
+using MyClassLibrary.FileSystem.CodeCounter;
 using MyClassLibrary.TaskScheduling;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -49,11 +50,15 @@ namespace MyClassLibraryBenchmark
 			var fileReader = new FileReader();
 			var directoryReader = new DirectoryReader();
 			var converter = new DirectoryTreeToGraphConverter<Language, CodeStats>(fileReader, directoryReader);
-			var analyzer = new DirectoryAnalyzer<Language, CodeStats>(converter, @"C:\UE4\UnrealEngine-release\Engine", CodeStats.Default, fileInterpreter);
+			var analyzer = new DirectoryAnalyzer<Language, CodeStats>(converter, @"C:\test", CodeStats.Default, fileInterpreter);
+			
+			//var fileInterpreter = new FileSizeInterpreter();
+			//var converter = new DirectoryTreeToGraphConverter<string, MyInt>(fileReader, directoryReader);
+			//var analyzer = new DirectoryAnalyzer<string, MyInt>(converter, "C:/test", MyInt.Default, fileInterpreter);
 
 			var stats = analyzer.GetTotalStats();
 
-			foreach (var (key, value) in stats)
+            foreach (var (key, value) in stats)
 			{
 				Console.WriteLine(key + "\t" + value);
 			}

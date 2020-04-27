@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyClassLibrary.CodeCounter
+namespace MyClassLibrary.FileSystem.CodeCounter
 {
 	public readonly struct CodeStats : IAddable<CodeStats>
 	{

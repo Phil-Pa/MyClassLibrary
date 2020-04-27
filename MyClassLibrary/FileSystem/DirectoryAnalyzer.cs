@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using MyClassLibrary.Collections.Graph;
+using MyClassLibrary.FileSystem.CodeCounter;
 
-namespace MyClassLibrary.CodeCounter
+namespace MyClassLibrary.FileSystem
 {
 	public class DirectoryAnalyzer<T, TV> where TV : IAddable<TV>
 	{

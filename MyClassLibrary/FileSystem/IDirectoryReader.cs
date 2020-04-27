@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace MyClassLibrary.CodeCounter
+namespace MyClassLibrary.FileSystem
 {
 	public interface IDirectoryReader
 	{
@@ -26,7 +26,7 @@ namespace MyClassLibrary.CodeCounter
 		public IEnumerable<string>? GetFiles(string path)
 		{
 			var fs = Directory.EnumerateFiles(path, "*", SearchOption.TopDirectoryOnly);
-			var files = fs.ToList().Where(file => file != null);
+			var files = fs.Where(file => file != null).ToList();
 			return files.Any() ? files : null;
 		}
 	}
