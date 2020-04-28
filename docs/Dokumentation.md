@@ -5,6 +5,17 @@
 Dieses Projekt ist eine Klassenbibliothek, die in möglichst jedem anderen C# Projekt von Nutzen sein soll. Ziel ist es daher,
 dass die Funktionen einfach gehalten sein sollen.
 
+Es gibt folgende Module in dem Projekt:
+
+- Aufgabenplanung
+- Backup-System
+- Kodierung
+- Dateisystem
+- Mathe
+- Einstellungen
+- Datenstrukturen
+- Algorithmen
+
 ## Aufgabenplanung
 
 In der Klassenbibliothek soll es eine Klasse geben, die dabei hilft, Aufgaben zu planen. Aufgaben könnne Aufgaben aus dem realen Leben, als auch
@@ -21,3 +32,8 @@ beendet werden. Dies ist möglich, indem man einzelne Aufgabe als Abhängigkeite
 Es soll möglich sein, die Anzahl der Arbeiter anzugeben, welche die Aufgaben erledigen. Ihre Aufteilung soll optimal sein. Wenn man an weitere
 Informationen wie die Dauer der Erledigung aller Aufgaben rankommen möchte, muss man die entsprechende Methode der Aufgabenplanerklasse aufrufen.
 
+... csharp
+
+Console.WriteLine("Hello World!");
+
+...

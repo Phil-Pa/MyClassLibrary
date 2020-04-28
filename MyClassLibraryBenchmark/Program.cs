@@ -18,17 +18,6 @@ namespace MyClassLibraryBenchmark
 		private static void Main(string[] args)
         {
 
-            var directories = new[] {@"E:\Dokumente\manictimeexports", @"E:\Dokumente\office"};
-            const string aescryptPath = @"C:\Program Files\AESCrypt\aescrypt.exe";
-            const string password = "1234";
-            var output = Backup.DoBackup(directories, "E:/Test", aescryptPath, password);
-
-            Thread.Sleep(2000);
-            
-            Backup.UnpackBackup(output, aescryptPath, password);
-            
-            return;
-            
             //var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
 			//var task1 = new Task(name: "Task1", description: "Task1 Test", duration: TimeSpan.FromMinutes(20), isParallel: true, priority: 3, dependingTasks: null);
