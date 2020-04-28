@@ -45,19 +45,21 @@ namespace MyClassLibraryBenchmark
 
 			//Console.WriteLine(watch.ElapsedMilliseconds);
 
+            var watch = Stopwatch.StartNew();
+
             const string path = @"C:\Users\Phil\source\projects\csharp\libraries";
 
 			var fileInterpreter = new CodeReader();
 			var fileReader = new FileReader();
 			var directoryReader = new DirectoryReader();
 			var converter = new DirectoryTreeToGraphConverter<Language, CodeStats>(fileReader, directoryReader);
-			var analyzer = new DirectoryAnalyzer<Language, CodeStats>(converter, path, CodeStats.Default, fileInterpreter);
+			var analyzer = new DirectoryAnalyzer<Language, CodeStats>(converter, path, CodeStats.Default, fileInterpreter, Console.Out);
 
             var stats = analyzer.GetTotalStats();
 
             var fileInterpreter2 = new FileSizeInterpreter();
             var converter2 = new DirectoryTreeToGraphConverter<string, MyInt>(fileReader, directoryReader);
-            var analyzer2 = new DirectoryAnalyzer<string, MyInt>(converter2, path, MyInt.Default, fileInterpreter2);
+            var analyzer2 = new DirectoryAnalyzer<string, MyInt>(converter2, path, MyInt.Default, fileInterpreter2, Console.Out);
 
             var stats2 = analyzer2.GetTotalStats().ToList();
             stats2.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
@@ -71,8 +73,12 @@ namespace MyClassLibraryBenchmark
             {
                 Console.WriteLine(key + "\t" + value);
             }
-            
-			//Console.ReadKey();
+
+            watch.Stop();
+
+            Console.WriteLine("Elapsed: " + watch.ElapsedMilliseconds + "ms");
+
+            //Console.ReadKey();
 		}
 
         private static void RunBenchmarks()

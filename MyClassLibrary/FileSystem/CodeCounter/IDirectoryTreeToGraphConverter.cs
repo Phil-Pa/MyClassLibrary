@@ -1,5 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using MyClassLibrary.Collections.Graph;
 
@@ -8,7 +11,7 @@ namespace MyClassLibrary.FileSystem.CodeCounter
 	public interface IDirectoryTreeToGraphConverter<T, TV>
 	{
 		// TODO: should we pass the file interpreter via convert or with ctor of deriving classes?
-		void Convert(string path, IFileInterpreter<T, TV> fileInterpreter);
+		void Convert(string path, IFileInterpreter<T, TV> fileInterpreter, TextWriter? fileOutput);
 
 		IEnumerable<IGraphNode<Tuple<string, IDictionary<T, IAddable<TV>>>>> Nodes { get; }
 		IEnumerable<IGraphEdge<Tuple<string, IDictionary<T, IAddable<TV>>>, object>> Edges { get; }
@@ -21,6 +24,7 @@ namespace MyClassLibrary.FileSystem.CodeCounter
 		private readonly List<IGraphNode<Tuple<string, IDictionary<T, IAddable<TV>>>>> _nodes;
 		private readonly List<IGraphEdge<Tuple<string, IDictionary<T, IAddable<TV>>>, object>> _edges;
 		private IFileInterpreter<T, TV>? _fileInterpreter;
+        private TextWriter? _fileOutput;
 
 		public DirectoryTreeToGraphConverter(IFileReader fileReader, IDirectoryReader directoryReader)
 		{
@@ -31,17 +35,32 @@ namespace MyClassLibrary.FileSystem.CodeCounter
 			_edges = new List<IGraphEdge<Tuple<string, IDictionary<T, IAddable<TV>>>, object>>();
 		}
 
-		public void Convert(string path, IFileInterpreter<T, TV> fileInterpreter)
+		public void Convert(string path, IFileInterpreter<T, TV> fileInterpreter, TextWriter? fileOutput)
 		{
-			_fileInterpreter = fileInterpreter;
+            _fileInterpreter = fileInterpreter;
+            _fileOutput = fileOutput;
 			ConvertInternal(path);
 			CreateEdges();
 		}
 
-		private void CreateEdges()
-		{
-			
-		}
+		[SuppressMessage("ReSharper", "ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator")]
+        private void CreateEdges()
+        {
+
+            foreach (var root in _nodes)
+            {
+                foreach (var graphNode in _nodes)
+                {
+                    var directory = root.NodeValue!.Item1;
+                    var subDirectory = graphNode.NodeValue!.Item1;
+                    if (!FileSystemUtils.IsSubDirectory(directory, subDirectory))
+                        continue;
+                    
+                    var edge = new GraphEdge<Tuple<string, IDictionary<T, IAddable<TV>>>, object>(root, graphNode);
+                    _edges.Add(edge);
+                }
+            }
+        }
 
 		private void ConvertInternal(string path)
 		{
@@ -59,27 +78,23 @@ namespace MyClassLibrary.FileSystem.CodeCounter
 
 		private void ProcessDirectory(string dir)
 		{
-			try
-			{
-				var files = _directoryReader.GetFiles(dir).Where(file => file?.GetFileExtension() != null);
-				if (files == null)
-					return;
+            var files = _directoryReader.GetFiles(dir);
 
-				var map = new Dictionary<T, IAddable<TV>>();
+            if (files == null)
+                return;
 
-				foreach (var file in files)
-				{
-					ProcessFile(file, map);
-				}
+            files = files.Where(file => file?.GetFileExtension() != null);
 
-				var tuple = new Tuple<string, IDictionary<T, IAddable<TV>>>(dir, map);
-				_nodes.Add(new GraphNode<Tuple<string, IDictionary<T, IAddable<TV>>>>(tuple));
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-			}
-		}
+            var map = new Dictionary<T, IAddable<TV>>();
+
+            foreach (var file in files)
+            {
+                ProcessFile(file, map);
+            }
+
+            var tuple = new Tuple<string, IDictionary<T, IAddable<TV>>>(dir, map);
+            _nodes.Add(new GraphNode<Tuple<string, IDictionary<T, IAddable<TV>>>>(tuple));
+        }
 
 		private void ProcessFile(string file, IDictionary<T, IAddable<TV>> map)
 		{
@@ -93,8 +108,10 @@ namespace MyClassLibrary.FileSystem.CodeCounter
 
 			if (!_fileInterpreter.SupportsFileExtension(fileExtension))
 				return;
-			
-			var lines = _fileReader.ReadLines(file);
+
+            _fileOutput?.WriteLine("processing:\t" + file);
+
+            var lines = _fileReader.ReadLines(file);
 
 			var res = _fileInterpreter.Interpret(fileExtension, lines);
 			if (!res.HasValue)

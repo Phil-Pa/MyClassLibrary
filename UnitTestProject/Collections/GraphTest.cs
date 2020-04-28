@@ -47,7 +47,7 @@ namespace UnitTestProject.Collections
 			IGraph<Int, Int> graph = new Graph<Int, Int>(nodes, edges);
 
 			Assert.True(graph.IsDirected);
-			Assert.True(graph.IsCyclic);
+			Assert.True(graph.IsCyclic.Value);
 		}
 		
 		[Fact]
@@ -78,7 +78,7 @@ namespace UnitTestProject.Collections
 			IGraph<Int, Int> graph = new Graph<Int, Int>(nodes, edges);
 
 			Assert.True(graph.IsDirected);
-			Assert.False(graph.IsCyclic);
+			Assert.False(graph.IsCyclic.Value);
 		}
 
 	}

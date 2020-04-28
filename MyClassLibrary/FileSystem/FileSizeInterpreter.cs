@@ -20,7 +20,7 @@ namespace MyClassLibrary.FileSystem
 			if (other is MyInt i)
 				return new MyInt(Value + i.Value);
 			
-			throw new ArgumentException(other.ToString());
+			throw new ArgumentException(other.ToString() + " is not of type CodeStats");
 		}
 
 		public override string ToString()

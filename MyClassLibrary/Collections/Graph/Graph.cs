@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -14,14 +14,18 @@ namespace MyClassLibrary.Collections.Graph
 		public bool IsDirected { get; private set; }
 		public IEnumerable<IGraphNode<T>> Nodes { get; }
 		public IEnumerable<IGraphEdge<T, TV>> Edges { get; }
-		public bool IsCyclic { get; private set; }
+
+        public Lazy<bool> IsCyclic { get; }
+
         public Graph(IEnumerable<IGraphNode<T>> nodes, IEnumerable<IGraphEdge<T, TV>> edges)
 		{
 			Nodes = nodes;
 			Edges = edges;
 
+            IsCyclic = new Lazy<bool>(AnalyzeCycles);
+
             Validate();
-			Analyze();
+            Analyze();
 		}
 
 		private void Validate()
@@ -38,29 +42,28 @@ namespace MyClassLibrary.Collections.Graph
 				}
 				else
 				{
-					throw new ArgumentException();
+					throw new ArgumentException("nodes in a graph edge must be in the nodes list");
 				}
 			}
 
 			// unique ids
 			if (Nodes.Select(node => node.Id).Distinct().Count() != Nodes.Count())
 			{
-				throw new ArgumentException();
+				throw new ArgumentException("nodes must have unique ids");
 			}
 		}
 
 		private void Analyze()
 		{
-			AnalyzeCycles();
-			AnalyzeDirected();
+            AnalyzeDirected();
 		}
 
-		private void AnalyzeCycles()
+		private bool AnalyzeCycles()
 		{ 
             var matrix = CreateAdjacencyMatrix();
 
-			Tarjan tarjan = new Tarjan(matrix);
-            IsCyclic = tarjan.countStronglyConnectedComponents() != Nodes.Count();
+			var tarjan = new Tarjan(matrix);
+            return tarjan.countStronglyConnectedComponents() != Nodes.Count();
         }
 
         private bool[][] CreateAdjacencyMatrix()

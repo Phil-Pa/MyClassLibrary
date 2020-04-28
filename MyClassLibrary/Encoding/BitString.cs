@@ -81,7 +81,7 @@ namespace MyClassLibrary.Encoding
 						sb.Append('0');
 						break;
 					default:
-						throw new ArgumentException(s);
+						throw new ArgumentException("string that shoudl be flipped must only contains 0 and 1");
 				}
 			}
 

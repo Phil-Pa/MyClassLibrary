@@ -79,8 +79,8 @@ namespace MyClassLibrary
 
 		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
 		{
-			if (source == null) throw new ArgumentNullException(nameof(source));
-			if (rng == null) throw new ArgumentNullException(nameof(rng));
+			if (source == null) throw new ArgumentNullException(nameof(source) + "is null");
+			if (rng == null) throw new ArgumentNullException(nameof(rng) + "is null");
 
 			return source.ShuffleIterator(rng);
 		}

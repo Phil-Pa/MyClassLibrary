@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MyClassLibrary.Collections.Graph
 {
@@ -7,6 +8,6 @@ namespace MyClassLibrary.Collections.Graph
 		bool IsDirected { get; }
 		IEnumerable<IGraphNode<T>> Nodes { get; }
 		IEnumerable<IGraphEdge<T, TV>> Edges { get; }
-		bool IsCyclic { get; }
+		Lazy<bool> IsCyclic { get; }
 	}
 }

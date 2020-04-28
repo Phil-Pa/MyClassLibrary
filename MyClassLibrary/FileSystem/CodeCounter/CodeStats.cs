@@ -27,7 +27,7 @@ namespace MyClassLibrary.FileSystem.CodeCounter
 			if (other is CodeStats stats)
 				return this + stats;
 			
-			throw new ArgumentException(other.ToString());
+			throw new ArgumentException(other.ToString() + "is not of type CodeStats");
 		}
 
 		public override string ToString()

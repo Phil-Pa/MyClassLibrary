@@ -27,7 +27,7 @@ namespace MyClassLibrary.Math
 			{
 				'+' => 62,
 				'-' => 63,
-				_ => throw new ArgumentException()
+				_ => throw new ArgumentException("ivalid identifier")
 			};
 		}
 
