@@ -5,5 +5,7 @@
 		IGraphNode<T> StartNode { get; }
 		IGraphNode<T> EndNode { get; }
 		TV? EdgeValue { get; }
-	}
+
+        bool HasConnectionBetweenNodes(int idNode1, int idNode2);
+    }
 }

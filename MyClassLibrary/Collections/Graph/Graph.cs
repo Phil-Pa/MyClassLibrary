@@ -15,15 +15,13 @@ namespace MyClassLibrary.Collections.Graph
 		public IEnumerable<IGraphNode<T>> Nodes { get; }
 		public IEnumerable<IGraphEdge<T, TV>> Edges { get; }
 		public bool IsCyclic { get; private set; }
-		private List<List<int>> _adjacencyMatrix;
-		public Graph(IEnumerable<IGraphNode<T>> nodes, IEnumerable<IGraphEdge<T, TV>> edges)
+        public Graph(IEnumerable<IGraphNode<T>> nodes, IEnumerable<IGraphEdge<T, TV>> edges)
 		{
 			Nodes = nodes;
 			Edges = edges;
-			_adjacencyMatrix = new List<List<int>>();
 
-			Validate();
-			// TODO: Analyze();
+            Validate();
+			Analyze();
 		}
 
 		private void Validate()
@@ -58,58 +56,33 @@ namespace MyClassLibrary.Collections.Graph
 		}
 
 		private void AnalyzeCycles()
+		{ 
+            var matrix = CreateAdjacencyMatrix();
+
+			Tarjan tarjan = new Tarjan(matrix);
+            IsCyclic = tarjan.countStronglyConnectedComponents() != Nodes.Count();
+        }
+
+        private bool[][] CreateAdjacencyMatrix()
 		{
-			_adjacencyMatrix = CreateAdjacencyMatrix();
+			var dimension = Nodes.Count();
+			bool[][] adjacencyMatrix = new bool[dimension][];
 
-			int[] color = new int[Nodes.Count()];
-			
-			for (var i = 0; i < color.Length; i++)
-				color[i] = White;
+            for (var i = 0; i < dimension; i++)
+            {
 
-			if (color.Where((t, i) => t == White && IsCyclicUtil(i, color)).Any())
-			{
-				IsCyclic = true;
-				return;
-			}
+                adjacencyMatrix[i] = new bool[dimension];
+                
+                for (var j = 0; j < dimension; j++)
+                {
+                    var connected = Edges.Any(edge => edge.HasConnectionBetweenNodes(i, j));
 
-			IsCyclic = false;
-		}
+                    adjacencyMatrix[i][j] = connected;
+                }
+            }
 
-		private bool IsCyclicUtil(in int i, IList<int> color)
-		{
-			color[i] = Gray;
-
-			foreach (var k in _adjacencyMatrix[i])
-			{
-				switch (color[k])
-				{
-					case Gray:
-					case White when IsCyclicUtil(k, color):
-						return true;
-				}
-			}
-
-			color[i] = Black;
-			return false;
-		}
-
-		private List<List<int>> CreateAdjacencyMatrix()
-		{
-			var dimension = Edges.Count();
-			List<List<int>> matrix = new List<List<int>>();
-
-			for (var i = 0; i < dimension; i++)
-			{
-				matrix.Add(new List<int>());
-			}
-
-			foreach (var graphEdge in Edges)
-			{
-				matrix[graphEdge.EndNode.Id].Add(graphEdge.StartNode.Id);
-			}
-
-			return matrix;
-		}
+            return adjacencyMatrix;
+        }
 
 		private void AnalyzeDirected()
 		{
@@ -129,5 +102,64 @@ namespace MyClassLibrary.Collections.Graph
 				}
 			}
 		}
+
+        private sealed class Tarjan
+        {
+
+            private int n, pre, count = 0;
+            private int[] id, low;
+            private bool[] marked;
+            private bool[][] adj;
+            private Stack<int> stack = new Stack<int>();
+
+            // Tarjan input requires an NxN adjacency matrix
+            public Tarjan(bool[][] adj) {
+                n = adj.Length;
+                this.adj = adj;
+                marked = new bool[n];
+                id = new int[n];
+                low = new int[n];
+                for (int u = 0; u < n; u++) if (!marked[u]) dfs(u);
+            }
+
+            private void dfs(int u) {
+                marked[u] = true;
+                low[u] = pre++;
+                int min = low[u];
+                stack.Push(u);
+                int v;
+                for (v = 0; v < n; v++) {
+                    if (adj[u][v]) {
+                        if (!marked[v]) dfs(v);
+                        if (low[v] < min) min = low[v];
+                    }
+                }
+                if (min < low[u]) {
+                    low[u] = min;
+                    return;
+                }
+
+                v = 0;
+                do {
+                    v = stack.Pop();
+                    id[v] = count;
+                    low[v] = n;
+                } while (v != u);
+                count++;
+            }
+
+            // Returns the id array with the strongly connected components.
+            // If id[i] == id[j] then nodes i and j are part of the same strongly connected component.
+            public int[] getStronglyConnectedComponents()
+            {
+                return id;
+            }
+
+            // Returns the number of strongly connected components in this graph
+            public int countStronglyConnectedComponents() {
+                return count;
+            }
+            
+        }
 	}
 }
