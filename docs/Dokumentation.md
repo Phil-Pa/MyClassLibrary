@@ -32,8 +32,7 @@ beendet werden. Dies ist möglich, indem man einzelne Aufgabe als Abhängigkeite
 Es soll möglich sein, die Anzahl der Arbeiter anzugeben, welche die Aufgaben erledigen. Ihre Aufteilung soll optimal sein. Wenn man an weitere
 Informationen wie die Dauer der Erledigung aller Aufgaben rankommen möchte, muss man die entsprechende Methode der Aufgabenplanerklasse aufrufen.
 
-... csharp
-
+```c#
+var s = "JavaScript syntax highlighting";
 Console.WriteLine("Hello World!");
-
-...
+```
