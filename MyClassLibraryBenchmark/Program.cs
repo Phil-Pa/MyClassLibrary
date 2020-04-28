@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using BenchmarkDotNet.Running;
+using MyClassLibrary.Backup;
 using MyClassLibrary.FileSystem;
 using MyClassLibrary.FileSystem.CodeCounter;
 using MyClassLibrary.TaskScheduling;
@@ -16,6 +17,11 @@ namespace MyClassLibraryBenchmark
 		private static void Main(string[] args)
         {
 
+            var directories = new[] {@"E:\Dokumente\manictimeexports", @"E:\Dokumente\office"};
+            Backup.DoBackup(directories, "E:/Test", @"C:\Program Files\AESCrypt\aescrypt.exe", "1234");
+
+            return;
+            
             //var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
 			//var task1 = new Task(name: "Task1", description: "Task1 Test", duration: TimeSpan.FromMinutes(20), isParallel: true, priority: 3, dependingTasks: null);

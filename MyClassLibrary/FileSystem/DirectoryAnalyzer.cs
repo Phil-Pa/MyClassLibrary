@@ -19,19 +19,11 @@ namespace MyClassLibrary.FileSystem
 		
 		public DirectoryAnalyzer(IDirectoryTreeToGraphConverter<T, TV> converter, string path, IAddable<TV> defaultValue, IFileInterpreter<T, TV> fileInterpreter, TextWriter? fileOutput = null)
 		{
-			// TODO: what if directory structure changes?
-			// TODO: refactor
-			_path = path;
+            _path = path;
 			_defaultValue = defaultValue;
 			converter.Convert(path, fileInterpreter, fileOutput);
 			_graph = new Graph<Tuple<string, IDictionary<T, IAddable<TV>>>, object>(converter.Nodes, converter.Edges);
-
-            Console.WriteLine(_graph.IsCyclic.Value);
-			
-			// TODO: uncomment asserts when they are working
-			// Debug.Assert(!_graph.IsCyclic, "directory graph must not be cyclic");
-			// Debug.Assert(_graph.IsDirected, "directory graph must be directed");
-		}
+        }
 
 		public IDictionary<T, TV> GetTotalStats()
 		{
