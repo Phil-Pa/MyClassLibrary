@@ -2,6 +2,7 @@ using MyClassLibrary.Algorithms.AStar;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using BenchmarkDotNet.Running;
 using MyClassLibrary.Backup;
 using MyClassLibrary.FileSystem;
@@ -18,8 +19,14 @@ namespace MyClassLibraryBenchmark
         {
 
             var directories = new[] {@"E:\Dokumente\manictimeexports", @"E:\Dokumente\office"};
-            Backup.DoBackup(directories, "E:/Test", @"C:\Program Files\AESCrypt\aescrypt.exe", "1234");
+            const string aescryptPath = @"C:\Program Files\AESCrypt\aescrypt.exe";
+            const string password = "1234";
+            var output = Backup.DoBackup(directories, "E:/Test", aescryptPath, password);
 
+            Thread.Sleep(2000);
+            
+            Backup.UnpackBackup(output, aescryptPath, password);
+            
             return;
             
             //var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
