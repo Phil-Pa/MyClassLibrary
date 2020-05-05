@@ -1,4 +1,4 @@
-﻿using MyClassLibrary.Math;
+using MyClassLibrary.Math;
 using System;
 using Xunit;
 
@@ -64,5 +64,27 @@ namespace UnitTestProject.Math
 
 			Assert.False(fraction3.GetHashCode() == fraction1.GetHashCode());
 		}
+
+        [Fact]
+        public void TestSimplifyForEquals()
+        {
+            var fraction = new Fraction(13, 39);
+            Assert.True(new Fraction(1, 3) == fraction);
+
+            fraction = new Fraction(14, 2);
+            Assert.True(new Fraction(7, 1) == fraction);
+
+            fraction = new Fraction(14, -2);
+            Assert.True(new Fraction(7, -1) == fraction);
+
+            fraction = new Fraction(14, -2);
+            Assert.True(new Fraction(-7, 1) == fraction);
+
+            fraction = new Fraction(-14, -2);
+            Assert.True(new Fraction(7, 1) == fraction);
+
+            fraction = new Fraction(-14, 2);
+            Assert.True(new Fraction(7, -1) == fraction);
+        }
 	}
 }

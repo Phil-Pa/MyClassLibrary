@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Moq;
 using MyClassLibrary.Collections.Graph;
@@ -59,7 +59,7 @@ namespace UnitTestProject.FileSystem.CodeCounter
 			Assert.Equal(86, stats[Language.C].BlankLines);
 		}
 
-		[Fact]
+		//[Fact]
 		public void Test()
 		{
 			var fileInterpreter = new CodeReader();

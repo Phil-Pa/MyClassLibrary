@@ -1,10 +1,12 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 
 namespace MyClassLibrary.Math
 {
 	/// <summary>
 	/// Represents a mathematical fraction
 	/// </summary>
+	[DebuggerDisplay("{" + nameof(Numerator) + "}/{" + nameof(Denominator) + "}")]
 	public readonly struct Fraction : IComparable<Fraction>
 	{
 		public int Numerator { get; }
@@ -19,6 +21,26 @@ namespace MyClassLibrary.Math
 			Denominator = denominator;
 		}
 
+		public static Fraction Of(int num)
+		{
+			return new Fraction(num, 1);
+		}
+
+		public Fraction Simplify()
+		{
+			var gdc = Math.GCD(Numerator, Denominator);
+			var numerator = Numerator / gdc;
+			var denominator = Denominator / gdc;
+
+			if (numerator < 0 && denominator < 0)
+			{
+				numerator = System.Math.Abs(numerator);
+				denominator = System.Math.Abs(denominator);
+			}
+
+			return new Fraction(numerator, denominator);
+		}
+
 		public float ToFloat()
 		{
 			return (float)Numerator / Denominator;
@@ -26,7 +48,10 @@ namespace MyClassLibrary.Math
 
 		public static bool operator ==(in Fraction a, in Fraction b)
 		{
-			return System.Math.Abs(System.Math.Abs(a.ToFloat()) - System.Math.Abs(b.ToFloat())) < float.Epsilon;
+			var simpleA = a.Simplify();
+			var simpleB = b.Simplify();
+			return System.Math.Abs(simpleA.Numerator) == System.Math.Abs(simpleB.Numerator) &&
+				System.Math.Abs(simpleA.Denominator) == System.Math.Abs(simpleB.Denominator);
 		}
 
 		public static bool operator !=(in Fraction a, in Fraction b)
@@ -46,7 +71,7 @@ namespace MyClassLibrary.Math
 
 		private bool Equals(in Fraction other)
 		{
-			return Numerator == other.Numerator && Denominator == other.Denominator;
+			return this == other;
 		}
 
 		public int CompareTo(Fraction other)
