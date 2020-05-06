@@ -18,7 +18,6 @@ namespace UnitTestProject.Math
 		public void TestInvalidFraction()
 		{
 			Assert.Throws<ArgumentException>(() => new Fraction(1, 0));
-			Assert.Throws<ArgumentException>(() => new Fraction(0, 1));
 		}
 
 		[Fact]
@@ -85,6 +84,24 @@ namespace UnitTestProject.Math
 
             fraction = new Fraction(-14, 2);
             Assert.True(new Fraction(7, -1) == fraction);
+        }
+
+        [Fact]
+        public void TestAdd()
+        {
+            var fraction1 = new Fraction(-3, 7);
+            var fraction2 = new Fraction(11, 6);
+
+            Assert.Equal(new Fraction(59, 42), fraction1 + fraction2);
+        }
+
+        [Fact]
+        public void TestMultiply()
+        {
+            var fraction1 = new Fraction(-3, 7);
+            var fraction2 = new Fraction(11, 6);
+
+            Assert.Equal(new Fraction(-11, 14), fraction1 * fraction2);
         }
 	}
 }

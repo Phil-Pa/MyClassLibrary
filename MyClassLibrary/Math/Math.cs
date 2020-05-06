@@ -21,12 +21,7 @@ namespace MyClassLibrary.Math
                     b %= a;
             }
 
-            var result = a == 0 ? b : a;
-
-            //if (a < 0 && b < 0)
-
-
-            return result;
+            return a == 0 ? b : a;
         }
 
         public static int GCD(params int[] values)
@@ -67,5 +62,14 @@ namespace MyClassLibrary.Math
             return num1 * num2;
         }
 
+        public static unsafe float Sqrt(float a)
+        {
+            var y = a;
+            var i = *(int*)&y;
+            i = 0x5f3759df - (i >> 1);
+            y = *(float*)&i;
+            y *= (1.5f - (a * 0.5f * y * y));
+            return 1.0f / y;
+        }
 	}
 }

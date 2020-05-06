@@ -14,10 +14,10 @@ namespace MyClassLibrary.Math
 
 		public Fraction(in int numerator, in int denominator)
 		{
-			if (numerator == 0 || denominator == 0)
-				throw new ArgumentException("arguments must not be 0");
+            if (denominator == 0)
+                throw new ArgumentException("arguments must not be 0");
 
-			Numerator = numerator;
+            Numerator = numerator;
 			Denominator = denominator;
 		}
 
@@ -46,6 +46,18 @@ namespace MyClassLibrary.Math
 			return (float)Numerator / Denominator;
 		}
 
+        public bool IsInteger()
+        {
+            return Numerator % Denominator == 0;
+        }
+
+        public int ToInt()
+        {
+            if (!IsInteger())
+                throw new Exception("fraction must be integer to be converted to an integer");
+            return Numerator / Denominator;
+        }
+
 		public static bool operator ==(in Fraction a, in Fraction b)
 		{
 			var simpleA = a.Simplify();
@@ -69,7 +81,34 @@ namespace MyClassLibrary.Math
 			return a.ToFloat() > b.ToFloat();
 		}
 
-		private bool Equals(in Fraction other)
+        public static Fraction operator+(in Fraction a, in Fraction b)
+        {
+            var newDenominator = a.Denominator * b.Denominator;
+            var newNumerator = a.Numerator * b.Denominator + b.Numerator * a.Denominator;
+            return new Fraction(newNumerator, newDenominator).Simplify();
+        }
+
+        public static Fraction operator-(in Fraction a, in Fraction b)
+        {
+            // TODO: test
+            var newDenominator = a.Denominator * b.Denominator;
+            var newNumerator = a.Numerator * b.Denominator - b.Numerator * a.Denominator;
+            return new Fraction(newNumerator, newDenominator).Simplify();
+        }
+
+        public static Fraction operator *(in Fraction a, in Fraction b)
+        {
+            var newNumerator = a.Numerator * b.Numerator;
+            var newDenominator = a.Denominator * b.Denominator;
+            return new Fraction(newNumerator, newDenominator).Simplify();
+        }
+
+        public static Fraction operator /(in Fraction a, in Fraction b)
+        {
+            return a * new Fraction(b.Denominator, b.Numerator);
+        }
+
+        private bool Equals(in Fraction other)
 		{
 			return this == other;
 		}
@@ -90,5 +129,30 @@ namespace MyClassLibrary.Math
 		{
 			return HashCode.Combine(Numerator, Denominator);
 		}
-	}
+
+        public override string ToString()
+        {
+            if (IsInteger())
+                return Numerator.ToString();
+            else
+                return Numerator + "/" + Denominator;
+        }
+
+        public static Fraction Random(in int min = 1, in int max = 10, bool canBeNegative = true)
+        {
+            var random = new Random();
+            var numerator = random.Next(min, max);
+            var denominator = random.Next(min, max);
+
+            if (canBeNegative)
+            {
+                if (random.NextBool())
+                    numerator = -numerator;
+                if (random.NextBool())
+                    denominator = -denominator;
+            }
+
+            return new Fraction(numerator, denominator).Simplify();
+        }
+    }
 }

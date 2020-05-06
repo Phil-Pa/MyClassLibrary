@@ -16,5 +16,10 @@ namespace UnitTestProject.Math
             Assert.Equal(4, MyClassLibrary.Math.Math.GCD(1232, 2804, 9380, 8300, 9256));
         }
 
+        [Fact]
+        public void TestSqrt()
+        {
+            Assert.Equal(4.0f, MyClassLibrary.Math.Math.Sqrt(16.0f), 1);
+        }
     }
 }
