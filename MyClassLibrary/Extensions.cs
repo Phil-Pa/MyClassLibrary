@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,6 +7,11 @@ namespace MyClassLibrary
 {
 	public static class Extensions
 	{
+        public static bool NextBool(this Random random)
+        {
+            return random.Next(2) == 0;
+        }
+
 		public static bool ContainsOnly<T>(this IEnumerable<T> enumerable, T value) where T : IComparable<T>
 		{
 			return enumerable.All(item => item.CompareTo(value) == 0);
