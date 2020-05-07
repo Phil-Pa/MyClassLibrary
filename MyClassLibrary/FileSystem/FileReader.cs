@@ -1,20 +1,29 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MyClassLibrary.FileSystem
 {
 	public class FileReader : IFileReader
 	{
-		public IList<string> ReadLines(string path)
+		public IList<string>? ReadLines(string path)
         {
-            var lines = new List<string>();
-            using StreamReader reader = new StreamReader(path);
-            while (!reader.EndOfStream)
+            try
             {
-                lines.Add(reader.ReadLine());
+                var lines = new List<string>();
+                using var reader = new StreamReader(path);
+                while (!reader.EndOfStream)
+                {
+                    lines.Add(reader.ReadLine());
+                }
+
+                return lines;
             }
-            
-            return lines;
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
 	}
 }

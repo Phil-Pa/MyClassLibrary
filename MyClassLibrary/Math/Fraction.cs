@@ -9,6 +9,9 @@ namespace MyClassLibrary.Math
 	[DebuggerDisplay("{" + nameof(Numerator) + "}/{" + nameof(Denominator) + "}")]
 	public readonly struct Fraction : IComparable<Fraction>
 	{
+
+        private static readonly Random random = new Random();
+
 		public int Numerator { get; }
 		public int Denominator { get; }
 
@@ -46,14 +49,16 @@ namespace MyClassLibrary.Math
 			return (float)Numerator / Denominator;
 		}
 
-        public bool IsInteger()
-        {
-            return Numerator % Denominator == 0;
+        public bool IsInteger {
+            get
+            {
+                return Numerator % Denominator == 0;
+            }
         }
 
         public int ToInt()
         {
-            if (!IsInteger())
+            if (!IsInteger)
                 throw new Exception("fraction must be integer to be converted to an integer");
             return Numerator / Denominator;
         }
@@ -105,7 +110,7 @@ namespace MyClassLibrary.Math
 
         public static Fraction operator /(in Fraction a, in Fraction b)
         {
-            return a * new Fraction(b.Denominator, b.Numerator);
+            return (a * new Fraction(b.Denominator, b.Numerator)).Simplify();
         }
 
         private bool Equals(in Fraction other)
@@ -130,17 +135,30 @@ namespace MyClassLibrary.Math
 			return HashCode.Combine(Numerator, Denominator);
 		}
 
-        public override string ToString()
-        {
-            if (IsInteger())
-                return Numerator.ToString();
-            else
-                return Numerator + "/" + Denominator;
+        public bool IsNegative {
+            get
+            {
+                return Numerator < 0 || Denominator < 0;
+            }
         }
 
-        public static Fraction Random(in int min = 1, in int max = 10, bool canBeNegative = true)
+        public override string ToString()
         {
-            var random = new Random();
+            if (IsInteger)
+            {
+                if (IsNegative)
+                    return "-" + System.Math.Abs(Numerator).ToString();
+                else
+                    return System.Math.Abs(Numerator).ToString();
+            }
+            else
+            {
+                return Numerator + "/" + Denominator;
+            }
+        }
+
+        public static Fraction Random(in int min = 1, in int max = 10, in bool canBeNegative = true)
+        {
             var numerator = random.Next(min, max);
             var denominator = random.Next(min, max);
 
@@ -153,6 +171,18 @@ namespace MyClassLibrary.Math
             }
 
             return new Fraction(numerator, denominator).Simplify();
+        }
+
+        public static Fraction RandomInteger(in int min = 1, in int max = 10, in bool canBeNegative = true)
+        {
+            var number = random.Next(min, max);
+
+            if (canBeNegative && random.NextBool())
+            {
+                number = -number;
+            }
+
+            return Of(number);
         }
     }
 }

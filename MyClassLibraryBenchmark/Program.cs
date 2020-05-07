@@ -18,11 +18,11 @@ namespace MyClassLibraryBenchmark
 		private static void Main(string[] args)
         {
 
-            var (gcd, calculation) = MyClassLibrary.Math.Learning.ExtendedEuclidean.Calculate(4325, 654);
+            //var (gcd, calculation) = MyClassLibrary.Math.Learning.ExtendedEuclidean.Calculate(4325, 654);
 
-            Console.WriteLine(calculation);
+            //Console.WriteLine(calculation);
 
-            Console.ReadKey();
+            //Console.ReadKey();
 
             //var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
@@ -86,7 +86,7 @@ namespace MyClassLibraryBenchmark
 
             Console.WriteLine("Elapsed: " + watch.ElapsedMilliseconds + "ms");
 
-            //Console.ReadKey();
+            Console.ReadKey();
 		}
 
         private static void RunBenchmarks()

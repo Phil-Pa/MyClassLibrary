@@ -113,6 +113,9 @@ namespace MyClassLibrary.FileSystem.CodeCounter
 
             var lines = _fileReader.ReadLines(file);
 
+            if (lines == null)
+                return;
+
 			var res = _fileInterpreter.Interpret(fileExtension, lines);
 			if (!res.HasValue)
 			{
