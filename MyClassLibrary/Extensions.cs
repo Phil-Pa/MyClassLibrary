@@ -17,7 +17,11 @@ namespace MyClassLibrary
 			return enumerable.All(item => item.CompareTo(value) == 0);
 		}
 
-		public static int ToInt(this string str)
+        public static IList<T> Clone<T>(this IEnumerable<T> listToClone) where T : ICloneable
+        {
+            return listToClone.Select(item => (T)item.Clone()).ToList();
+        }
+        public static int ToInt(this string str)
 		{
 			var success = int.TryParse(str, out var result);
 			if (success)

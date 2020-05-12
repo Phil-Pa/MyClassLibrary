@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using BenchmarkDotNet.Running;
+using MyClassLibrary;
 //using MyClassLibrary.Backup;
 using MyClassLibrary.FileSystem;
 using MyClassLibrary.FileSystem.CodeCounter;
+using MyClassLibrary.Math.Learning;
 using MyClassLibrary.TaskScheduling;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -23,6 +25,32 @@ namespace MyClassLibraryBenchmark
             //Console.WriteLine(calculation);
 
             //Console.ReadKey();
+
+            // falsches ergebnis bei
+            // -3 6 4 | 7
+            // -6 5 6 | 6
+            // -4 5 4 | -6
+
+            //var matrix = LGSSolver.FindExerciseLGS(2, 8);
+            //var output = new FormattedOutput(10);
+
+            //LGSSolver.PrintMatrix(matrix, output);
+
+            //Console.WriteLine(output);
+
+            //Console.ReadKey();
+
+            //var (result, calculation) = LGSSolver.Solve(matrix);
+
+            //Console.WriteLine(string.Join(", ", result));
+
+            //Console.ReadKey();
+
+            //Console.WriteLine(calculation);
+
+            //Console.ReadKey();
+
+            //return;
 
             //var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
@@ -55,7 +83,7 @@ namespace MyClassLibraryBenchmark
 
             var watch = Stopwatch.StartNew();
 
-            const string path = @"C:\Users\Phil\source\projects\csharp\libraries";
+            const string path = @"E:\Downloads\tornadofx-master\tornadofx-master\src\main\java\tornadofx"; //@"C:\Users\Phil\source\projects\csharp\libraries";
 
 			var fileInterpreter = new CodeReader();
 			var fileReader = new FileReader();
@@ -65,9 +93,9 @@ namespace MyClassLibraryBenchmark
 
             var stats = analyzer.GetTotalStats();
 
-            var fileInterpreter2 = new FileSizeInterpreter();
-            var converter2 = new DirectoryTreeToGraphConverter<string, MyInt>(fileReader, directoryReader);
-            var analyzer2 = new DirectoryAnalyzer<string, MyInt>(converter2, path, MyInt.Default, fileInterpreter2, Console.Out);
+            var fileInterpreter2 = new KotlinAverageLineLengthCounter();
+            var converter2 = new DirectoryTreeToGraphConverter<Language, MyInt>(fileReader, directoryReader);
+            var analyzer2 = new DirectoryAnalyzer<Language, MyInt>(converter2, path, MyInt.Default, fileInterpreter2, Console.Out);
 
             var stats2 = analyzer2.GetTotalStats().ToList();
             stats2.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
@@ -85,6 +113,7 @@ namespace MyClassLibraryBenchmark
             watch.Stop();
 
             Console.WriteLine("Elapsed: " + watch.ElapsedMilliseconds + "ms");
+            Console.WriteLine(fileInterpreter2.Result);
 
             Console.ReadKey();
 		}

@@ -79,6 +79,36 @@ namespace UnitTestProject.Math.Learning
         }
 
         [Fact]
+        public void TestFixedMatrix3()
+        {
+
+            var matrix = new List<List<Fraction>>
+            {
+                new List<Fraction>
+                {
+                    Fraction.Of(2), Fraction.Of(-2), Fraction.Of(3), Fraction.Of(2)
+                },
+                new List<Fraction>
+                {
+                    Fraction.Of(-6), Fraction.Of(6), Fraction.Of(-3), Fraction.Of(7)
+                },
+                new List<Fraction>
+                {
+                    Fraction.Of(-7), Fraction.Of(-7), Fraction.Of(4), Fraction.Of(-2)
+                }
+            };
+
+            var (result, calculation) = LGSSolver.Solve(matrix);
+
+            //Assert.Equal(result[0], new Fraction(-1, 10));
+            //Assert.Equal(result[1], new Fraction(-23, 25));
+            //Assert.Equal(result[2], new Fraction(-13, 25));
+
+            outputHelper.WriteLine(calculation);
+            outputHelper.WriteLine(string.Join('\t', result));
+        }
+
+        [Fact]
         public void TestRandomMatrix()
         {
 

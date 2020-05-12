@@ -1,25 +1,40 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Xunit;
+using static MyClassLibrary.Math.Math;
 
 namespace UnitTestProject.Math
 {
     public class MathTest
     {
-
-        [Fact]
-        public void TestGDC()
+        [Theory]
+        [InlineData(2, 8, 12, 20, 50)]
+        [InlineData(1, 9, 43, 76, 87)]
+        [InlineData(4, 1232, 2804, 9380)]
+        public void TestGCG(params int[] numbers)
         {
-            Assert.Equal(2, MyClassLibrary.Math.Math.GCD(8, 12, 20, 50));
-            Assert.Equal(1, MyClassLibrary.Math.Math.GCD(9, 43, 76, 87)); 
-            Assert.Equal(4, MyClassLibrary.Math.Math.GCD(1232, 2804, 9380, 8300, 9256));
+            var result = numbers.First();
+            var list = numbers.ToList();
+            list.RemoveAt(0);
+
+            var input = list.ToArray();
+
+            Assert.Equal(result, GCD(input));
         }
 
         [Fact]
         public void TestSqrt()
         {
-            Assert.Equal(4.0f, MyClassLibrary.Math.Math.Sqrt(16.0f), 1);
+            Assert.Equal(4.0f, Sqrt(16.0f), 1);
+        }
+
+        [Theory]
+        [InlineData(3, 6, 6)]
+        [InlineData(5, 3, 15)]
+        [InlineData(5, 24, 5 * 24)]
+        [InlineData(5, 10, 10)]
+        public void TestLCM(int a, int b, int result)
+        {
+            Assert.Equal(result, LCM(a, b));
         }
     }
 }

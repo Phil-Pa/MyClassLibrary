@@ -70,14 +70,65 @@ namespace MyClassLibrary.Math.Learning
             }
         }
 
-        private static void PrintMatrix(List<List<Fraction>> matrix, FormattedOutput output)
+        public static void PrintMatrix(List<List<Fraction>> matrix, FormattedOutput output)
         {
-            for (var i = 0; i < matrix.Count; i++)
+            foreach (var row in matrix)
             {
-                output.AddRow(matrix[i].Select(fraction => fraction.ToString()).ToArray());
+                output.AddRow(row.Select(fraction => fraction.ToString()).ToArray());
             }
 
             output.AddEmptyRow();
+        }
+
+        public static List<List<Fraction>> FindExerciseLGS(in int min = 1, in int max = 6)
+        {
+            while (true)
+            {
+                var matrix = GenerateRandomMatrix(min, max);
+                var clone = matrix.Select(row => row.ToList()).ToList();
+
+                try
+                {
+                    var (result, _) = Solve(matrix);
+                    if (!result.All(fraction => fraction.Numerator < 10 && fraction.Denominator < 10 && !fraction.IsInteger && fraction != Fraction.Of(1) && fraction != Fraction.Of(-1)) || result.IsEmpty() ||
+                        result.Distinct().Count() != result.Count)
+                    {
+                        continue;
+                    }
+
+                    return clone;
+                }
+                catch (DivideByZeroException)
+                {
+                }
+                catch (ArgumentException)
+                {
+
+                }
+            }
+        }
+
+        private static List<List<Fraction>> GenerateRandomMatrix(in int min = 1, in int max = 6)
+        {
+            var matrix = new List<List<Fraction>>();
+
+            for (var i = 0; i < 3; i++)
+            {
+                var list = new List<Fraction>(4);
+                for (var j = 0; j < 4; j++)
+                {
+                    list.Add(Fraction.Of(1));
+                }
+                matrix.Add(list);
+            }
+
+            for (var i = 0; i < 3; i++)
+            {
+                for (var j = 0; j < 4; j++)
+                    matrix[i][j] = Fraction.RandomInteger(min, max);
+            }
+
+            return matrix;
         }
     }
 }

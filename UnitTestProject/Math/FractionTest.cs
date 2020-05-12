@@ -121,5 +121,24 @@ namespace UnitTestProject.Math
         {
             Assert.Equal(new Fraction(n3, d3), new Fraction(n1, d1) / new Fraction(n2, d2));
         }
+
+        [Theory]
+        [InlineData(2, 6, 3)]
+        [InlineData(-2, -6, 3)]
+        [InlineData(2, -6, -3)]
+        [InlineData(8, 120, 15)]
+        public void TestToInt(int result, int a, int b)
+        {
+            Assert.Equal(result, new Fraction(a, b).ToInt());
+        }
+
+        [Fact]
+        public void TestToIntException()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                new Fraction(7, 3).ToInt();
+            });
+        }
     }
 }

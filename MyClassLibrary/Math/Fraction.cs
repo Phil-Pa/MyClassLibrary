@@ -59,7 +59,7 @@ namespace MyClassLibrary.Math
         public int ToInt()
         {
             if (!IsInteger)
-                throw new Exception("fraction must be integer to be converted to an integer");
+                throw new ArgumentException("fraction must be integer to be converted to an integer");
             return Numerator / Denominator;
         }
 
@@ -144,17 +144,14 @@ namespace MyClassLibrary.Math
 
         public override string ToString()
         {
-            if (IsInteger)
-            {
-                if (IsNegative)
-                    return "-" + System.Math.Abs(Numerator).ToString();
-                else
-                    return System.Math.Abs(Numerator).ToString();
-            }
-            else
-            {
+            if (!IsInteger)
                 return Numerator + "/" + Denominator;
-            }
+
+            if (IsNegative)
+                return "-" + System.Math.Abs(Numerator);
+
+            return System.Math.Abs(Numerator).ToString();
+
         }
 
         public static Fraction Random(in int min = 1, in int max = 10, in bool canBeNegative = true)
