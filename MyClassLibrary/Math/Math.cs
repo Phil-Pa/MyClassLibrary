@@ -82,6 +82,8 @@ namespace MyClassLibrary.Math
         public static (int gcd, int s, int t) ExtendedEuclidean(int a, int b)
         {
             Debug.Assert(a > b);
+            Debug.Assert(a > 0);
+            Debug.Assert(b > 0);
             
             var gcd = Math.GCD(a, b);
 
