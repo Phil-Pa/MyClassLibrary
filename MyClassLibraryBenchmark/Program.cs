@@ -1,16 +1,13 @@
-using MyClassLibrary.Algorithms.AStar;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using BenchmarkDotNet.Running;
 using MyClassLibrary;
 //using MyClassLibrary.Backup;
 using MyClassLibrary.FileSystem;
 using MyClassLibrary.FileSystem.CodeCounter;
-using MyClassLibrary.Math.Learning;
-using MyClassLibrary.TaskScheduling;
+using MyClassLibrary.Learning;
 
 // ReSharper disable MemberCanBePrivate.Global
 

@@ -3,19 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace MyClassLibrary.Math.Learning
+namespace MyClassLibrary.Learning
 {
-
-    public readonly ref struct ExtendedEuclideanResult
-    {
-        // ggt_ex(a, b) == gcd == s * a + t * b
-
-        public int A { get; }
-        public int B { get; }
-        public int S { get; }
-        public int T { get; }
-        public int Gcd { get; }
-    }
 
 
     // (ExtendedEuclideanResult result, string calculation)
@@ -28,7 +17,7 @@ namespace MyClassLibrary.Math.Learning
             Debug.Assert(a > b);
 
             // TODO:
-            var gcd = Math.GCD(a, b);
+            var gcd = Math.Math.GCD(a, b);
 
             var aStr = a.ToString();
             var bStr = b.ToString();

@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
-using MyClassLibrary.Math.Learning;
+using MyClassLibrary.Learning;
 
 namespace MyClassLibraryBenchmark
 {

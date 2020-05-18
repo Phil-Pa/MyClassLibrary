@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace MyClassLibrary.Math.Learning
+namespace MyClassLibrary.Learning
 {
 	/// <summary>
 	/// Static Multiplication class providing the <see cref="DoMultiply"/> method for multiplying in writing

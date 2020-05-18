@@ -1,9 +1,9 @@
-﻿using MyClassLibrary.Math.Learning;
-using System;
+﻿using System;
+using MyClassLibrary.Learning;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace UnitTestProject.Math.Learning
+namespace UnitTestProject.Learning
 {
 	public class MultiplicationTest
 	{

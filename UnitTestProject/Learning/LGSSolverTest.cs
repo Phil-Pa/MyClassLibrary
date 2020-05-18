@@ -1,12 +1,10 @@
 using MyClassLibrary.Math;
-using MyClassLibrary.Math.Learning;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using MyClassLibrary.Learning;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace UnitTestProject.Math.Learning
+namespace UnitTestProject.Learning
 {
     public class LGSSolverTest
     {

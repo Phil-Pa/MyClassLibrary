@@ -1,5 +1,3 @@
-using MyClassLibrary.Math.Learning;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace UnitTestProject
@@ -12,13 +10,5 @@ namespace UnitTestProject
 		{
 			_testOutputHelper = testOutputHelper;
 		}
-
-		[Fact]
-		public void TestMethod1()
-		{
-			var result = Multiplication.DoMultiply(99999, 9999);
-
-			_testOutputHelper.WriteLine(result.calculation);
-		}
-	}
+    }
 }

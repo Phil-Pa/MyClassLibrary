@@ -1,4 +1,9 @@
 // ReSharper disable All
+
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
 namespace MyClassLibrary.Math
 {
 	public static class Math
@@ -74,6 +79,53 @@ namespace MyClassLibrary.Math
             return num1 * num2;
         }
 
+        public static (int gcd, int s, int t) ExtendedEuclidean(int a, int b)
+        {
+            Debug.Assert(a > b);
+            
+            var gcd = Math.GCD(a, b);
+
+            var calcST = new Func<int, int, int, int, int, (int, int)>((int quotient, int prev1S, int prev2S, int prev1T, int prev2T) =>
+            {
+                return (prev2S - prev1S * quotient, prev2T - prev1T * quotient);
+            });
+
+            var quotient = System.Math.DivRem(a, b, out var remainder);
+
+            var prev1S = 0;
+            var prev2S = 1;
+            var prev1T = 1;
+            var prev2T = 0;
+
+            var (temp1, temp2) = calcST(quotient, prev1S, prev2S, prev1T, prev2T);
+            prev2S = prev1S;
+            prev2T = prev1T;
+            prev1S = temp1;
+            prev1T = temp2;
+
+            a = b;
+            b = remainder;
+
+            while (true)
+            {
+                quotient = System.Math.DivRem(a, b, out var rem);
+
+                a = b;
+                b = rem;
+
+                if (rem == 0)
+                    break;
+                
+                (temp1, temp2) = calcST(quotient, prev1S, prev2S, prev1T, prev2T);
+                prev2S = prev1S;
+                prev2T = prev1T;
+                prev1S = temp1;
+                prev1T = temp2;
+            }
+
+            return (gcd, prev1S, prev1T);
+        }
+
         public static unsafe float Sqrt(float a)
         {
             var y = a;
@@ -83,5 +135,5 @@ namespace MyClassLibrary.Math
             y *= (1.5f - (a * 0.5f * y * y));
             return 1.0f / y;
         }
-	}
+    }
 }

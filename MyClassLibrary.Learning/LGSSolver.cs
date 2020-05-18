@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MyClassLibrary.Math;
 
-namespace MyClassLibrary.Math.Learning
+namespace MyClassLibrary.Learning
 {
     public static class LGSSolver
     {

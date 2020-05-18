@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MyClassLibrary.Learning\MyClassLibrary.Learning.csproj" />
     <ProjectReference Include="..\MyClassLibrary\MyClassLibrary.csproj" />
   </ItemGroup>
 

@@ -21,6 +21,17 @@ namespace UnitTestProject.Math
             Assert.Equal(result, GCD(input));
         }
 
+        [Theory]
+        [InlineData(50, 23, 1, 6, -13)]
+        public void TestExtendedEuclidean(int a, int b, int gcd, int s, int t)
+        {
+            // ReSharper disable once UseDeconstruction
+            var result = ExtendedEuclidean(a, b);
+            Assert.Equal(gcd, result.gcd);
+            Assert.Equal(s, result.s);
+            Assert.Equal(t, result.t);
+        }
+
         [Fact]
         public void TestSqrt()
         {

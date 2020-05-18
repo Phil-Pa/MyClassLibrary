@@ -4,7 +4,7 @@ using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace UnitTestProject.Math.Learning
+namespace UnitTestProject.Learning
 {
     public class ExtendedEuclideanTest
     {
@@ -21,7 +21,7 @@ namespace UnitTestProject.Math.Learning
         public void Test()
         {
 
-            var (gcd, calculation) = MyClassLibrary.Math.Learning.ExtendedEuclidean.Calculate(4325, 654);
+            var (gcd, calculation) = MyClassLibrary.Learning.ExtendedEuclidean.Calculate(4325, 654);
             Assert.Equal(1, gcd);
 
             outputHelper.WriteLine(calculation);
