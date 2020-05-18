@@ -28,7 +28,7 @@ namespace UnitTestProject.Encoding
 		{
 			IEncodingAlgorithm encodingAlgorithm = new ShannonAlgorithm();
 
-			var text = File.ReadAllText("data.txt");
+			var text = File.ReadAllText("../../../Encoding/data.txt");
 
 			var encoded = encodingAlgorithm.Encode(text);
 
