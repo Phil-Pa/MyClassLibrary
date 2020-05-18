@@ -1,4 +1,4 @@
-﻿using MyClassLibrary.Encoding;
+using MyClassLibrary.Encoding;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +28,7 @@ namespace UnitTestProject.Encoding
 		{
 			IEncodingAlgorithm encodingAlgorithm = new ShannonAlgorithm();
 
-			var text = File.ReadAllText("E:/share/data.txt");
+			var text = File.ReadAllText("data.txt");
 
 			var encoded = encodingAlgorithm.Encode(text);
 
