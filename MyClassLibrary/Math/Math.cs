@@ -1,3 +1,4 @@
+// ReSharper disable All
 namespace MyClassLibrary.Math
 {
 	public static class Math
@@ -33,11 +34,22 @@ namespace MyClassLibrary.Math
 
             for (var i = 1; i < values.Length - 1; i++)
             {
-                var newGDC = InternalGCD(gdc, values[i + 1]);
-                gdc = System.Math.Min(gdc, newGDC);
+                var newGcd = InternalGCD(gdc, values[i + 1]);
+                gdc = System.Math.Min(gdc, newGcd);
             }
 
             return gdc;
+        }
+
+        public static int Phi(int n)
+        {
+            var result = 1;
+            for (var i = 2; i < n; i++)
+            {
+                if (GCD(i, n) == 1)
+                    result++;
+            }
+            return result;
         }
 
         public static int LCM(in int a, in int b)

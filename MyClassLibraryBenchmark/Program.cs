@@ -1,5 +1,6 @@
 using MyClassLibrary.Algorithms.AStar;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -17,7 +18,23 @@ namespace MyClassLibraryBenchmark
 {
 	internal static class Program
 	{
-		private static void Main(string[] args)
+
+        static List<int> GetPrimeFactors(int number)
+        {
+            var primes = new List<int>();
+
+            for (int div = 2; div <= number; div++)
+            {
+                while (number % div == 0)
+                {
+                    primes.Add(div);
+                    number = number / div;
+                }
+            }
+            return primes;
+        }
+
+        private static void Main(string[] args)
         {
 
             //var (gcd, calculation) = MyClassLibrary.Math.Learning.ExtendedEuclidean.Calculate(4325, 654);
@@ -31,26 +48,26 @@ namespace MyClassLibraryBenchmark
             // -6 5 6 | 6
             // -4 5 4 | -6
 
-            //var matrix = LGSSolver.FindExerciseLGS(2, 8);
-            //var output = new FormattedOutput(10);
+            var matrix = LGSSolver.FindExerciseLGS(2, 8);
+            var output = new FormattedOutput(10);
 
-            //LGSSolver.PrintMatrix(matrix, output);
+            LGSSolver.PrintMatrix(matrix, output);
 
-            //Console.WriteLine(output);
+            Console.WriteLine(output);
 
-            //Console.ReadKey();
+            Console.ReadKey();
 
-            //var (result, calculation) = LGSSolver.Solve(matrix);
+            var (result, calculation) = LGSSolver.Solve(matrix);
 
-            //Console.WriteLine(string.Join(", ", result));
+            Console.WriteLine(string.Join(", ", result));
 
-            //Console.ReadKey();
+            Console.ReadKey();
 
-            //Console.WriteLine(calculation);
+            Console.WriteLine(calculation);
 
-            //Console.ReadKey();
+            Console.ReadKey();
 
-            //return;
+            return;
 
             //var summary = BenchmarkRunner.Run<AStarAlgorithmBenchmark>();
 
