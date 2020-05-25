@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestProject", "UnitTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyClassLibraryBenchmark", "MyClassLibraryBenchmark\MyClassLibraryBenchmark.csproj", "{73CD6700-16D6-4CE7-9890-321405E52E9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyClassLibrary.Learning", "MyClassLibrary.Learning\MyClassLibrary.Learning.csproj", "{7B60F2FC-801D-4045-8281-03482DADFAA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyClassLibrary.Learning", "MyClassLibrary.Learning\MyClassLibrary.Learning.csproj", "{7B60F2FC-801D-4045-8281-03482DADFAA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
