@@ -45,11 +45,7 @@ namespace MyClassLibrary.FileSystem
             if (fileExtension.StartsWith(".git"))
                 fileExtension = ".gitfile";
 
-            var sum = 0;
-            for (var i = 0; i < lines.Count; i++)
-            {
-                sum += lines[i].Length;
-            }
+            var sum = lines.Sum(t => t.Length);
 
             // var sum = lines.Sum(line => line.Length);
 

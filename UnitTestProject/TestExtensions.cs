@@ -51,6 +51,41 @@ namespace UnitTestProject
 			Assert.False(list.ContainsOnly(2));
 		}
 
+        class ClonableObject : ICloneable
+        {
+            public object Value { get; set; }
+            public object Clone()
+            {
+                return new ClonableObject
+                {
+                    Value = Value
+                };
+            }
+        }
+
+        [Fact]
+        public void TestClone()
+        {
+            var list = new List<ClonableObject>();
+            for (var i = 0; i < 10; i++)
+                list.Add(new ClonableObject
+                {
+                    Value = i
+                });
+
+            var clonedList = list.Clone();
+            
+            Assert.Equal(list.Count, clonedList.Count);
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                var obj1 = list[i];
+                var obj2 = clonedList[i];
+
+                Assert.Equal(obj1.Value, obj2.Value);
+            }
+        }
+
 		[Fact]
 		public void TestToInt()
 		{
