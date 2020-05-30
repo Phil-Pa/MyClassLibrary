@@ -9,51 +9,130 @@ namespace MyClassLibrary
     public class FormattedOutput
     {
 
-        private readonly StringBuilder sb = new StringBuilder();
-        private readonly List<string> rows = new List<string>();
-        private const string Space = " ";
-        private readonly int numSpaces;
+        private readonly StringBuilder _sb = new StringBuilder();
+        private List<string> _rows = new List<string>();
+        private const char Space = ' ';
+        private int _numSpaces;
+        private readonly int _newOverflowSpaces;
+        private int _numMaxWordsInRow;
 
-        public FormattedOutput(int numSpaces)
+        public FormattedOutput(in int numSpaces, in int newOverflowSpaces = 4)
         {
-            this.numSpaces = numSpaces;
+            _numSpaces = numSpaces;
+            _newOverflowSpaces = newOverflowSpaces;
         }
 
-        public void Clear() => sb.Clear();
+        public void Clear() => _sb.Clear();
 
         public void AddRow(params string[] values)
         {
-            // reserve space
-            var filledValues = CheckAndFillValues(values);
 
-            var capacity = values.Length * numSpaces;
+            var maxValueWordLength = values.Max(str => str.Length);
+
+            if (maxValueWordLength >= _numSpaces)
+            {
+                RecalculateAllRows(maxValueWordLength + _newOverflowSpaces);
+                // ReSharper disable once TailRecursiveCall
+                AddRow(values);
+                return;
+            }
+
+            _numMaxWordsInRow = System.Math.Max(_numMaxWordsInRow, values.Length);
+
+            var capacity = _numMaxWordsInRow * _numSpaces;
             var rowBuilder = new StringBuilder(capacity);
 
             FillRowBuilder(capacity, rowBuilder);
 
-            var offset = 0;
-
-            for (var i = 0; i < filledValues.Count; i++)
+            for (var i = 0; i < capacity; i += _numSpaces)
             {
-                var value = filledValues[i];
+                Debug.Assert(i % _numSpaces == 0);
+
+                var index = i / _numSpaces;
+
+                var outOfValueSize = index >= values.Length;
+
+                if (AppendEmptySpaces(outOfValueSize, rowBuilder, i))
+                    continue;
+
+                var value = values[index];
+
+                if (string.IsNullOrEmpty(value))
+                    AppendEmptySpaces(outOfValueSize, rowBuilder, i);
+
                 for (var j = 0; j < value.Length; j++)
                 {
                     var ch = value[j];
-                    rowBuilder[offset + j] = ch;
+                    rowBuilder[i + j] = ch;
                 }
 
-                offset += numSpaces;
+                for (var j = value.Length; j < _numSpaces; j++)
+                {
+                    rowBuilder[i + j] = Space;
+                }
             }
 
-            rows.Add(rowBuilder.ToString());
+            _rows.Add(rowBuilder.ToString());
+        }
+
+        private void RecalculateAllRows(in int newNumSpaces)
+        {
+            var newRows = new List<string>();
+
+            var diffSpaces = newNumSpaces - _numSpaces;
+            var rowCount = _rows.Count;
+
+            for (var i = 0; i < rowCount; i++)
+            {
+                // insert every _numSpaces the missing spaces
+
+                var tempSb = new StringBuilder(_rows[i], newNumSpaces);
+                tempSb.Append(Space, diffSpaces);
+
+                var numWords = _rows[i].Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
+
+                var count = 0;
+
+                for (var j = _numSpaces;; j += _numSpaces)
+                {
+
+                    for (var k = 0; k < diffSpaces; k++)
+                        tempSb.Insert(j, Space);
+
+                    j += diffSpaces;
+
+                    count++;
+
+                    if (count + 1 >= numWords)
+                        break;
+                }
+
+                newRows.Add(tempSb.ToString());
+            }
+
+            _rows.Clear();
+            _rows = newRows;
+            _numSpaces = newNumSpaces;
         }
 
         public void AddEmptyRow()
         {
-            rows.Add(string.Empty);
+            _rows.Add(string.Empty);
         }
 
-        private static void FillRowBuilder(int capacity, StringBuilder rowBuilder)
+        private bool AppendEmptySpaces(in bool outOfValueSize, StringBuilder stringBuilder, in int i)
+        {
+            if (!outOfValueSize)
+                return false;
+
+            for (var j = 0; j < _numSpaces; j++)
+                stringBuilder[i + j] = Space;
+
+            return true;
+
+        }
+
+        private static void FillRowBuilder(in int capacity, StringBuilder rowBuilder)
         {
             for (var i = 0; i < capacity; i++)
             {
@@ -61,38 +140,11 @@ namespace MyClassLibrary
             }
         }
 
-        private List<string> CheckAndFillValues(string[] values)
-        {
-            var list = new List<string>();
-            for (var i = 0; i < values.Length; i++)
-            {
-                var value = values[i];
-                if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
-                {
-                    list.Add(new string(' ', numSpaces));
-                }
-                else
-                {
-                    var sb = new StringBuilder(numSpaces);
-                    sb.Append(value);
-                    var length = value.Length;
-                    for (var j = length; j < numSpaces; j++)
-                    {
-                        sb.Append(Space);
-                    }
-
-                    list.Add(sb.ToString());
-                }
-            }
-
-            return list;
-        }
-
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(_rows.Count * _numSpaces * _numMaxWordsInRow);
 
-            foreach (var row in rows)
+            foreach (var row in _rows)
             {
                 sb.Append(row).Append('\n');
             }
