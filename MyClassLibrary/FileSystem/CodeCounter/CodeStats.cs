@@ -1,4 +1,5 @@
-﻿using System;
+using MyClassLibrary.Math;
+using System;
 
 namespace MyClassLibrary.FileSystem.CodeCounter
 {

@@ -1,0 +1,18 @@
+in
+hallo,was,geht,bei,dir
+ich,mache,hier,nur,etwas
+out
+hallo   was     geht    bei     dir     
+ich     mache   hier    nur     etwas   
+in
+hallo,was,geht,bei,dir
+ich,mache,hier,nur,etwas
+out
+hallo   was     geht    bei     dir     
+ich     mache   hier    nur     etwas  
+in
+hallo,was,geht,bei,dir
+ich,mache,hier,nur,etwas
+out
+hallo   was     geht    bei     dir     
+ich     mache   hier    nur     etwas  
